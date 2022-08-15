@@ -12,7 +12,4 @@ include_directories(src)
 FILE(GLOB_RECURSE sourcefiles "src/*.cpp")
 add_executable( mosse ${sourcefiles} )
 target_link_libraries( mosse ${OpenCV_LIBS})
-
-
-
-
+target_compile_options(mosse PRIVATE -g)
