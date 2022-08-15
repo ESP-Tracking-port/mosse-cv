@@ -3,6 +3,15 @@
 #include <stdlib.h>
 #include <time.h>
 
+#if 1
+# include <iostream>
+# define debug(a) std::cout << (#a) << " : " << (a) << std::endl
+# define debugstr(a) std::cout << (a) << std::endl;
+#else
+# define debug(...)
+# define debugstr(...)
+#endif
+
 mosseTracker::mosseTracker()
 {
 	
@@ -247,6 +256,8 @@ cv::Rect mosseTracker::update(const cv::Mat& image)
 	cv::Point ps;
 	double max_response;
 	cv::minMaxLoc(resp_cv8u, NULL, &max_response, NULL, &ps);
+	debug(max_response);
+	debug(init_sz);
 
 	float dx = ps.x - init_sz.width / 2;
 	float dy = ps.y - init_sz.height / 2;
