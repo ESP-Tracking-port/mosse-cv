@@ -28,6 +28,7 @@ protected:
 	cv::Mat imag(cv::Mat image);
 	cv::Mat complexDivision(cv::Mat a, cv::Mat b);
 	cv::Mat complexMultiplication(cv::Mat a, cv::Mat b);
+	double calculatePsr(const cv::Mat &aResponse);
 private:
 	float _sigma;
 	float _eta;

@@ -144,6 +144,30 @@ cv::Mat mosseTracker::complexMultiplication(cv::Mat a, cv::Mat b)
 	return res;
 }
 
+/// \brief PSR can be used as a tracking quality metric enabling use of threshold-based tracking failure detection.
+///
+/// PSR is calculated as $\over {max_response - mean} {stdev}$
+///
+/// When calculating mean and std. dev., a 11x11 window should be excluded from the response (according to the MOSSE
+/// paper)
+///
+double mosseTracker::calculatePsr(const cv::Mat &aResponse)
+{
+	// Get max response value
+	double maxValue = 0.0f;
+	cv::minMaxLoc(aResponse, nullptr, &maxValue, nullptr, nullptr);
+
+	// Get max stats w/ an account for the 11x11 window
+	cv::Scalar mean;
+	cv::Scalar stddev;
+	cv::Rect2i exclusionArea{aResponse.size().width / 2 - 5, aResponse.size().height / 2 - 5, 11, 11};
+	cv::Mat mask = cv::Mat::ones(aResponse.size[0], aResponse.size[1], CV_8UC1);
+	mask(exclusionArea) = 0;
+	cv::meanStdDev(aResponse, mean, stddev, mask);
+
+	return (maxValue - mean[0]) / stddev[0];
+}
+
 void mosseTracker::init(cv::Rect roi, const cv::Mat& image)
 {
 	init_param();
@@ -263,6 +287,8 @@ cv::Rect mosseTracker::update(const cv::Mat& image)
 	float dy = ps.y - init_sz.height / 2;
 
 	_roi = cv::Rect(_roi.x + dx, _roi.y + dy, init_sz.width, init_sz.height);
+	auto psr = calculatePsr(response);
+	debug(psr);
 
 	train(gray);
 
