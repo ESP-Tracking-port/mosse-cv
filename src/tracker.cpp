@@ -160,7 +160,7 @@ double mosseTracker::calculatePsr(const cv::Mat &aResponse)
 	return (maxValue - mean[0]) / stddev[0];
 }
 
-void mosseTracker::init(cv::Rect roi, const cv::Mat& image)
+void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
 {
 	MallocCounter mallocCounter{};
 	(void)mallocCounter;
@@ -169,9 +169,7 @@ void mosseTracker::init(cv::Rect roi, const cv::Mat& image)
 
 	cv::Point center = cv::Point(roi.x+roi.width/2, roi.y+roi.height/2);
 
-	guassKernelMatrix = createGaussKernel(image.size(), _sigma, center);
-
-	cv::Mat gray = bgr2gray(image);
+	guassKernelMatrix = createGaussKernel(gray.size(), _sigma, center);
 
 	cv::Mat gray_crop = imcrop(roi, gray);
 
@@ -252,9 +250,8 @@ cv::Mat mosseTracker::complexDivision(cv::Mat a, cv::Mat b)
 	return res;
 }
 
-cv::Rect mosseTracker::update(const cv::Mat& image)
+cv::Rect mosseTracker::update(const cv::Mat& gray)
 {
-	cv::Mat gray = bgr2gray(image);
 	Hi = complexDivision(Ai, Bi);
 
 	fi = imcrop(_roi, gray);
