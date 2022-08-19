@@ -3,6 +3,16 @@
 #include "selectROI.h"
 #include "MallocCounter.hpp"
 
+static cv::Mat bgr2gray(const cv::Mat& image)
+{
+	cv::Mat res;
+	int chans = image.channels();
+	if(chans == 3)
+		cv::cvtColor(image, res, CV_BGR2GRAY);
+	else res = image.clone();
+	return res;
+}
+
 void run()
 {
 	cv::VideoCapture cap;
@@ -17,14 +27,15 @@ void run()
 	std::string trackingWindow = "tracking.jpg";
 	while(cap.read(frame))
 	{
+		auto gray = bgr2gray(frame);
 		if(init)
 		{
 			roi = box.add(trackingWindow, frame);
-			track.init(roi, frame);
+			track.init(roi, gray);
 			init = false;
 		}
 		else 
-			roi = track.update(frame);
+			roi = track.update(gray);
 		cv::rectangle(frame, roi, cv::Scalar(255,255,0));
 		cv::imshow(trackingWindow, frame);
 		cv::waitKey(20);
