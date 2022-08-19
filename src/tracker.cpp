@@ -2,15 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <time.h>
-
-#if 1
-# include <iostream>
-# define debug(a) std::cout << (#a) << " : " << (a) << std::endl
-# define debugstr(a) std::cout << (a) << std::endl;
-#else
-# define debug(...)
-# define debugstr(...)
-#endif
+#include "MallocCounter.hpp"
 
 mosseTracker::mosseTracker()
 {
@@ -170,6 +162,8 @@ double mosseTracker::calculatePsr(const cv::Mat &aResponse)
 
 void mosseTracker::init(cv::Rect roi, const cv::Mat& image)
 {
+	MallocCounter mallocCounter{};
+	(void)mallocCounter;
 	init_param();
 	_roi = roi;
 

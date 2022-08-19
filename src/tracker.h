@@ -3,6 +3,15 @@
 
 #include <opencv2/opencv.hpp>
 
+#if 1
+# include <iostream>
+# define debug(a) std::cout << (#a) << " : " << (a) << std::endl
+# define debugstr(a) std::cout << (a) << std::endl;
+#else
+# define debug(...)
+# define debugstr(...)
+#endif
+
 class mosseTracker
 {
 public:
