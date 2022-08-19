@@ -1,14 +1,13 @@
 #include "tracker.h"
 #include <assert.h>
 #include "selectROI.h"
+#include "MallocCounter.hpp"
 
 void run()
 {
 	cv::VideoCapture cap;
 	cap.open("save.avi");
 
-	cv::VideoWriter save;
-	save.open("save_1.avi", CV_FOURCC('M','P','4','2'), 25.0, cv::Size(480,360), true);
 	mosseTracker track;
 	selectROI box;
 	box.init_param();
@@ -28,7 +27,6 @@ void run()
 			roi = track.update(frame);
 		cv::rectangle(frame, roi, cv::Scalar(255,255,0));
 		cv::imshow(trackingWindow, frame);
-		save << frame;
 		cv::waitKey(20);
 	}
 	cap.release();
@@ -71,5 +69,6 @@ int main()
 {
 	//img2avi((char*)"img");
 	run();
+	debug(MallocCounter::getPeakCount());
 	return 0;
 }
