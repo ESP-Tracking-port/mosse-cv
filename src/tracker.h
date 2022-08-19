@@ -24,7 +24,6 @@ protected:
 	void init_param();
 	void train(const cv::Mat& image);
 	
-	cv::Mat bgr2gray(const cv::Mat& image);
 	cv::Mat imcrop(cv::Rect roi, const cv::Mat& image);
 	cv::Mat createGaussKernel(cv::Size sz, float sigma, cv::Point center);
 	cv::Mat fft(cv::Mat image, bool backwards = false);

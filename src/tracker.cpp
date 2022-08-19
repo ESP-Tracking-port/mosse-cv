@@ -33,16 +33,6 @@ void mosseTracker::init_param()
 	_eta = 0.125;
 }
 
-cv::Mat mosseTracker::bgr2gray(const cv::Mat& image)
-{
-	cv::Mat res;
-	int chans = image.channels();
-	if(chans == 3)
-		cv::cvtColor(image, res, CV_BGR2GRAY);
-	else res = image.clone();
-	return res;
-}
-
 cv::Mat mosseTracker::imcrop(cv::Rect roi, const cv::Mat& image)
 {
 	cv::Rect img = cv::Rect(0,0,image.cols,image.rows);
