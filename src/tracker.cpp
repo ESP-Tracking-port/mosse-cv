@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "MallocCounter.hpp"
+#include "MosseApi.hpp"
 
 mosseTracker::mosseTracker()
 {
@@ -152,12 +153,17 @@ double mosseTracker::calculatePsr(const cv::Mat &aResponse)
 
 void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
 {
-	MallocCounter mallocCounter{};
-	(void)mallocCounter;
+//	MallocCounter mallocCounter{};
+//	(void)mallocCounter;
 	init_param();
-	_roi = roi;
-
+	unsigned rows = roi.height;
+	unsigned cols = roi.width;
 	cv::Point center = cv::Point(roi.x+roi.width/2, roi.y+roi.height/2);
+	Mosse::getClosestWindow(rows, cols);
+	debug(rows);
+	debug(cols);
+	_roi = cv::Rect2i(center.x - cols / 2, center.y - rows / 2, cols, rows);
+	roi = _roi;
 
 	guassKernelMatrix = createGaussKernel(gray.size(), _sigma, center);
 
@@ -242,6 +248,8 @@ cv::Mat mosseTracker::complexDivision(cv::Mat a, cv::Mat b)
 
 cv::Rect mosseTracker::update(const cv::Mat& gray)
 {
+//	MallocCounter mallocCounter{};
+//	(void)mallocCounter;
 	Hi = complexDivision(Ai, Bi);
 
 	fi = imcrop(_roi, gray);
