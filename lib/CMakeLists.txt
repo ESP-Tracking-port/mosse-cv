@@ -1,1 +1,4 @@
 add_subdirectory(fft)
+add_subdirectory(mosseapi)
+add_library(libinterface INTERFACE)
+target_link_libraries(libinterface INTERFACE fft mosseapi)
