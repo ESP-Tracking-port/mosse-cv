@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+set(CMAKE_CXX_STANDARD 11)
+project(mosseapi)
+file(GLOB SOURCES "*.cpp")
+add_library(mosseapi ${SOURCES})
+target_include_directories(mosseapi PUBLIC mosseapi)
