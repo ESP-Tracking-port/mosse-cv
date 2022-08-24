@@ -5,6 +5,22 @@
 #include "MallocCounter.hpp"
 #include "MosseApi.hpp"
 
+#if 1
+
+template <class T>
+static void cvmatout(const cv::Mat &aMat)
+{
+	for (int r = 0; r < aMat.size[0]; ++r) {
+		for (int c = 0; c < aMat.size[1]; ++c) {
+			std::cout << aMat.at<T>(r, c) << std::endl;
+		}
+	}
+}
+
+#else
+# define cvmatout(...)
+#endif
+
 mosseTracker::mosseTracker()
 {
 	
@@ -168,6 +184,7 @@ void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
 	cv::Mat gray_crop = imcrop(roi, gray);
 
 	cv::Mat guassKernelMatrix_crop = imcrop(roi, guassKernelMatrix);
+	cvmatout<float>(guassKernelMatrix_crop);
 
 	init_sz.width = guassKernelMatrix_crop.cols;
 	init_sz.height = guassKernelMatrix_crop.rows;
@@ -176,7 +193,7 @@ void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
 	void *gauss_fft_raw_3d = const_cast<void *>(static_cast<const void *>(Mosse::getGaussKernelFft3d(rows, cols)));
 	assert(gauss_fft_raw_3d != nullptr);
 	gauss_fft = cv::Mat(2, sizes, CV_32FC2, gauss_fft_raw_3d);
-//	gauss_fft = fft(guassKernelMatrix_crop);
+	gauss_fft = fft(guassKernelMatrix_crop);
 
 	if(gray_crop.size() != guassKernelMatrix_crop.size())
 		cv::resize(gray_crop, gray_crop, guassKernelMatrix_crop.size());
