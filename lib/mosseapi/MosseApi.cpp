@@ -1,4 +1,5 @@
 #include "MosseApi.hpp"
+#include "MosseApiDebug.hpp"
 #include "MosseTables/MosseTables.hpp"
 #include <array>
 #include <limits>
@@ -17,48 +18,49 @@ static constexpr auto makeArray(T &&a, Ts &&...as) -> std::array<typename std::d
 }
 
 static constexpr auto kWindowSizes = makeArray(
-	std::array<unsigned, 2>{80, 50},
-	std::array<unsigned, 2>{50, 80},
-	std::array<unsigned, 2>{95, 60},
-	std::array<unsigned, 2>{60, 95},
-	std::array<unsigned, 2>{70, 70},
-	std::array<unsigned, 2>{60, 60},
-	std::array<unsigned, 2>{50, 50},
-	std::array<unsigned, 2>{40, 40}
+	std::array<unsigned, 2>{85, 65},
+	std::array<unsigned, 2>{65, 85},
+	std::array<unsigned, 2>{75, 75},
+	std::array<unsigned, 2>{45, 45}
 );
 
 static constexpr auto kHannMap = makeArray(
-	kHann80x50Raw,
-	kHann50x80Raw,
-	kHann95x60Raw,
-	kHann60x95Raw,
-	kHann70x70Raw,
-	kHann60x60Raw,
-	kHann50x50Raw,
-	kHann40x40Raw
+	kHann85x65Raw,
+	kHann65x85Raw,
+	kHann75x75Raw,
+	kHann45x45Raw
 );
 
 static constexpr auto kGaussKernelFftMapImReal = makeArray(
-	std::pair<const float *, const float *>{&kGaussKernelFft80x50ImReal[0][0], &kGaussKernelFft80x50ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft50x80ImReal[0][0], &kGaussKernelFft50x80ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft95x60ImReal[0][0], &kGaussKernelFft95x60ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft60x95ImReal[0][0], &kGaussKernelFft60x95ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft70x70ImReal[0][0], &kGaussKernelFft70x70ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft60x60ImReal[0][0], &kGaussKernelFft60x60ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft50x50ImReal[0][0], &kGaussKernelFft50x50ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft40x40ImReal[0][0], &kGaussKernelFft40x40ImReal[1][0]}
+	std::pair<const float *, const float *>{&kGaussKernelFft85x65ImReal[0][0], &kGaussKernelFft85x65ImReal[1][0]},
+	std::pair<const float *, const float *>{&kGaussKernelFft65x85ImReal[0][0], &kGaussKernelFft65x85ImReal[1][0]},
+	std::pair<const float *, const float *>{&kGaussKernelFft75x75ImReal[0][0], &kGaussKernelFft75x75ImReal[1][0]},
+	std::pair<const float *, const float *>{&kGaussKernelFft45x45ImReal[0][0], &kGaussKernelFft45x45ImReal[1][0]}
 );
+
+static constexpr auto kGaussKernelFftMapImReal3d = makeArray(
+	kGaussKernelFft85x65ImReal3dRaw,
+	kGaussKernelFft65x85ImReal3dRaw,
+	kGaussKernelFft75x75ImReal3dRaw,
+	kGaussKernelFft45x45ImReal3dRaw
+);
+
 
 /// \brief Compares two window size matrices using weighted preferences
 /// regarding aspect ratio and difference in area sizes
 ///
 static float windowGetDistance(const std::array<unsigned, 2> &a, const std::array<unsigned, 2> &b)
 {
-	constexpr auto kWeightAspectRatio = 0.2f;
+	auto a0 = static_cast<float>(a[0]);
+	auto a1 = static_cast<float>(a[1]);
+	auto b0 = static_cast<float>(b[0]);
+	auto b1 = static_cast<float>(b[1]);
+
+	constexpr auto kWeightAspectRatio = 0.6f;
 	constexpr auto kWeightAreaSize = 1 - kWeightAspectRatio;
-	const auto diffAspectRatio = static_cast<float>(a[0]) * b[1] / (a[1] * b[0]);
-	const auto diffAreaSize  = static_cast<float>(a[0]) * a[1] / (b[0] * b[1]);
-	const auto distance = diffAspectRatio * kWeightAspectRatio + diffAreaSize * kWeightAreaSize;
+	const auto diffAspectRatio = pow(a0 - b0 * a1 / b1, 2);  // Compare by aspect ratio numerators, ensure common denominator, raise to the power of 2 to get "px^2" units
+	const auto diffAreaSize = abs(a0 * a1 - b0 * b1);  // Difference in areas, units - "px^2"
+	const auto distance = kWeightAreaSize * diffAspectRatio + kWeightAreaSize * diffAreaSize;
 
 	return distance;
 }
@@ -71,6 +73,8 @@ void getClosestWindow(unsigned &aRows, unsigned &aCols)
 		{
 			return windowGetDistance(aLhs, ref) < windowGetDistance(aRhs, ref);
 		});
+	aRows = (*itClosest)[0];
+	aCols = (*itClosest)[1];
 }
 
 int checkWindowExists(unsigned aRows, unsigned aCols)
@@ -108,6 +112,17 @@ std::pair<const float *, const float *> getGaussKernelFft(unsigned aRows, unsign
 	}
 
 	return kGaussKernelFftMapImReal[id];
+}
+
+const float *getGaussKernelFft3d(unsigned aRows, unsigned aCols)
+{
+	int id = checkWindowExists(aRows, aCols);
+
+	if (id < 0) {
+		return nullptr;
+	}
+
+	return kGaussKernelFftMapImReal3d[id];
 }
 
 }  // namespace Mosse
