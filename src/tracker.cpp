@@ -160,8 +160,6 @@ void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
 	unsigned cols = roi.width;
 	cv::Point center = cv::Point(roi.x+roi.width/2, roi.y+roi.height/2);
 	Mosse::getClosestWindow(rows, cols);
-	debug(rows);
-	debug(cols);
 	_roi = cv::Rect2i(center.x - cols / 2, center.y - rows / 2, cols, rows);
 	roi = _roi;
 
@@ -174,7 +172,11 @@ void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
 	init_sz.width = guassKernelMatrix_crop.cols;
 	init_sz.height = guassKernelMatrix_crop.rows;
 
-	gauss_fft = fft(guassKernelMatrix_crop);
+	const int sizes[3] = {static_cast<int>(rows), static_cast<int>(cols), 2};
+	void *gauss_fft_raw_3d = const_cast<void *>(static_cast<const void *>(Mosse::getGaussKernelFft3d(rows, cols)));
+	assert(gauss_fft_raw_3d != nullptr);
+	gauss_fft = cv::Mat(2, sizes, CV_32FC2, gauss_fft_raw_3d);
+//	gauss_fft = fft(guassKernelMatrix_crop);
 
 	if(gray_crop.size() != guassKernelMatrix_crop.size())
 		cv::resize(gray_crop, gray_crop, guassKernelMatrix_crop.size());
@@ -269,15 +271,12 @@ cv::Rect mosseTracker::update(const cv::Mat& gray)
 	cv::Point ps;
 	double max_response;
 	cv::minMaxLoc(resp_cv8u, NULL, &max_response, NULL, &ps);
-	debug(max_response);
-	debug(init_sz);
 
 	float dx = ps.x - init_sz.width / 2;
 	float dy = ps.y - init_sz.height / 2;
 
 	_roi = cv::Rect(_roi.x + dx, _roi.y + dy, init_sz.width, init_sz.height);
 	auto psr = calculatePsr(response);
-	debug(psr);
 
 	train(gray);
 
