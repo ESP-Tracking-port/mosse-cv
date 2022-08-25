@@ -18,31 +18,27 @@ static constexpr auto makeArray(T &&a, Ts &&...as) -> std::array<typename std::d
 }
 
 static constexpr auto kWindowSizes = makeArray(
-	std::array<unsigned, 2>{85, 65},
-	std::array<unsigned, 2>{65, 85},
-	std::array<unsigned, 2>{75, 75},
-	std::array<unsigned, 2>{45, 45}
+	std::array<unsigned, 2>{86, 63},
+	std::array<unsigned, 2>{63, 86},
+	std::array<unsigned, 2>{75, 75}
 );
 
 static constexpr auto kHannMap = makeArray(
-	kHann85x65Raw,
-	kHann65x85Raw,
-	kHann75x75Raw,
-	kHann45x45Raw
+	kHann86x63Raw,
+	kHann63x86Raw,
+	kHann75x75Raw
 );
 
 static constexpr auto kGaussKernelFftMapImReal = makeArray(
-	std::pair<const float *, const float *>{&kGaussKernelFft85x65ImReal[0][0], &kGaussKernelFft85x65ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft65x85ImReal[0][0], &kGaussKernelFft65x85ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft75x75ImReal[0][0], &kGaussKernelFft75x75ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft45x45ImReal[0][0], &kGaussKernelFft45x45ImReal[1][0]}
+	std::pair<const float *, const float *>{&kGaussKernelFft86x63ImReal[0][0], &kGaussKernelFft86x63ImReal[1][0]},
+	std::pair<const float *, const float *>{&kGaussKernelFft63x86ImReal[0][0], &kGaussKernelFft63x86ImReal[1][0]},
+	std::pair<const float *, const float *>{&kGaussKernelFft75x75ImReal[0][0], &kGaussKernelFft75x75ImReal[1][0]}
 );
 
 static constexpr auto kGaussKernelFftMapImReal3d = makeArray(
-	kGaussKernelFft85x65ImReal3dRaw,
-	kGaussKernelFft65x85ImReal3dRaw,
-	kGaussKernelFft75x75ImReal3dRaw,
-	kGaussKernelFft45x45ImReal3dRaw
+	kGaussKernelFft86x63ImReal3dRaw,
+	kGaussKernelFft63x86ImReal3dRaw,
+	kGaussKernelFft75x75ImReal3dRaw
 );
 
 
