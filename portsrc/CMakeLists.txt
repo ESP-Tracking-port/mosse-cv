@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project(embmosse)
+FILE(GLOB_RECURSE SOURCEFILES "*.cpp")
+add_library(embmosse ${SOURCEFILES} )
+target_link_libraries(embmosse mosselibs)
+target_compile_options(embmosse PRIVATE -g)
