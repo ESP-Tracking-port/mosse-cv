@@ -178,39 +178,20 @@ void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
 	Mosse::getClosestWindow(rows, cols);
 	_roi = cv::Rect2i(center.x - cols / 2, center.y - rows / 2, cols, rows);
 	roi = _roi;
-
-	guassKernelMatrix = createGaussKernel(gray.size(), _sigma, center);
-
 	cv::Mat gray_crop = imcrop(roi, gray);
-
-	cv::Mat guassKernelMatrix_crop = imcrop(roi, guassKernelMatrix);
-	cvmatout<float>(guassKernelMatrix_crop);
-
-	init_sz.width = guassKernelMatrix_crop.cols;
-	init_sz.height = guassKernelMatrix_crop.rows;
-
 	const int sizes[3] = {static_cast<int>(rows), static_cast<int>(cols), 2};
 	void *gauss_fft_raw_3d = const_cast<void *>(static_cast<const void *>(Mosse::getGaussKernelFft3d(rows, cols)));
 	assert(gauss_fft_raw_3d != nullptr);
 	gauss_fft = cv::Mat(2, sizes, CV_32FC2, gauss_fft_raw_3d);
-//	gauss_fft = fft(guassKernelMatrix_crop);
-	cv::Mat planes[2];
-	cv::split(gauss_fft, planes);
-//	cvmatout<float>(planes[1]);
-
-	if(gray_crop.size() != guassKernelMatrix_crop.size())
-		cv::resize(gray_crop, gray_crop, guassKernelMatrix_crop.size());
-
+	init_sz.width = gauss_fft.cols;
+	init_sz.height = gauss_fft.rows;
 	fi = preprocess(gray_crop);
-
 	fi_fft = fft(fi);
-
 	Ai = complexMultiplication(gauss_fft, conj(fi_fft));
 	Bi = complexMultiplication(fi_fft, conj(fi_fft));
-
 	int N = 128;
-	for(int i = 0; i < N; i++)
-	{
+
+	for (int i = 0; i < N; i++) {
 		fi = preprocess(rand_warp(gray_crop));
 		fi_fft = fft(fi);
 		Ai += complexMultiplication(gauss_fft, conj(fi_fft));
