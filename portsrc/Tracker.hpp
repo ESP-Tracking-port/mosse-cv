@@ -29,8 +29,8 @@ struct TrackingInfo {
 
 class Tracker {
 public:
-	virtual void init(Image, Roi);
-	virtual const TrackingInfo &update(Image);
+	void init(Image, Roi);
+	const TrackingInfo &update(Image);
 };
 
 }  // namespace Mosse
