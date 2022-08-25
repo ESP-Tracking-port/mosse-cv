@@ -31,19 +31,6 @@ mosseTracker::~mosseTracker()
 	
 }
 
-cv::Mat mosseTracker::createGaussKernel(cv::Size sz, float sigma, cv::Point center)
-{
-	cv::Mat gauss = cv::Mat::zeros(sz, CV_32FC1);
-	for(int r = 0; r < sz.height; r++)
-		for(int c = 0; c < sz.width; c++)
-		{
-			float v = (r - center.y) * (r - center.y) + (c - center.x) * (c - center.x);
-			v /= (2 * sigma);
-			gauss.at<float>(r, c) = std::exp(-v);
-		}
-	return gauss;
-}
-
 void mosseTracker::init_param()
 {
 	_sigma = 100;
