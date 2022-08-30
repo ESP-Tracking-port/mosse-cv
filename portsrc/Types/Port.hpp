@@ -11,14 +11,12 @@
 namespace Mosse {
 namespace Ut {
 
-class Fft;
 class Ops;
 class Mem;
 
 /// \brief Replaceable operations which take number representation into account
 ///
 struct Port {
-	Fft &fft;
 	Ops &ops;
 	Mem &mem;
 };
