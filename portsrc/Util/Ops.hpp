@@ -19,7 +19,8 @@ class PointRowCol;
 
 namespace Ut {
 
-/// \brief A numeric representation may use fixed point
+/// \brief A numeric representation may use fixed point, or some other compact representation. Therefore, all the
+/// matrix operations are delegated to descendants of `Ops`
 ///
 class Ops {
 public:
