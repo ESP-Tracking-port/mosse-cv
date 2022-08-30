@@ -9,6 +9,7 @@
 #define MOSSE_UTIL_BITOP_HPP_
 
 namespace Mosse {
+namespace Ut {
 
 template <class T>
 static constexpr inline std::uint64_t bit(T base)
@@ -32,6 +33,7 @@ static constexpr inline std::uint64_t mask(B base, N n)
 		0 | bit(base, n - 1) | mask(base, n - 1);
 }
 
+}  // namespace Ut
 }  // namespace Mosse
 
 #endif // MOSSE_UTIL_BITOP_HPP_
