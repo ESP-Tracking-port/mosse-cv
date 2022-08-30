@@ -26,8 +26,7 @@ void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 		unsigned rows = aRoi.size(0);
 		unsigned cols = aRoi.size(1);
 		Mosse::getClosestWindow(rows, cols);
-		tracking.roi.origin = {aRoi.origin(0) + aRoi.size(0) / 2 - rows / 2,
-			aRoi.origin(1) + aRoi.size(1) / 2 - cols / 2};
+		tracking.roi.origin = aRoi.origin + aRoi.size / 2 - Tp::PointRowCol{rows, cols} / 2;
 		tracking.roi.size = {rows, cols};
 	}
 
