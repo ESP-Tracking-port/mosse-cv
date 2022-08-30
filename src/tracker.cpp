@@ -257,8 +257,7 @@ cv::Rect mosseTracker::update(const cv::Mat& gray)
 	cv::Mat resp_cv8u = cv::Mat_<unsigned char>(resp);
 
 	cv::Point ps;
-	double max_response;
-	cv::minMaxLoc(resp_cv8u, NULL, &max_response, NULL, &ps);
+	cv::minMaxLoc(resp_cv8u, NULL, NULL, NULL, &ps);
 
 	float dx = ps.x - init_sz.width / 2;
 	float dy = ps.y - init_sz.height / 2;
