@@ -38,8 +38,8 @@ public:
 	///
 	/// \arg sum (optional) - stores sum of all the values. The result can be used later in `calcPsr`
 	///
-	virtual void maxReal(void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *sum = nullptr);
-	float calcPsr(void *aComplexBuffer, Tp::PointRowCol aPeak, float *sumHint = nullptr,
+	virtual void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *sum = nullptr);
+	float calcPsr(const void *aComplexBuffer, Tp::PointRowCol aPeak, float *sumHint = nullptr,
 		Tp::PointRowCol aMask = {11, 11});
 
 	/// \brief Updates the A matrix (ref. to the MOSSE paper:
@@ -48,8 +48,8 @@ public:
 	/// \arg eta - learning rate. Authors of the paper suggest using `0.125`
 	/// \arg aInitial - if false, a weighted element-wise sum of the current and the previous element will be used.
 	///
-	virtual void mataUpdate(void *aMatAcomplex, float aEta, bool aInitial) = 0;
-	virtual void matbUpdate(void *aMatBcomplex, void *aImageCropFftComplex, float aEta, bool aInitial);
+	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial) = 0;
+	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial);
 };
 
 }  // namespace Ut
