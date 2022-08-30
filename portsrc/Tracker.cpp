@@ -54,9 +54,9 @@ void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
 
 	if (aUpdatePsr) {
 		float sum = 0.0f;
-		port.ops.maxReal(port.mem.buffer(), maxResponsePos, sum);
+		port.ops.maxReal(port.mem.buffer(), maxResponsePos, &sum);
 		const Tp::PointRowCol kMaskSize{11, 11};
-		tracking.psr = port.ops.calcPsr(port.mem.buffer(), maxResponsePos, sum, kMaskSize);
+		tracking.psr = port.ops.calcPsr(port.mem.buffer(), maxResponsePos, &sum, kMaskSize);
 	} else {
 		port.ops.maxReal(port.mem.buffer(), maxResponsePos, nullptr);
 	}
@@ -71,11 +71,6 @@ void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
 	port.ops.mataUpdate(port.mem.matA(), tracking.eta, false);
 	port.ops.fft2(port.mem.buffer());
 	port.ops.matbUpdate(port.mem.matB(), port.mem.buffer(), tracking.eta, false);
-}
-
-float Tracker::psr()
-{
-	return tracking.psr;
 }
 
 const Tp::Roi &Tracker::roi() const
