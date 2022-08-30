@@ -32,15 +32,15 @@ private:
 	struct Tracking {
 		Tp::Roi roi;
 		float psr;
+		const float eta;
 	};
 public:
-	Tracker(Ut::Port port);
+	Tracker(Ut::Port port, float aEta = 0.125);
 	virtual ~Tracker() = default;
 	void init(Tp::Image, Tp::Roi);
-	void update(Tp::Image);
-	float psr();
-protected:
+	void update(Tp::Image, bool updatePsr);
 	const Tp::Roi &roi() const;
+	float lastPsr() const;
 protected:
 	Tracking tracking;
 	Ut::Port port;
