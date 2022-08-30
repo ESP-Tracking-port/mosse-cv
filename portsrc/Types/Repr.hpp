@@ -9,36 +9,63 @@
 #define MOSSE_TYPES_REPR_HPP_
 
 #include <cstdint>
+#include "Util/Bitop.hpp"
 
 namespace Mosse {
 namespace Tp {
 
-static constexpr inline std::uint64_t bit()
-{
-	return 0;
-}
-
-template <class T, class ...Ts>
-static constexpr inline std::uint64_t bit(T t, Ts ...aTs)
-{
-	using List = std::uint64_t[];
-
-	return 1 << t | bit(aTs...);
-}
-
 struct Repr {
-	enum Flag : std::uint64_t {
-		LenU16 = bit(0),
-		LenU32 = bit(1),
-		MaskLen = bit(0, 1),
-		ReprDirect = bit(2),
-		ReprLog2 = bit(3),
-		MaskRepr = bit(2, 3),
+	using Flags = std::uint64_t;
+	enum : Flags {
+		// Len
+		BaseLen = 0,
+		BitsLen = 2,
+		MaskLen = Ut::mask(BaseLen, BitsLen),
+
+		Len16 = Ut::bit(BaseLen, 0),  ///< Item is packed in 16 bits
+		Len32 = Ut::bit(BaseLen, 1),  ///< Item is packed in 32 bits
+
+		// Repr
+		BaseRepr = BaseLen + BitsLen,
+		BitsRepr = 2,
+		MaskRepr = Ut::mask(BaseRepr, BitsRepr),
+
+		ReprDirect = Ut::bit(BaseRepr, 0),  ///< item = item
+		ReprLog2 = Ut::bit(BaseRepr, 1),  ///< item = static_cast<std::int16_t>(log2(value));
+
+		// Cplx
+		BaseCplx = BaseRepr + BitsRepr,
+		BitsCplx = 3,
+		MaskCplx = Ut::mask(BaseCplx, BitsCplx),
+
+		CplxNone = Ut::bit(BaseCplx, 0),  ///< The array is an array of real numbers.
+		CplxIrir = Ut::bit(BaseCplx, 1),  ///< The array is a complex one. Numbers are placed in (Real1, Im1, Real2, Im2, ...) sequence
+		CplxIirr = Ut::bit(BaseCplx, 2),  ///< The array is a complex one. Numbers are placed in (Real1, Real2, Im1, Im2, ...) sequence
 	};
+
+	template <Flags>
+	struct TypeImpl;
+
+	template <Flags F>
+	using Type = typename TypeImpl<F | MaskLen>::Type;
+};
+
+template <>
+struct Repr::TypeImpl<Repr::Len16> {
+	using Type = std::int16_t;
+};
+
+template <>
+struct Repr::TypeImpl<Repr::Len32> {
+	using Type = float;
 };
 
 class Geometry {
-	std::size_t elementSizeof;
+	Repr::Flags buffer;
+	Repr::Flags matA;
+	Repr::Flags matB;
+	Repr::Flags gaussFft;
+	Repr::Flags hannMatrix;
 };
 
 }  // namespace Tp
