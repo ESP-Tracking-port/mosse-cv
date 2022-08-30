@@ -30,7 +30,7 @@ public:
 	virtual void init(Tp::Roi) = 0;
 	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) = 0;
 	virtual void imagePreprocess(void *aCropComplex) = 0;
-	virtual void imageConvFftDomain(void *aioImageFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex);
+	virtual void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex);
 	virtual void fft2(void *aBufferComplex) = 0;
 	virtual void ifft2(void *aBufferComplex) = 0;
 
@@ -41,8 +41,6 @@ public:
 	virtual void maxReal(void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *sum = nullptr);
 	float calcPsr(void *aComplexBuffer, Tp::PointRowCol aPeak, float *sumHint = nullptr,
 		Tp::PointRowCol aMask = {11, 11});
-	virtual void imageMaxResponse(void *aImageConvolvedFftDomainComplex, aSize) = 0;
-	virtual void imageMaxResponse(void *aImageConvolvedFftDomainComplex, float &aoPsr, aSize);  ///< Same as `imageMaxResponse(void *)`, but also calculates PSR. Optimization, as both operations require linear exploration
 
 	/// \brief Updates the A matrix (ref. to the MOSSE paper:
 	/// https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf)
