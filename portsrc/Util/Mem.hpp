@@ -17,6 +17,7 @@ class Roi;
 class Geometry;
 
 }  // namespace Tp
+
 namespace Ut {
 
 class Mem {
