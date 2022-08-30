@@ -35,8 +35,10 @@ void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 	port.ops.imageCropInto(aImage, port.mem.buffer());
 	port.ops.imagePreprocess(port.mem.buffer());
 	port.ops.fft2(port.mem.buffer());
-	port.ops.mataUpdate(port.mem.matA(), tracking.eta, true);
+	port.ops.mataUpdate(port.mem.matA(), port.mem.buffer(), tracking.eta, true);
 	port.ops.matbUpdate(port.mem.matB(), port.mem.buffer(), tracking.eta, true);
+
+	// TODO: rand warp-based pretraining
 }
 
 void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
@@ -46,8 +48,10 @@ void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
 	port.ops.imagePreprocess(port.mem.buffer());
 	port.ops.fft2(port.mem.buffer());
 	port.ops.imageConvFftDomain(port.mem.buffer(), port.mem.matA(), port.mem.matB());
+	// Back to time domain
 	port.ops.ifft2(port.mem.buffer());  // Now buffer stores response in time domain
-	Tp::PointRowCol maxResponsePos{};  // TODO: init
+	// TODO: XXX: The reference implementation used normalization (probably, to prevent overflows).
+	Tp::PointRowCol maxResponsePos{};
 
 	if (aUpdatePsr) {
 		float sum = 0.0f;
@@ -65,8 +69,8 @@ void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
 	// Retrain w/ the new ROI
 	port.ops.imageCropInto(aImage, port.mem.buffer());
 	port.ops.imagePreprocess(port.mem.buffer());
-	port.ops.mataUpdate(port.mem.matA(), tracking.eta, false);
 	port.ops.fft2(port.mem.buffer());
+	port.ops.mataUpdate(port.mem.matA(), port.mem.buffer(), tracking.eta, false);
 	port.ops.matbUpdate(port.mem.matB(), port.mem.buffer(), tracking.eta, false);
 }
 
