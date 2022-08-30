@@ -264,7 +264,7 @@ cv::Rect mosseTracker::update(const cv::Mat& gray)
 	float dy = ps.y - init_sz.height / 2;
 
 	_roi = cv::Rect(_roi.x + dx, _roi.y + dy, init_sz.width, init_sz.height);
-	auto psr = calculatePsr(response);
+	auto psr = calculatePsr(response);  // TODO: BUG! The PSR must be calculated using the new peak, while this one uses the previous one
 
 	train(gray);
 
