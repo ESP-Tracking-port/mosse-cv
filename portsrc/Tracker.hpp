@@ -9,30 +9,43 @@
 #define MOSSE_TRACKER_HPP_
 
 #include <array>
+#include <Eigen/Core>
 
 namespace Mosse {
+namespace Tp {
 
-using PointRowCol = std::array<unsigned, 2>;  // row, col
+class Image;
+class Roi;
+class TrackingInfo;
+class PointRowCol;
 
-struct Image {
-	const void *data;
-	PointRowCol size;
-};
+}  // namespace Tp
 
-struct Roi {
-	PointRowCol origin;
-	PointRowCol size;
-};
+namespace Ut {
 
-struct TrackingInfo {
-};
+class Port;
+
+}  // namespace Ut
 
 class Tracker {
+private:
+	struct Tracking {
+		Tp::Roi roi;
+		float psr;
+	};
 public:
-	void init(Image, Roi);
-	const TrackingInfo &update(Image);
+	Tracker(Ut::Port port);
+	virtual ~Tracker() = default;
+	void init(Tp::Image, Tp::Roi);
+	void update(Tp::Image);
+	float psr();
+protected:
+	const Tp::Roi &roi() const;
+protected:
+	Tracking tracking;
+	Ut::Port port;
 };
 
 }  // namespace Mosse
 
-#endif // MOSSE_TRACKER_HPP_
+#endif // MOSSE_TRACKER_FWD_
