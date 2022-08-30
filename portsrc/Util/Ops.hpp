@@ -50,7 +50,7 @@ public:
 	/// \arg aInitial - if false, a weighted element-wise sum of the current and the previous element will be used.
 	///
 	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial) = 0;
-	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial);
+	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial) = 0;
 };
 
 }  // namespace Ut
