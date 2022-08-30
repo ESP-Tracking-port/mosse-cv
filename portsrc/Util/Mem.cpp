@@ -5,7 +5,7 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
-#include "Types/Mem.hpp"
+#include "Types/Repr.hpp"
 #include "Util/Mem.hpp"
 
 namespace Mosse {
