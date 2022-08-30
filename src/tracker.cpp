@@ -240,13 +240,13 @@ cv::Rect mosseTracker::update(const cv::Mat& gray)
 {
 //	MallocCounter mallocCounter{};
 //	(void)mallocCounter;
-	Hi = complexDivision(Ai, Bi);
 
 	fi = imcrop(_roi, gray);
 	//cv::resize(_roi, gray);
 	cv::resize(fi, fi, init_sz);
 	fi = preprocess(fi);
 
+	Hi = complexDivision(Ai, Bi);
 	cv::Mat response = fft(complexMultiplication(Hi, fft(fi)), true);
 
 	cv::normalize(response, response, 0, 1, cv::NORM_MINMAX);
