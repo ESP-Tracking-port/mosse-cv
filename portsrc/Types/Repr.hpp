@@ -34,21 +34,13 @@ struct Repr {
 		ReprLog2 = Ut::bit(BaseRepr, 1),  ///< item = static_cast<std::int16_t>(log2(value));
 		ReprFixedPoint = Ut::bit(BaseRepr, 2),  ///< item = static_cast<Integer>(fp * kPrecision);
 
-		// Cplx
+		// Cplx. If not specified, an array (or an element) is interpreted as real
 		BaseCplx = BaseRepr + BitsRepr,
-		BitsCplx = 3,
+		BitsCplx = 2,
 		MaskCplx = Ut::mask(BaseCplx, BitsCplx),
 
-		CplxNone = Ut::bit(BaseCplx, 0),  ///< The array is an array of real numbers.
-		CplxRe1Im1 = Ut::bit(BaseCplx, 1),  ///< The array is a complex one. Numbers are placed in (Real1, Im1, Real2, Im2, ...) sequence
-		CplxRenImn = Ut::bit(BaseCplx, 2),  ///< The array is a complex one. Numbers are placed in (Real1, Real2, Im1, Im2, ...) sequence
-
-		// Platform align
-		BaseAlign = BaseCplx + BitsCplx,
-		BitsAlign = 1,
-		MaskAlign = Ut::mask(BaseAlign, BitsAlign),
-
-		AlignPlatform = Ut::bit(BaseAlign, 0),  ///< Depending on context, denotes whether (1) elements of the underlying array, or (2) the number is aligned w/ the platform's register size
+		CplxRe1Im1 = Ut::bit(BaseCplx, 0),  ///< The array is a complex one. Numbers are placed in (Real1, Im1, Real2, Im2, ...) sequence
+		CplxRenImn = Ut::bit(BaseCplx, 1),  ///< The array is a complex one. Numbers are placed in (Real1, Real2, Im1, Im2, ...) sequence
 	};
 
 	template <Flags>
@@ -56,6 +48,12 @@ struct Repr {
 
 	template <Flags F>
 	using Type = typename TypeImpl<F & MaskLen>::Type;
+
+	template <Flags F>
+	static constexpr bool isValid()
+	{
+		return (F & MaskLen) && (F & MaskRepr);
+	}
 };
 
 template <>
