@@ -10,6 +10,7 @@
 
 #include <cstdint>
 #include "Util/Bitop.hpp"
+#include "Util/StoreType.hpp"
 
 namespace Mosse {
 namespace Tp {
@@ -43,11 +44,11 @@ struct Repr {
 		CplxRenImn = Ut::bit(BaseCplx, 1),  ///< The array is a complex one. Numbers are placed in (Real1, Real2, Im1, Im2, ...) sequence
 	};
 
-	template <Flags>
+	template <Flags Len, Flags Repr>
 	struct TypeImpl;
 
 	template <Flags F>
-	using Type = typename TypeImpl<F & MaskLen>::Type;
+	using Type = typename TypeImpl<F & MaskLen, F & MaskRepr>::Type;
 
 	template <Flags F>
 	static constexpr bool isValid()
@@ -56,14 +57,12 @@ struct Repr {
 	}
 };
 
-template <>
-struct Repr::TypeImpl<Repr::Len16> {
-	using Type = std::int16_t;
+template <Repr::Flags F>
+struct Repr::TypeImpl<Repr::Len16, F> : Ut::StoreType<std::int16_t> {
 };
 
 template <>
-struct Repr::TypeImpl<Repr::Len32> {
-	using Type = float;
+struct Repr::TypeImpl<Repr::Len32, Repr::ReprRaw> : Ut::StoreType<float> {
 };
 
 class Geometry {
