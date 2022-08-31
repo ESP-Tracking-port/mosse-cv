@@ -28,7 +28,7 @@ public:
 	/// \brief Implementation MUST expect that it will be called multiple times during the tracking process and therefore
 	/// optimize for unnecessary time and memory expenses.
 	///
-	virtual void init(Tp::Roi) = 0;
+	void init(Tp::Roi);
 	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) = 0;
 	virtual void imagePreprocess(void *aCropComplex) = 0;
 	virtual void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex);
@@ -51,6 +51,11 @@ public:
 	///
 	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial) = 0;
 	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial) = 0;
+protected:
+	const Tp::Roi &roi() const;
+	virtual void initImpl();
+private:
+	Tp::Roi mRoi;
 };
 
 }  // namespace Ut
