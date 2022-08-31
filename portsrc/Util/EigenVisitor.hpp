@@ -36,7 +36,7 @@ struct MaxVisitor {
 	Tp::PointRowCol pos;
 };
 
-template <class ValueType>
+template <class ValueType, Tp::Repr::Flags F>
 struct FloatSumVisitor {
 	inline void init(const ValueType &, unsigned, unsigned)
 	{
@@ -75,7 +75,7 @@ struct CompositeVisitor {
 		initAll(val, row, col, makeIndexSequence<kN>());
 	}
 
-	inline void init(const T &val, unsigned row, unsigned col)
+	inline void operator()(const T &val, unsigned row, unsigned col)
 	{
 		invokeAll(val, row, col, makeIndexSequence<kN>());
 	}
