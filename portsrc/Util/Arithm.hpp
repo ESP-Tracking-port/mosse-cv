@@ -12,8 +12,6 @@
 
 namespace Mosse {
 namespace Ut {
-namespace Impl {
-
 static std::size_t szof(Tp::Repr::Flags f)
 {
 	return f & Tp::Repr::Len16 ?
@@ -27,15 +25,17 @@ static constexpr std::size_t szof()
 	return sizeof(typename Tp::Repr::template Type<F>);
 }
 
+namespace Impl {
+
 template <class T>
-struct ConvInv {
+struct FromRepr {
 	template <bool F>
 	using EnableIf = typename std::enable_if<F>::type *;
 
 	template <Tp::Repr::Flags F>
-	static inline T convInv(const void *num, EnableIf<(F & Tp::Repr::ReprRaw) && !(F & Tp::Repr::AlignPlatform)>)
+	static inline T call(const void *num, EnableIf<(F & Tp::Repr::ReprRaw) && !(F & Tp::Repr::AlignPlatform)>)
 	{
-		return *reinterpret_cast<const T *>(num);
+		return static_cast<T>(*static_cast<const typename Tp::Repr::template Type<F> *>(num));
 	}
 };
 
@@ -43,9 +43,9 @@ struct ConvInv {
 /// \brief Convert from compact representation to the regular one (decode). E.g. fixed point to regular `float` type
 ///
 template <class T, Tp::Repr::Flags From>
-inline T convInv(const void *num)
+inline T fromRepr(const void *num)
 {
-	return Impl::ConvInv<T>::convInv<From>(num, nullptr);
+	return Impl::FromRepr<T>::template call<From>(num, nullptr);
 }
 
 }  // namespace Ut
