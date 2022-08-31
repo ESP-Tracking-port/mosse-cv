@@ -27,11 +27,12 @@ struct Repr {
 
 		// Repr
 		BaseRepr = BaseLen + BitsLen,
-		BitsRepr = 2,
+		BitsRepr = 3,
 		MaskRepr = Ut::mask(BaseRepr, BitsRepr),
 
-		ReprDirect = Ut::bit(BaseRepr, 0),  ///< item = item
+		ReprRaw = Ut::bit(BaseRepr, 0),  ///< item = item
 		ReprLog2 = Ut::bit(BaseRepr, 1),  ///< item = static_cast<std::int16_t>(log2(value));
+		ReprFixedPoint = Ut::bit(BaseRepr, 2),  ///< item = static_cast<Integer>(fp * kPrecision);
 
 		// Cplx
 		BaseCplx = BaseRepr + BitsRepr,
@@ -39,8 +40,15 @@ struct Repr {
 		MaskCplx = Ut::mask(BaseCplx, BitsCplx),
 
 		CplxNone = Ut::bit(BaseCplx, 0),  ///< The array is an array of real numbers.
-		CplxIrir = Ut::bit(BaseCplx, 1),  ///< The array is a complex one. Numbers are placed in (Real1, Im1, Real2, Im2, ...) sequence
-		CplxIirr = Ut::bit(BaseCplx, 2),  ///< The array is a complex one. Numbers are placed in (Real1, Real2, Im1, Im2, ...) sequence
+		CplxRe1Im1 = Ut::bit(BaseCplx, 1),  ///< The array is a complex one. Numbers are placed in (Real1, Im1, Real2, Im2, ...) sequence
+		CplxRenImn = Ut::bit(BaseCplx, 2),  ///< The array is a complex one. Numbers are placed in (Real1, Real2, Im1, Im2, ...) sequence
+
+		// Platform align
+		BaseAlign = BaseCplx + BitsCplx,
+		BitsAlign = 1,
+		MaskAlign = Ut::mask(BaseAlign, BitsAlign),
+
+		AlignPlatform = Ut::bit(BaseAlign, 0),  ///< Depending on context, denotes whether (1) elements of the underlying array, or (2) the number is aligned w/ the platform's register size
 	};
 
 	template <Flags>
