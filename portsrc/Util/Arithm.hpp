@@ -9,6 +9,7 @@
 #define MOSSE_UTIL_ARITHM_HPP_
 
 #include "Types/Repr.hpp"
+#include <cmath>
 
 namespace Mosse {
 namespace Ut {
@@ -27,19 +28,30 @@ static constexpr std::size_t szof()
 
 namespace Impl {
 
+template <bool F>
+using En = std::enable_if<F>::type *;
+
 template <class T>
-struct FromRepr {
-	template <bool F>
-	using EnableIf = typename std::enable_if<F>::type *;
+struct FromRepr;
+
+template <>
+struct FromRepr<float> {
 
 	template <Tp::Repr::Flags F>
-	static inline T call(const void *num, EnableIf<(F & Tp::Repr::ReprRaw) && !(F & Tp::Repr::AlignPlatform)>)
+	static inline float call(const float &a, En<F & Tp::Repr::ReprRaw>)
 	{
-		return static_cast<T>(*static_cast<const typename Tp::Repr::template Type<F> *>(num));
+		return a;
+	}
+
+	template <Tp::Repr::Flags F>
+	static inline float call(const std::int16_t &a, En<F & Tp::Repr::ReprLog2>)
+	{
+		return pow(2.0f, a);
 	}
 };
 
 }  // namespace Impl
+
 /// \brief Convert from compact representation to the regular one (decode). E.g. fixed point to regular `float` type
 ///
 template <class T, Tp::Repr::Flags From>
