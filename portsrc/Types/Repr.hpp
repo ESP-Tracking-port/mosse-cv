@@ -55,7 +55,7 @@ struct Repr {
 	struct TypeImpl;
 
 	template <Flags F>
-	using Type = typename TypeImpl<F | MaskLen>::Type;
+	using Type = typename TypeImpl<F & MaskLen>::Type;
 };
 
 template <>
