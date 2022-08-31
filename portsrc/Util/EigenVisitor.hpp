@@ -9,21 +9,22 @@
 #define MOSSE_UTIL_EIGENVISITOR_HPP_
 
 #include "Util/IndexSequence.hpp"
+#include "Util/Arithm.hpp"
 #include "Types/Tracking.hpp"
 #include <utility>
 
 namespace Mosse {
 namespace Ut {
 
-template <class T>
+template <class T, Tp::Repr::Flags R>
 struct MaxVisitor {
-	void init(const T &aValueType, unsigned row, unsigned col)
+	inline void init(const T &aValueType, unsigned row, unsigned col)
 	{
 		max = aValueType;
 		pos = {row, col};
 	}
 
-	void operator()(const T &aValueType, unsigned row, unsigned col)
+	inline void operator()(const T &aValueType, unsigned row, unsigned col)
 	{
 		if (max < aValueType) {
 			max = aValueType;
@@ -37,14 +38,14 @@ struct MaxVisitor {
 
 template <class ValueType>
 struct FloatSumVisitor {
-	void init(const ValueType &, unsigned, unsigned)
+	inline void init(const ValueType &, unsigned, unsigned)
 	{
 		sum = 0.0f;
 	}
 
-	void operator()(const ValueType &aValueType, unsigned row, unsigned col)
+	inline void operator()(const ValueType &aValueType, unsigned row, unsigned col)
 	{
-		sum += static_cast<float>(aValueType);
+		sum += fromRepr<float, F>(&aValueType);
 	}
 
 	float sum;
@@ -56,25 +57,25 @@ struct CompositeVisitor {
 	std::tuple<Vs...> visitors;
 
 	template <std::size_t ...Is>
-	void initAll(const T &aValue, unsigned row, unsigned col, IndexSequence<Is...>)
+	inline void initAll(const T &aValue, unsigned row, unsigned col, IndexSequence<Is...>)
 	{
 		using List = int[];
 		(void)List{(void(std::get<Is>(visitors).init(aValue, row, col)), 0)...};
 	}
 
 	template <std::size_t ...Is>
-	void invokeAll(const T &aValue, unsigned row, unsigned col, IndexSequence<Is...>)
+	inline void invokeAll(const T &aValue, unsigned row, unsigned col, IndexSequence<Is...>)
 	{
 		using List = int[];
 		(void)List{(void(std::get<Is>(visitors)(aValue, row, col)), 0)...};
 	}
 
-	void init(const T &val, unsigned row, unsigned col)
+	inline void init(const T &val, unsigned row, unsigned col)
 	{
 		initAll(val, row, col, makeIndexSequence<kN>());
 	}
 
-	void init(const T &val, unsigned row, unsigned col)
+	inline void init(const T &val, unsigned row, unsigned col)
 	{
 		invokeAll(val, row, col, makeIndexSequence<kN>());
 	}
