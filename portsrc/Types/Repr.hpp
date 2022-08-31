@@ -15,6 +15,10 @@
 namespace Mosse {
 namespace Tp {
 
+/// \brief The implementation is only expected to work w/ two representations. These flags are defined to leave the
+/// room for further painless extension, if the results of the experiments w/ different FFTs and representations are
+/// not satisfactory.
+///
 struct Repr {
 	using Flags = std::uint64_t;
 	enum : Flags {
@@ -47,6 +51,8 @@ struct Repr {
 	template <Flags Len, Flags Repr>
 	struct TypeImpl;
 
+	/// \brief In which type a value is stored
+	///
 	template <Flags F>
 	using Type = typename TypeImpl<F & MaskLen, F & MaskRepr>::Type;
 
