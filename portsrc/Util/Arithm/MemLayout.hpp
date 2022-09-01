@@ -18,8 +18,8 @@ namespace Ut {
 
 inline std::size_t szof(Tp::Repr::Flags f)
 {
-	return f & Tp::Repr::Len16 ?
-		16 : f & Tp::Repr::Len32 ?
+	return f & Tp::Repr::StorageI16 ?
+		16 : f & Tp::Repr::StorageF32 ?
 		32 : 0;
 }
 
