@@ -9,6 +9,7 @@
 #define MOSSE_UTIL_MEMLAYOUT_HPP_
 
 #include "Types/Repr.hpp"
+#include "Types/Tracking.hpp"
 #include "Util/Helper/En.h"
 #include <type_traits>
 
@@ -42,6 +43,24 @@ template <Tp::Repr::Flags F>
 constexpr unsigned strideInner(En<F & Tp::Repr::CplxRenImn> = nullptr)
 {
 	return Ut::szof<F>();
+}
+
+template <Tp::Repr::Flags F, class T>
+constexpr unsigned offsetFirstReal(T &&)
+{
+	return 0;
+}
+
+template <Tp::Repr::Flags F, class T>
+constexpr unsigned offsetFirstImag(T &&, En<F & Tp::Repr::CplxRe1Im1> = nullptr)
+{
+	return Ut::szof<F>();
+}
+
+template <Tp::Repr::Flags F>
+unsigned offsetFirstImag(Tp::Roi roi, En<F & Tp::Repr::CplxRenImn> = nullptr)
+{
+	return Ut::szof<F>() * roi.size.rows() * roi.size.cols();
 }
 
 }  // namespace Ut
