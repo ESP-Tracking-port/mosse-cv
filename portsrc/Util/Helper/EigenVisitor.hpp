@@ -8,8 +8,8 @@
 #if !defined(MOSSE_UTIL_EIGENVISITOR_HPP_)
 #define MOSSE_UTIL_EIGENVISITOR_HPP_
 
-#include "Util/IndexSequence.hpp"
-#include "Util/Arithm.hpp"
+#include "Util/Helper/IndexSequence.hpp"
+#include "Util/Arithm/Arithm.hpp"
 #include "Types/Tracking.hpp"
 #include <utility>
 
