@@ -16,15 +16,15 @@ namespace Ut {
 using BitBase = std::uint64_t;
 
 template <class T>
-static constexpr inline BitBase bit(T base)
+static constexpr inline BitBase bitb(T base)
 {
 	return 0;
 }
 
 template <class B, class T, class ...Ts>
-static constexpr inline BitBase bit(B base, T t, Ts ...aTs)
+static constexpr inline BitBase bitb(B base, T t, Ts ...aTs)
 {
-	return 1 << (t + base) | bit(base, aTs...);
+	return 1 << (t + base) | bitb(base, aTs...);
 }
 
 template <class B, class N>
@@ -32,14 +32,14 @@ static constexpr inline BitBase mask(B base, N n)
 {
 	return static_cast<int>(n) == 0 || base >= sizeof(BitBase) ?
 		0 :
-		0 | bit(base, n - 1) | mask(base, n - 1);
+		0 | bitb(base, n - 1) | mask(base, n - 1);
 }
 
 static constexpr std::size_t maskLen(BitBase mask, std::size_t offset = 0, std::size_t count = 0)
 {
 	return offset >= sizeof(mask) ?
 		count :
-		mask & bit(offset) == 1 ?
+		mask & bitb(offset) == 1 ?
 		maskLen(mask, offset + 1, count + 1) :
 		maskLen(mask, offset + 1, count);
 }
