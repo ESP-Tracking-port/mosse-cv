@@ -25,9 +25,6 @@ namespace Ut {
 
 template <Tp::Repr::Flags ReprBuffer>
 class CommonOps : public Ops {
-private:
-	template <bool F>
-	using En = typename std::enable_if<F>::type *;
 public:
 	static_assert(ReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
 
