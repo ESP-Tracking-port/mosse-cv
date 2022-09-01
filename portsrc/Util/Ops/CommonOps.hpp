@@ -11,7 +11,7 @@
 #include "Types/Tracking.hpp"
 #include "Types/Repr.hpp"
 #include "Types/EigenAux.hpp"
-#include "Util/Arithm/Arithm.hpp"
+#include "Util/Arithm/Conv.hpp"
 #include "Util/Arithm/MemLayout.hpp"
 #include "Util/Ops.hpp"
 #include "Util/Helper/EigenVisitor.hpp"
@@ -107,6 +107,8 @@ private:
 	template <Tp::Repr::Flags B, Tp::Repr::Flags H>
 	inline void imagePreprocess(void *aComplexBuffer)
 	{
+		auto matrixHann = Ut::makeEigenMap<H>(hannMatrix(), roi());
+		auto matrixCrop = Ut::makeEigenMap<B>(aComplexBuffer, roi());
 	}
 };
 
