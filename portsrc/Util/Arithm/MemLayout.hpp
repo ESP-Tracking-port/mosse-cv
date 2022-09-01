@@ -16,7 +16,7 @@
 namespace Mosse {
 namespace Ut {
 
-static std::size_t szof(Tp::Repr::Flags f)
+inline std::size_t szof(Tp::Repr::Flags f)
 {
 	return f & Tp::Repr::Len16 ?
 		16 : f & Tp::Repr::Len32 ?
@@ -26,7 +26,7 @@ static std::size_t szof(Tp::Repr::Flags f)
 /// \brief Size of the integral type that is used to store a number in a chosen representation
 ///
 template <Tp::Repr::Flags F>
-static constexpr std::size_t szof()
+inline constexpr std::size_t szof()
 {
 	return sizeof(typename Tp::Repr::template Type<F>);
 }
@@ -46,21 +46,35 @@ constexpr unsigned strideInner(En<F & Tp::Repr::CplxRenImn> = nullptr)
 }
 
 template <Tp::Repr::Flags F, class R = std::uint8_t>
-constexpr unsigned offsetFirstReal(Tp::Roi)
+constexpr unsigned offsetFirstReal(const Tp::Roi &)
 {
 	return 0 * sizeof(R);
 }
 
 template <Tp::Repr::Flags F, class R = std::uint8_t>
-constexpr unsigned offsetFirstImag(Tp::Roi, En<F & Tp::Repr::CplxRe1Im1> = nullptr)
+constexpr unsigned offsetFirstImag(const Tp::Roi &, En<F & Tp::Repr::CplxRe1Im1> = nullptr)
 {
 	return Ut::szof<F>() * sizeof(R);
 }
 
 template <Tp::Repr::Flags F, class R = std::uint8_t>
-unsigned offsetFirstImag(Tp::Roi roi, En<F & Tp::Repr::CplxRenImn> = nullptr)
+inline unsigned offsetFirstImag(const Tp::Roi &roi, En<F & Tp::Repr::CplxRenImn> = nullptr)
 {
 	return Ut::szof<F>() * roi.size.rows() * roi.size.cols() * sizeof(R);
+}
+
+template <Tp::Repr::Flags F>
+inline void *at(unsigned offset, void *mem)
+{
+	using ValueType = typename Tp::Repr::Type<F>;
+	return static_cast<void *>(static_cast<ValueType *>(mem) + offset);
+}
+
+template <Tp::Repr::Flags F>
+inline void *at(unsigned offset, const void *mem)
+{
+	using ValueType = typename Tp::Repr::Type<F>;
+	return static_cast<const void *>(static_cast<const ValueType *>(mem) + offset);
 }
 
 }  // namespace Ut
