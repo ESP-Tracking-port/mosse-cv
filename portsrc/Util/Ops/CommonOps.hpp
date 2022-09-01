@@ -47,10 +47,12 @@ public:
 	{
 		bufferComplexInit<ReprBuffer>(aImageReal, aBufferComplex);
 	}
+
 	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum) override
 	{
 		maxReal<ReprBuffer>(aComplexBuffer, aPos, sum);
 	}
+
 	void imagePreprocess(void *aCropBufferComplex) override
 	{
 		imagePreprocess<ReprBuffer, ReprHann>(aCropBufferComplex);
