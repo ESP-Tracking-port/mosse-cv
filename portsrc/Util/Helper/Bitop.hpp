@@ -15,27 +15,32 @@ namespace Ut {
 
 using BitBase = std::uint64_t;
 
-template <class T>
-static constexpr inline BitBase bitb(T base)
+constexpr inline BitBase bit()
 {
 	return 0;
 }
 
-template <class B, class T, class ...Ts>
-static constexpr inline BitBase bitb(B base, T t, Ts ...aTs)
+template <class ...Ts>
+constexpr BitBase bit(std::size_t i, Ts ...ts)
 {
-	return 1 << (t + base) | bitb(base, aTs...);
+	return (1 << i) | bit(ts...);
+}
+
+template <class ...Ts>
+constexpr BitBase bitb(std::size_t base, Ts ...ts)
+{
+	return bit(ts...) << base;
 }
 
 template <class B, class N>
-static constexpr inline BitBase mask(B base, N n)
+constexpr inline BitBase mask(B base, N n)
 {
 	return static_cast<int>(n) == 0 || base >= sizeof(BitBase) ?
 		0 :
 		0 | bitb(base, n - 1) | mask(base, n - 1);
 }
 
-static constexpr std::size_t maskLen(BitBase mask, std::size_t offset = 0, std::size_t count = 0)
+constexpr std::size_t maskLen(BitBase mask, std::size_t offset = 0, std::size_t count = 0)
 {
 	return offset >= sizeof(mask) ?
 		count :
@@ -48,14 +53,14 @@ static constexpr std::size_t maskLen(BitBase mask, std::size_t offset = 0, std::
 /// E.g., if P is std::uint64_t, and N == 8, the result will be 0x00FF00FF00FF00FF
 ///
 template <class P, std::size_t Pattern>
-static constexpr inline P maskAb(std::size_t base = 0)
+constexpr inline P maskAb(std::size_t base = 0)
 {
 	return base > sizeof(P) ?
 		0 :
 		0 | mask(base, Pattern) | maskAb<P, Pattern>(base + Pattern * 2);
 }
 
-static constexpr inline std::size_t trailingZeros(BitBase bit, std::size_t zeros = 0)
+constexpr inline std::size_t trailingZeros(BitBase bit, std::size_t zeros = 0)
 {
 	return bit == 0 ? sizeof(BitBase) :
 		bit & 1 ? zeros :
