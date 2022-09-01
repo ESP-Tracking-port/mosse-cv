@@ -15,6 +15,7 @@
 #include "Util/Arithm/MemLayout.hpp"
 #include "Util/Ops.hpp"
 #include "Util/Helper/EigenVisitor.hpp"
+#include "Util/Helper/EigenMem.hpp"
 #include <Eigen/Core>
 #include <type_traits>
 #include <cassert>
@@ -51,8 +52,7 @@ private:
 	template <Tp::Repr::Flags F>
 	void bufferComplexInitRe(Tp::Image aImage, void *aBufferCplx)
 	{
-		using ValueType = typename Tp::Repr::template Type<F>;
-		auto map = makeMap(aBufferCplx);
+		auto map = makeEigenMapReal<F>(aBufferCplx, roi());
 
 		for (unsigned row = 0; row < map.rows(); ++row) {
 			for (unsigned col = 0; col < map.cols(); ++col) {
@@ -61,35 +61,14 @@ private:
 		}
 	}
 
-	/// \brief Re1 Im1 order, short representation (length is less than that of the CPU's registers)
-	///
 	template <Tp::Repr::Flags F>
-	void bufferComplexInitImZeros(void *aBufferCplx,
-		En<(F & Tp::Repr::CplxRe1Im1) && (szof<F>() < sizeof(std::size_t))> = nullptr)
+	void bufferComplexInitImZeros(void *aBufferComplex)
 	{
-		constexpr auto kReprSizeof = szof<kReprBuffer>();
-		using ValueType = typename Tp::Repr::template Type<F>;
-		constexpr auto maskAb = ~Ut::maskAb<ValueType, kReprSizeof>();
-		const auto signalLength = roi().size.cols() * roi().size.rows();
-		const auto bufferSize = signalLength * kReprSizeof * 2 / sizeof(std::size_t);
-		assert(bufferSize % sizeof(std::size_t) == 0);
-
-		for (std::size_t i = 0; i < bufferSize; i += sizeof(std::size_t)) {
-			*(static_cast<std::size_t *>(aBufferCplx) + i) &= maskAb;
-		}
-	}
-
-	/// \brief Re1 Im1 order, long representation (equal to the length of the CPU's registers)
-	///
-	template <Tp::Repr::Flags F>
-	void bufferComplexInitImZeros(void *aBufferCplx,
-		En<(F & Tp::Repr::CplxRe1Im1) && (szof<F>() == sizeof(std::size_t))> = nullptr)
-	{
-		const auto signalLength = roi().size.cols() * roi().size.rows();
-		const auto bufferSize = signalLength * 2;
-
-		for (std::size_t i = 1; i < bufferSize; i += sizeof(std::size_t)) {
-			*(static_cast<std::size_t *>(aBufferCplx) + i) = 0;
+		auto map = makeEigenMapImag<F>(aBufferComplex, roi());
+		for (unsigned row = 0; row < map.rows(); ++row) {
+			for (unsigned col = 0; col < map.cols(); ++col) {
+				map(row, col) = toRepr<F>(0);
+			}
 		}
 	}
 
