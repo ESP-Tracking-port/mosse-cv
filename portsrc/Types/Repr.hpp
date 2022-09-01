@@ -9,8 +9,8 @@
 #define MOSSE_TYPES_REPR_HPP_
 
 #include <cstdint>
-#include "Util/Bitop.hpp"
-#include "Util/StoreType.hpp"
+#include "Util/Helper/Bitop.hpp"
+#include "Util/Helper/StoreType.hpp"
 
 namespace Mosse {
 namespace Tp {
