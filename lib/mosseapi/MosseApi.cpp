@@ -18,27 +18,27 @@ static constexpr auto makeArray(T &&a, Ts &&...as) -> std::array<typename std::d
 }
 
 static constexpr auto kWindowSizes = makeArray(
-	std::array<unsigned, 2>{86, 63},
-	std::array<unsigned, 2>{63, 86},
-	std::array<unsigned, 2>{75, 75}
+	std::array<unsigned, 2>{64, 64},
+	std::array<unsigned, 2>{64, 32},
+	std::array<unsigned, 2>{32, 64}
 );
 
 static constexpr auto kHannMap = makeArray(
-	kHann86x63Raw,
-	kHann63x86Raw,
-	kHann75x75Raw
+	kHann64x64Raw,
+	kHann64x32Raw,
+	kHann32x64Raw
 );
 
 static constexpr auto kGaussKernelFftMapImReal = makeArray(
-	std::pair<const float *, const float *>{&kGaussKernelFft86x63ImReal[0][0], &kGaussKernelFft86x63ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft63x86ImReal[0][0], &kGaussKernelFft63x86ImReal[1][0]},
-	std::pair<const float *, const float *>{&kGaussKernelFft75x75ImReal[0][0], &kGaussKernelFft75x75ImReal[1][0]}
+	std::pair<const float *, const float *>{&kGaussKernelFft64x64ImReal[0][0], &kGaussKernelFft64x64ImReal[1][0]},
+	std::pair<const float *, const float *>{&kGaussKernelFft64x32ImReal[0][0], &kGaussKernelFft64x32ImReal[1][0]},
+	std::pair<const float *, const float *>{&kGaussKernelFft32x64ImReal[0][0], &kGaussKernelFft32x64ImReal[1][0]}
 );
 
 static constexpr auto kGaussKernelFftMapImReal3d = makeArray(
-	kGaussKernelFft86x63ImReal3dRaw,
-	kGaussKernelFft63x86ImReal3dRaw,
-	kGaussKernelFft75x75ImReal3dRaw
+	kGaussKernelFft64x64ImReal3dRaw,
+	kGaussKernelFft64x32ImReal3dRaw,
+	kGaussKernelFft32x64ImReal3dRaw
 );
 
 
@@ -119,6 +119,11 @@ const float *getGaussKernelFft3d(unsigned aRows, unsigned aCols)
 	}
 
 	return kGaussKernelFftMapImReal3d[id];
+}
+
+const float *getLogTable8bit()  ///< Returns a float log table for integers from 1 to 256
+{
+	return kLogMatrix8bit;
 }
 
 }  // namespace Mosse

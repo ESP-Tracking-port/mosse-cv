@@ -2,12 +2,13 @@
 #define MOSSE_MOSSETABLES_HPP_
 
 #include <complex>
-#include "Hann86x63.hpp"
-#include "Hann63x86.hpp"
-#include "Hann75x75.hpp"
-#include "GaussKernelFft86x63.hpp"
-#include "GaussKernelFft63x86.hpp"
-#include "GaussKernelFft75x75.hpp"
+#include "Hann64x64.hpp"
+#include "Hann64x32.hpp"
+#include "Hann32x64.hpp"
+#include "GaussKernelFft64x64.hpp"
+#include "GaussKernelFft64x32.hpp"
+#include "GaussKernelFft32x64.hpp"
+#include "LogMatrix.hpp"
 
 #endif
 
