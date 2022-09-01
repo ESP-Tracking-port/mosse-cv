@@ -23,7 +23,17 @@
 namespace Mosse {
 namespace Ut {
 
-template <Tp::Repr::Flags ReprBuffer>
+/// \brief Serves as a boilerplate-reducing intermediary between the API (virtual method) and a particular
+/// implementation of the tracker.
+///
+/// \details The implementation is altered in compile time by use of representation flags which define representation,
+/// memory layout, and which FFT and arithmetic operations depend upon.
+///
+/// \tparam ReprBuffer Representation flag for intermediary buffer in which FFT and convolution calculations are
+/// performed
+/// \tparam ReprHann Representation flags for Hann matrices
+///
+template <Tp::Repr::Flags ReprBuffer, Tp::Repr::Flags ReprHann>
 class CommonOps : public Ops {
 public:
 	static_assert(ReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
@@ -34,10 +44,13 @@ public:
 	{
 		bufferComplexInit<ReprBuffer>(aImageReal, aBufferComplex);
 	}
-
 	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum) override
 	{
 		maxReal<ReprBuffer>(aComplexBuffer, aPos, sum);
+	}
+	void imagePreprocess(void *aCropBufferComplex) override
+	{
+		imagePreprocess<ReprBuffer, ReprHann>(aCropBufferComplex);
 	}
 private:
 	template <Tp::Repr::Flags F>
@@ -87,6 +100,12 @@ private:
 			*sum = visitor.template get<1>().sum;
 			aPos = visitor.template get<0>().pos;
 		}
+	}
+
+	template <Tp::Repr::Flags B, Tp::Repr::Flags H>
+	inline void imagePreprocess(void *aComplexBuffer)
+	{
+		(void)aComplexBuffer;
 	}
 };
 
