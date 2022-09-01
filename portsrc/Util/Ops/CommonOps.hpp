@@ -32,8 +32,6 @@ public:
 	///
 	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override
 	{
-		const auto cols = aImageReal.cols;
-		const auto rows = aImageReal.rows;
 		bufferComplexInitRe(aImageReal, aBufferComplex);
 		bufferComplexInitImZeros(aBufferComplex);
 	}
