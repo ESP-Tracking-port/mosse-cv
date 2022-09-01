@@ -40,6 +40,11 @@ public:
 		bufferComplexInitRe(aImageReal, aBufferComplex);
 		bufferComplexInitImZeros(aBufferComplex);
 	}
+
+	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum) override
+	{
+		maxReal<kReprBuffer>(aComplexBuffer, aPos, sum);
+	}
 private:
 	template <Tp::Repr::Flags F>
 	inline typename Tp::EigenMapType<F>::Type makeMap(void *aBufferCplx)
@@ -79,7 +84,7 @@ private:
 	/// \pre (3) Row-major array is expected (elements are addressed as array[row][col])
 	///
 	template <Tp::Repr::Flags F>
-	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum)
+	inline void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum)
 	{
 		static constexpr auto kStrideInner = Ut::strideInner<F>();
 		const auto strideOuter = kStrideInner * roi().size.cols;
