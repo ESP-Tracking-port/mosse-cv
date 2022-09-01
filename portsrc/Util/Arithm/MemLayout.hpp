@@ -9,6 +9,7 @@
 #define MOSSE_UTIL_MEMLAYOUT_HPP_
 
 #include "Types/Repr.hpp"
+#include "Util/Helper/En.h"
 #include <type_traits>
 
 namespace Mosse {
@@ -32,13 +33,13 @@ static constexpr std::size_t szof()
 /// \brief Stride between two consecutive real or imaginary numbers in a chosen layout
 ///
 template <Tp::Repr::Flags F>
-constexpr unsigned strideInner(typename std::enable_if<F & Tp::Repr::CplxRe1Im1>::type * = nullptr)
+constexpr unsigned strideInner(En<F & Tp::Repr::CplxRe1Im1> = nullptr)
 {
 	return Ut::szof<F>() * 2;
 }
 
 template <Tp::Repr::Flags F>
-constexpr unsigned strideInner(typename std::enable_if<F & Tp::Repr::CplxRenImn>::type * = nullptr)
+constexpr unsigned strideInner(En<F & Tp::Repr::CplxRenImn> = nullptr)
 {
 	return Ut::szof<F>();
 }
