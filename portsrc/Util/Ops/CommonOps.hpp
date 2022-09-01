@@ -66,7 +66,7 @@ private:
 	template <Tp::Repr::Flags F>
 	void bufferComplexInit(Tp::Image aImage, void *aBufferCplx)
 	{
-		auto map = makeEigenMapReal<F>(aBufferCplx, roi());
+		auto map = makeEigenMap<F>(aBufferCplx, roi());
 		auto mapImag = makeEigenMapImag<F>(aBufferCplx, roi());
 
 		for (unsigned row = 0; row < map.rows(); ++row) {
@@ -107,7 +107,6 @@ private:
 	template <Tp::Repr::Flags B, Tp::Repr::Flags H>
 	inline void imagePreprocess(void *aComplexBuffer)
 	{
-		(void)aComplexBuffer;
 	}
 };
 
