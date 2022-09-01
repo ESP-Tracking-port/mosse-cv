@@ -9,7 +9,7 @@
 #define MOSSE_UTIL_EIGENVISITOR_HPP_
 
 #include "Util/Helper/IndexSequence.hpp"
-#include "Util/Arithm/Arithm.hpp"
+#include "Util/Arithm/Conv.hpp"
 #include "Types/Tracking.hpp"
 #include <utility>
 
