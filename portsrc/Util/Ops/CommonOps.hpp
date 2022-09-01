@@ -20,6 +20,7 @@
 #include <Eigen/Core>
 #include <type_traits>
 #include <cassert>
+#include <cmath>
 
 namespace Mosse {
 namespace Ut {
@@ -66,6 +67,9 @@ private:
 			typename Tp::EigenMapType<F>::StrideType{Ut::strideInner<F>(), strideOuter}};
 	}
 
+	/// \brief Unlike the workflow implied by the API, performs both buffer initialization and image preprocessing,
+	/// because there are certain points which can be optimized by sparing conversions.
+	///
 	template <Tp::Repr::Flags F>
 	void bufferComplexInit(Tp::Image aImage, void *aBufferCplx)
 	{
@@ -73,11 +77,38 @@ private:
 		auto mapImag = makeEigenMapImag<F>(aBufferCplx, roi());
 		auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
 		float *logTable = Mosse::getLogTable8bit();
+		float sum = 0.0f;
+
+		// Calculating mean value
 
 		for (unsigned row = 0; row < map.rows(); ++row) {
 			for (unsigned col = 0; col < map.cols(); ++col) {
-				map(row, col) = toRepr<F>(logTable[blockImage(row, col)]);  // Optimization, shortcut
+				sum += logTable[blockImage(row, col)];
+			}
+		}
+
+		const float mean = sum / static_cast<float>(map.size());
+		float devsum = 0.0f;
+
+		// Second turn: calculating standard deviation
+
+		for (unsigned row = 0; row < map.rows(); ++row) {
+			for (unsigned col = 0; col < map.cols(); ++col) {
+				devsum += abs(mean - logTable[blockImage(row, col)]);
+			}
+		}
+
+		// Final turn: initializing the array
+
+		const float stddev = devsum / sqrt(static_cast<float>(map.size()));
+
+		for (unsigned row = 0; row < map.rows(); ++row) {
+			for (unsigned col = 0; col < map.cols(); ++col) {
+				constexpr float kEps = 1e-5;  // Small fraction to prevent zero division
+				devsum += abs(mean - logTable[blockImage(row, col)]);
+				map(row, col) = toRepr<F>(logTable[blockImage(row, col)]);  // Optimization, shortcut. The log(0) issue is already taken care of during the table compilation stage.
 				mapImag(row, col) = toRepr<F>(0);
+				map(row, col) = (logTable[blockImage(row, col)] - mean) / (stddev + kEps);
 			}
 		}
 	}
