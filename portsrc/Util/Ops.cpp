@@ -6,6 +6,7 @@
 //
 
 #include "Types/Tracking.hpp"
+#include "Util/Arithm/Arithm.hpp"
 #include "Ops.hpp"
 
 namespace Mosse {
