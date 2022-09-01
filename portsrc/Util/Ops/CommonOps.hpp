@@ -23,13 +23,13 @@
 namespace Mosse {
 namespace Ut {
 
-template <Tp::Repr::Flags kReprBuffer>
+template <Tp::Repr::Flags ReprBuffer>
 class CommonOps : public Ops {
 private:
 	template <bool F>
 	using En = typename std::enable_if<F>::type *;
 public:
-	static_assert(kReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
+	static_assert(ReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
 
 	/// \brief Initializes the buffer by splitting the image into its real and imaginary (zeroed) part
 	///
@@ -43,7 +43,7 @@ public:
 
 	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum) override
 	{
-		maxReal<kReprBuffer>(aComplexBuffer, aPos, sum);
+		maxReal<ReprBuffer>(aComplexBuffer, aPos, sum);
 	}
 private:
 	template <Tp::Repr::Flags F>
