@@ -35,10 +35,9 @@ static constexpr inline BitBase mask(B base, N n)
 		0 | bit(base, n - 1) | mask(base, n - 1);
 }
 
-template <class B>
-static constexpr std::size_t maskLen(B mask, std::size_t offset = 0, std::size_t count = 0)
+static constexpr std::size_t maskLen(BitBase mask, std::size_t offset = 0, std::size_t count = 0)
 {
-	return offset >= sizeof(B) ?
+	return offset >= sizeof(mask) ?
 		count :
 		mask & bit(offset) == 1 ?
 		maskLen(mask, offset + 1, count + 1) :
