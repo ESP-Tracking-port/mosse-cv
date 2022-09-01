@@ -50,13 +50,13 @@ struct Repr {
 
 	/// \brief Compile-time type selector
 	///
-	template <Flags Storage, Flags Repr>
+	template <Flags Storage>
 	struct TypeImpl;
 
 	/// \brief In which type a value is stored
 	///
 	template <Flags F>
-	using Type = typename TypeImpl<F & MaskStorage, F & MaskRepr>::Type;
+	using Type = typename TypeImpl<F & MaskStorage>::Type;
 
 	template <Flags F>
 	static constexpr bool isValid()
@@ -65,12 +65,12 @@ struct Repr {
 	}
 };
 
-template <Repr::Flags F>
-struct Repr::TypeImpl<Repr::StorageI16, F> : Ut::StoreType<std::int16_t> {
+template <>
+struct Repr::TypeImpl<Repr::StorageI16> : Ut::StoreType<std::int16_t> {
 };
 
 template <>
-struct Repr::TypeImpl<Repr::StorageF32, Repr::ReprRaw> : Ut::StoreType<float> {
+struct Repr::TypeImpl<Repr::StorageF32> : Ut::StoreType<float> {
 };
 
 class Geometry {
