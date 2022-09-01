@@ -69,11 +69,12 @@ private:
 	{
 		auto map = makeEigenMap<F>(aBufferCplx, roi());
 		auto mapImag = makeEigenMapImag<F>(aBufferCplx, roi());
+		auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
 		float *logTable = Mosse::getLogTable8bit();
 
 		for (unsigned row = 0; row < map.rows(); ++row) {
 			for (unsigned col = 0; col < map.cols(); ++col) {
-				map(row, col) = toRepr<F>(logTable[aImage(row, col)]);
+				map(row, col) = toRepr<F>(logTable[blockImage(row, col)]);  // Optimization, shortcut
 				mapImag(row, col) = toRepr<F>(0);
 			}
 		}
