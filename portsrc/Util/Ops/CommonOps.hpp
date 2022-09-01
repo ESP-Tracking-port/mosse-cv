@@ -37,6 +37,8 @@ template <Tp::Repr::Flags ReprBuffer, Tp::Repr::Flags ReprHann>
 class CommonOps : public Ops {
 public:
 	static_assert(ReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
+	static_assert(Tp::Repr::isValid<ReprBuffer>(), "");
+	static_assert(Tp::Repr::isValid<ReprHann>(), "");
 
 	/// \brief Initializes the buffer by splitting the image into its real and imaginary (zeroed) part
 	///
