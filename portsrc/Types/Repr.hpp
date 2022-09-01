@@ -22,16 +22,16 @@ namespace Tp {
 struct Repr {
 	using Flags = std::uint64_t;
 	enum : Flags {
-		// Len
-		BaseLen = 0,
-		BitsLen = 2,
-		MaskLen = Ut::mask(BaseLen, BitsLen),
+		// Storage
+		BaseStorage = 0,
+		BitsStorage = 2,
+		MaskStorage = Ut::mask(BaseStorage, BitsStorage),
 
-		Len16 = Ut::bitb(BaseLen, 0),  ///< Item is packed in 16 bits
-		Len32 = Ut::bitb(BaseLen, 1),  ///< Item is packed in 32 bits
+		StorageI16 = Ut::bitb(BaseStorage, 0),  ///< Item is packed in 16 bits
+		StorageF32 = Ut::bitb(BaseStorage, 1),  ///< Item is packed in 32 bits
 
 		// Repr
-		BaseRepr = BaseLen + BitsLen,
+		BaseRepr = BaseStorage + BitsStorage,
 		BitsRepr = 3,
 		MaskRepr = Ut::mask(BaseRepr, BitsRepr),
 
@@ -50,27 +50,27 @@ struct Repr {
 
 	/// \brief Compile-time type selector
 	///
-	template <Flags Len, Flags Repr>
+	template <Flags Storage, Flags Repr>
 	struct TypeImpl;
 
 	/// \brief In which type a value is stored
 	///
 	template <Flags F>
-	using Type = typename TypeImpl<F & MaskLen, F & MaskRepr>::Type;
+	using Type = typename TypeImpl<F & MaskStorage, F & MaskRepr>::Type;
 
 	template <Flags F>
 	static constexpr bool isValid()
 	{
-		return (F & MaskLen) && (F & MaskRepr);
+		return (F & MaskStorage) && (F & MaskRepr);
 	}
 };
 
 template <Repr::Flags F>
-struct Repr::TypeImpl<Repr::Len16, F> : Ut::StoreType<std::int16_t> {
+struct Repr::TypeImpl<Repr::StorageI16, F> : Ut::StoreType<std::int16_t> {
 };
 
 template <>
-struct Repr::TypeImpl<Repr::Len32, Repr::ReprRaw> : Ut::StoreType<float> {
+struct Repr::TypeImpl<Repr::StorageF32, Repr::ReprRaw> : Ut::StoreType<float> {
 };
 
 class Geometry {
