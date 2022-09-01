@@ -13,23 +13,10 @@
 
 namespace Mosse {
 namespace Ut {
-static std::size_t szof(Tp::Repr::Flags f)
-{
-	return f & Tp::Repr::Len16 ?
-		16 : f & Tp::Repr::Len32 ?
-		32 : 0;
-}
-
-template <Tp::Repr::Flags F>
-static constexpr std::size_t szof()
-{
-	return sizeof(typename Tp::Repr::template Type<F>);
-}
-
 namespace Impl {
 
 template <bool F>
-using En = std::enable_if<F>::type *;
+using En = typename std::enable_if<F>::type *;
 
 template <class T>
 struct FromRepr;
@@ -58,6 +45,27 @@ template <class T, Tp::Repr::Flags From>
 inline T fromRepr(const void *num)
 {
 	return Impl::FromRepr<T>::template call<From>(num, nullptr);
+}
+
+namespace Impl {
+
+template <class T>
+struct ToRepr;
+
+template <>
+struct ToRepr<std::uint8_t> {
+	template <Tp::Repr::Flags F>
+	inline static auto call(...) -> typename Tp::Repr::template Type<F>
+	{
+		return 0;
+	}
+};
+
+}  // namespace Impl
+
+template <class T, Tp::Repr::Flags To>
+inline auto toRepr(std::uint8_t a) -> typename Tp::Repr::template Type<To>
+{
 }
 
 }  // namespace Ut
