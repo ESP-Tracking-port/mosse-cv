@@ -45,22 +45,22 @@ constexpr unsigned strideInner(En<F & Tp::Repr::CplxRenImn> = nullptr)
 	return Ut::szof<F>();
 }
 
-template <Tp::Repr::Flags F, class T>
-constexpr unsigned offsetFirstReal(T &&)
+template <Tp::Repr::Flags F, class R = std::uint8_t>
+constexpr unsigned offsetFirstReal(Tp::Roi)
 {
-	return 0;
+	return 0 * sizeof(R);
 }
 
-template <Tp::Repr::Flags F, class T>
-constexpr unsigned offsetFirstImag(T &&, En<F & Tp::Repr::CplxRe1Im1> = nullptr)
+template <Tp::Repr::Flags F, class R = std::uint8_t>
+constexpr unsigned offsetFirstImag(Tp::Roi, En<F & Tp::Repr::CplxRe1Im1> = nullptr)
 {
-	return Ut::szof<F>();
+	return Ut::szof<F>() * sizeof(R);
 }
 
-template <Tp::Repr::Flags F>
+template <Tp::Repr::Flags F, class R = std::uint8_t>
 unsigned offsetFirstImag(Tp::Roi roi, En<F & Tp::Repr::CplxRenImn> = nullptr)
 {
-	return Ut::szof<F>() * roi.size.rows() * roi.size.cols();
+	return Ut::szof<F>() * roi.size.rows() * roi.size.cols() * sizeof(R);
 }
 
 }  // namespace Ut
