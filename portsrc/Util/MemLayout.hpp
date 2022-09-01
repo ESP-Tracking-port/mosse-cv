@@ -21,12 +21,16 @@ static std::size_t szof(Tp::Repr::Flags f)
 		32 : 0;
 }
 
+/// \brief Size of the integral type that is used to store a number in a chosen representation
+///
 template <Tp::Repr::Flags F>
 static constexpr std::size_t szof()
 {
 	return sizeof(typename Tp::Repr::template Type<F>);
 }
 
+/// \brief Stride between two consecutive real or imaginary numbers in a chosen layout
+///
 template <Tp::Repr::Flags F>
 constexpr unsigned strideInner(typename std::enable_if<F & Tp::Repr::CplxRe1Im1>::type * = nullptr)
 {
@@ -36,7 +40,7 @@ constexpr unsigned strideInner(typename std::enable_if<F & Tp::Repr::CplxRe1Im1>
 template <Tp::Repr::Flags F>
 constexpr unsigned strideInner(typename std::enable_if<F & Tp::Repr::CplxRenImn>::type * = nullptr)
 {
-	return Ut::szof<F>() * 2;
+	return Ut::szof<F>();
 }
 
 }  // namespace Ut
