@@ -12,6 +12,7 @@
 #include "Types/Repr.hpp"
 #include "Types/Tracking.hpp"
 #include "Util/Arithm/MemLayout.hpp"
+#include "Util/Helper/En.h"
 
 namespace Mosse {
 namespace Ut {
@@ -26,7 +27,8 @@ inline typename Tp::EigenMapType<F>::Type makeEigenMapReal(void *bufferComplex, 
 }
 
 template <Tp::Repr::Flags F>
-inline typename Tp::EigenMapType<F>::Type makeEigenMapImag(void *bufferComplex, const Tp::Roi &roi)
+inline typename Tp::EigenMapType<F>::Type makeEigenMapImag(void *bufferComplex, const Tp::Roi &roi,
+	En<F & Tp::Repr::MaskCplx> = nullptr)
 {
 	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
 
