@@ -10,9 +10,11 @@
 
 #include "Types/Tracking.hpp"
 #include "Types/Repr.hpp"
+#include "Types/EigenAux.hpp"
 #include "Util/Arithm.hpp"
 #include "Util/Ops.hpp"
 #include "Util/EigenVisitor.hpp"
+#include "Util/MemLayout.hpp"
 #include <Eigen/Core>
 #include <type_traits>
 #include <cassert>
@@ -39,8 +41,24 @@ public:
 	}
 private:
 	template <Tp::Repr::Flags F>
+	inline typename Tp::EigenMapType<F>::Type makeMap(void *aBufferCplx)
+	{
+		const auto strideOuter = Ut::strideInner<F>() * roi().size.cols();
+		return typename Tp::EigenMapType<F>::Type{aBufferCplx, roi().size.rows(), roi().size.cols(),
+			typename Tp::EigenMapType<F>::StrideType{Ut::strideInner<F>(), strideOuter}};
+	}
+
+	template <Tp::Repr::Flags F>
 	void bufferComplexInitRe(Tp::Image aImage, void *aBufferCplx)
 	{
+		using ValueType = typename Tp::Repr::template Type<F>;
+		auto map = makeMap(aBufferCplx);
+
+		for (unsigned row = 0; row < map.rows(); ++row) {
+			for (unsigned col = 0; col < map.cols(); ++col) {
+				map(row, col) = toRepr<F>(aImage(row, col));
+			}
+		}
 	}
 
 	/// \brief Re1 Im1 order, short representation (length is less than that of the CPU's registers)
@@ -84,13 +102,11 @@ private:
 	template <Tp::Repr::Flags F>
 	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum)
 	{
-		static constexpr auto kStrideInner = szof<F>() * 2;
+		static constexpr auto kStrideInner = Ut::strideInner<F>();
 		const auto strideOuter = kStrideInner * roi().size.cols;
-		using ValueType = Tp::Repr::Type<F>;
-		using MatrixType = typename Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>;
-		using StrideType = typename Eigen::Stride<kStrideInner, Eigen::Dynamic>;
-		using MapType = Eigen::Map<MatrixType, Eigen::Unaligned, StrideType>;
-		MapType map{aComplexBuffer, roi().size.rows, roi().size.cols, StrideType{kStrideInner, strideOuter}};
+		using ValueType = typename Tp::Repr::template Type<F>;
+		typename Tp::EigenMapType<F>::Type map{aComplexBuffer, roi().size.rows, roi().size.cols,
+			typename Tp::EigenMapType<F>::StrideType{kStrideInner, strideOuter}};
 
 		if (nullptr == sum) {
 			MaxVisitor<ValueType, F> visitor;
