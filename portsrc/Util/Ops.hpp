@@ -54,6 +54,7 @@ public:
 protected:
 	const Tp::Roi &roi() const;
 	virtual void initImpl();
+	virtual const void *hannMatrix();  ///< Precompiled hann matrix
 private:
 	Tp::Roi mRoi;
 };
