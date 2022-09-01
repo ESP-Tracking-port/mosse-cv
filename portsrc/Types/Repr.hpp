@@ -17,7 +17,7 @@ namespace Tp {
 
 /// \brief The implementation is only expected to work w/ two representations. These flags are defined to leave the
 /// room for further painless extension, if the results of the experiments w/ different FFTs and representations are
-/// not satisfactory.
+/// not satisfactory. \see CommonOps for use examples.
 ///
 struct Repr {
 	using Flags = std::uint64_t;
