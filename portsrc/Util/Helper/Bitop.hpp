@@ -35,6 +35,16 @@ static constexpr inline BitBase mask(B base, N n)
 		0 | bit(base, n - 1) | mask(base, n - 1);
 }
 
+template <class B>
+static constexpr std::size_t maskLen(B mask, std::size_t offset = 0, std::size_t count = 0)
+{
+	return offset >= sizeof(B) ?
+		count :
+		mask & bit(offset) == 1 ?
+		maskLen(mask, offset + 1, count + 1) :
+		maskLen(mask, offset + 1, count);
+}
+
 /// \brief Produces ABAB mask pattern taking storing and masked types' sizeofs into account.
 /// E.g., if P is std::uint64_t, and N == 8, the result will be 0x00FF00FF00FF00FF
 ///
