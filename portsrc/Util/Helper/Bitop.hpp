@@ -43,13 +43,13 @@ constexpr inline BitBase mask(B base, N n)
 		0 | bitb(base, n - 1) | mask(base, n - 1);
 }
 
-constexpr std::size_t maskLen(BitBase mask, std::size_t offset = 0, std::size_t count = 0)
+constexpr std::size_t countBit(BitBase mask, std::size_t offset = 0, std::size_t count = 0)
 {
 	return offset >= sizeof(mask) ?
 		count :
-		mask & bitb(offset) == 1 ?
-		maskLen(mask, offset + 1, count + 1) :
-		maskLen(mask, offset + 1, count);
+		mask & bit(offset) ?
+		countBit(mask, offset + 1, count + 1) :
+		countBit(mask, offset + 1, count);
 }
 
 /// \brief Produces ABAB mask pattern taking storing and masked types' sizeofs into account.
