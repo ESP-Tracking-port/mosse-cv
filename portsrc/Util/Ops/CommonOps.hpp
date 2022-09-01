@@ -16,6 +16,7 @@
 #include "Util/Ops.hpp"
 #include "Util/Helper/EigenVisitor.hpp"
 #include "Util/Helper/EigenMem.hpp"
+#include "MosseApi.hpp"
 #include <Eigen/Core>
 #include <type_traits>
 #include <cassert>
@@ -68,10 +69,11 @@ private:
 	{
 		auto map = makeEigenMap<F>(aBufferCplx, roi());
 		auto mapImag = makeEigenMapImag<F>(aBufferCplx, roi());
+		float *logTable = Mosse::getLogTable8bit();
 
 		for (unsigned row = 0; row < map.rows(); ++row) {
 			for (unsigned col = 0; col < map.cols(); ++col) {
-				map(row, col) = toRepr<F>(aImage(row, col));
+				map(row, col) = toRepr<F>(logTable[aImage(row, col)]);
 				mapImag(row, col) = toRepr<F>(0);
 			}
 		}
