@@ -11,10 +11,10 @@
 #include "Types/Tracking.hpp"
 #include "Types/Repr.hpp"
 #include "Types/EigenAux.hpp"
-#include "Util/Arithm.hpp"
+#include "Util/Arithm/Arithm.hpp"
+#include "Util/Arithm/MemLayout.hpp"
 #include "Util/Ops.hpp"
-#include "Util/EigenVisitor.hpp"
-#include "Util/MemLayout.hpp"
+#include "Util/Helper/EigenVisitor.hpp"
 #include <Eigen/Core>
 #include <type_traits>
 #include <cassert>
