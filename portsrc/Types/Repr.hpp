@@ -27,25 +27,25 @@ struct Repr {
 		BitsLen = 2,
 		MaskLen = Ut::mask(BaseLen, BitsLen),
 
-		Len16 = Ut::bit(BaseLen, 0),  ///< Item is packed in 16 bits
-		Len32 = Ut::bit(BaseLen, 1),  ///< Item is packed in 32 bits
+		Len16 = Ut::bitb(BaseLen, 0),  ///< Item is packed in 16 bits
+		Len32 = Ut::bitb(BaseLen, 1),  ///< Item is packed in 32 bits
 
 		// Repr
 		BaseRepr = BaseLen + BitsLen,
 		BitsRepr = 3,
 		MaskRepr = Ut::mask(BaseRepr, BitsRepr),
 
-		ReprRaw = Ut::bit(BaseRepr, 0),  ///< item = item
-		ReprLog2 = Ut::bit(BaseRepr, 1),  ///< item = static_cast<std::int16_t>(log2(value));
-		ReprFixedPoint = Ut::bit(BaseRepr, 2),  ///< item = static_cast<Integer>(fp * kPrecision);
+		ReprRaw = Ut::bitb(BaseRepr, 0),  ///< item = item
+		ReprLog2 = Ut::bitb(BaseRepr, 1),  ///< item = static_cast<std::int16_t>(log2(value));
+		ReprFixedPoint = Ut::bitb(BaseRepr, 2),  ///< item = static_cast<Integer>(fp * kPrecision);
 
 		// Cplx. If not specified, an array (or an element) is interpreted as real
 		BaseCplx = BaseRepr + BitsRepr,
 		BitsCplx = 2,
 		MaskCplx = Ut::mask(BaseCplx, BitsCplx),
 
-		CplxRe1Im1 = Ut::bit(BaseCplx, 0),  ///< The array is a complex one. Numbers are placed in (Real1, Im1, Real2, Im2, ...) sequence
-		CplxRenImn = Ut::bit(BaseCplx, 1),  ///< The array is a complex one. Numbers are placed in (Real1, Real2, Im1, Im2, ...) sequence
+		CplxRe1Im1 = Ut::bitb(BaseCplx, 0),  ///< The array is a complex one. Numbers are placed in (Real1, Im1, Real2, Im2, ...) sequence
+		CplxRenImn = Ut::bitb(BaseCplx, 1),  ///< The array is a complex one. Numbers are placed in (Real1, Real2, Im1, Im2, ...) sequence
 	};
 
 	/// \brief Compile-time type selector
