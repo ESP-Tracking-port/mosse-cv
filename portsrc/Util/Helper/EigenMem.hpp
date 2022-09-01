@@ -18,11 +18,11 @@ namespace Mosse {
 namespace Ut {
 
 template <Tp::Repr::Flags F>
-inline typename Tp::EigenMapType<F>::Type makeEigenMapReal(void *bufferComplex, const Tp::Roi &roi)
+inline typename Tp::EigenMapType<F>::Type makeEigenMap(void *bufferComplexOrReal, const Tp::Roi &roi)
 {
 	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
 
-	return typename Tp::EigenMapType<F>::Type{Ut::at(Ut::offsetFirstReal<F>(roi), bufferComplex),
+	return typename Tp::EigenMapType<F>::Type{Ut::at(Ut::offsetFirstReal<F>(roi), bufferComplexOrReal),
 		roi.size.rows(), roi.size.cols(), typename Tp::EigenMapType<F>::StrideType{Ut::strideInner<F>(), strideOuter}};
 }
 
