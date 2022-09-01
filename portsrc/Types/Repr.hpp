@@ -48,6 +48,8 @@ struct Repr {
 		CplxRenImn = Ut::bit(BaseCplx, 1),  ///< The array is a complex one. Numbers are placed in (Real1, Real2, Im1, Im2, ...) sequence
 	};
 
+	/// \brief Compile-time type selector
+	///
 	template <Flags Len, Flags Repr>
 	struct TypeImpl;
 
