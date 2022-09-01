@@ -32,8 +32,7 @@ public:
 	///
 	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override
 	{
-		bufferComplexInitRe(aImageReal, aBufferComplex);
-		bufferComplexInitImZeros(aBufferComplex);
+		bufferComplexInit<ReprBuffer>(aImageReal, aBufferComplex);
 	}
 
 	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum) override
@@ -50,24 +49,15 @@ private:
 	}
 
 	template <Tp::Repr::Flags F>
-	void bufferComplexInitRe(Tp::Image aImage, void *aBufferCplx)
+	void bufferComplexInit(Tp::Image aImage, void *aBufferCplx)
 	{
 		auto map = makeEigenMapReal<F>(aBufferCplx, roi());
+		auto mapImag = makeEigenMapImag<F>(aBufferCplx, roi());
 
 		for (unsigned row = 0; row < map.rows(); ++row) {
 			for (unsigned col = 0; col < map.cols(); ++col) {
 				map(row, col) = toRepr<F>(aImage(row, col));
-			}
-		}
-	}
-
-	template <Tp::Repr::Flags F>
-	void bufferComplexInitImZeros(void *aBufferComplex)
-	{
-		auto map = makeEigenMapImag<F>(aBufferComplex, roi());
-		for (unsigned row = 0; row < map.rows(); ++row) {
-			for (unsigned col = 0; col < map.cols(); ++col) {
-				map(row, col) = toRepr<F>(0);
+				mapImag(row, col) = toRepr<F>(0);
 			}
 		}
 	}
