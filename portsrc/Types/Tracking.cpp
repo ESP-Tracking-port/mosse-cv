@@ -10,7 +10,7 @@
 namespace Mosse {
 namespace Tp {
 
-std::size_t Roi::countElements()
+std::size_t Roi::area()
 {
 	return size(0) * size(1);
 }

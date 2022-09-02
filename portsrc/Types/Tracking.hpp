@@ -28,7 +28,7 @@ struct Roi {
 	PointRowCol origin;
 	PointRowCol size;
 
-	std::size_t countElements();
+	std::size_t area();
 };
 
 struct TrackingInfo {
