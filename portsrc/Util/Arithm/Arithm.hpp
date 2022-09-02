@@ -17,6 +17,8 @@ namespace Mosse {
 namespace Ut {
 namespace Impl {
 
+// Complex multiplication
+
 /// \brief Default implementation, just converts from representation to floats, and performs multiplication.
 /// Optimizations will be achieved through template specialization.
 ///
@@ -41,6 +43,36 @@ template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
 inline void mulCplxA3(ReTp<R1> aRe1, ReTp<R1> aIm1, ReTp<R2> aRe2, ReTp<R2> aIm2, ReTp<O> &aoRe, ReTp<O> &aoIm)
 {
 	Impl::MulCplxA3<R1 & Tp::Repr::MaskTraitScalar, R2 & Tp::Repr::MaskTraitScalar,
+		O & Tp::Repr::MaskTraitScalar>::call(aRe1, aIm1, aRe2, aIm2, aoRe, aoIm);
+}
+
+namespace Impl {
+
+// Complex division
+
+/// \brief Complex division
+///
+template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
+struct DivCplxA3 {
+	static inline void call(ReTp<R1> aRe1, ReTp<R1> aIm1, ReTp<R2> aRe2, ReTp<R2> aIm2, ReTp<O> &aoRe, ReTp<O> &aoIm)
+	{
+		auto a = fromRepr<float, R1>(aRe1);
+		auto b = fromRepr<float, R1>(aIm1);
+		auto c = fromRepr<float, R2>(aRe2);
+		auto d = fromRepr<float, R2>(aIm2);
+		float oRef = (a * c + b * d) / (c * c + d * d);
+		float oImf = (b * c - a * d) / (c * c + d * d);
+		aoRe = toRepr<O>(oRef);
+		aoIm = toRepr<O>(oImf);
+	}
+};
+
+}  // namespace Impl
+
+template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
+inline void divCplxA3(ReTp<R1> aRe1, ReTp<R1> aIm1, ReTp<R2> aRe2, ReTp<R2> aIm2, ReTp<O> &aoRe, ReTp<O> &aoIm)
+{
+	Impl::DivCplxA3<R1 & Tp::Repr::MaskTraitScalar, R2 & Tp::Repr::MaskTraitScalar,
 		O & Tp::Repr::MaskTraitScalar>::call(aRe1, aIm1, aRe2, aIm2, aoRe, aoIm);
 }
 
