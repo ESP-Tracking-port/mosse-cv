@@ -9,6 +9,8 @@
 #define MOSSE_UTIL_EIGENVISITOR_HPP_
 
 #include "Util/Helper/IndexSequence.hpp"
+#include "Util/Helper/ReTp.hpp"
+#include "Util/Helper/En.h"
 #include "Util/Arithm/Conv.hpp"
 #include "Types/Tracking.hpp"
 #include <utility>
@@ -49,6 +51,34 @@ struct FloatSumVisitor {
 	}
 
 	float sum;
+};
+
+/// \brief Calculates sum of absolute deviations from the mean value, taking mask into account
+///
+template <Tp::Repr::Flags F, bool Fmask>
+struct FloatDevSumVisitor {
+	inline void init(const ReTp<F> &, unsigned, unsigned)
+	{
+		devsum = 0.0f;
+	}
+
+	template <typename std::enable_if<!Fmask, bool>::type = true>
+	inline void operator()(const ReTp<F> &aValueType, unsigned row, unsigned col)
+	{
+		devsum += fromRepr<float, F>(&aValueType);
+	}
+
+	template <typename std::enable_if<Fmask, bool>::type = true>
+	inline void operator()(const ReTp<F> &aValueType, unsigned row, unsigned col)
+	{
+		if (!mask.isInside({row, col})) {
+			devsum += fromRepr<float, F>(&aValueType);
+		}
+	}
+
+	float devsum = 0.0f;
+	float mean = 0.0f;
+	Tp::Roi mask;
 };
 
 template <class T, class ...Vs>
