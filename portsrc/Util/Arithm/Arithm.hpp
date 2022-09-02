@@ -76,6 +76,8 @@ inline void divCplxA3(ReTp<R1> aRe1, ReTp<R1> aIm1, ReTp<R2> aRe2, ReTp<R2> aIm2
 		O & Tp::Repr::MaskTraitScalar>::call(aRe1, aIm1, aRe2, aIm2, aoRe, aoIm);
 }
 
+// Minus
+
 namespace Impl {
 
 template <Tp::Repr::Flags F>
