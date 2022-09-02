@@ -164,9 +164,10 @@ public:
 			}
 		} else {
 			for (unsigned row = 0; row < roi().rows(); ++row) {
-				for (unsigned col = 0; col < col().cols(); ++col) {
+				for (unsigned col = 0; col < roi().cols(); ++col) {
+					mapFftImag(row, col) = Ut::minus(mapFftImag(row, col));  // Complex conjugate
 					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
-						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));
+						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));  // eta * complexMult(gaussfft, conj(imagefft))
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), mapA(row, col),
 						mapA(row, col));
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), mapAimag(row, col),
