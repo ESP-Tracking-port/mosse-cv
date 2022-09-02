@@ -25,13 +25,13 @@ template <>
 struct FromRepr<float> {
 
 	template <Tp::Repr::Flags F>
-	static inline float call(const float &a, En<F & Tp::Repr::ReprRaw>)
+	static inline float call(float a, En<F & Tp::Repr::ReprRaw>)
 	{
 		return a;
 	}
 
 	template <Tp::Repr::Flags F>
-	static inline float call(const std::int16_t &a, En<F & Tp::Repr::ReprLog2>)
+	static inline float call(std::int16_t a, En<F & Tp::Repr::ReprLog2>)
 	{
 		return pow(2.0f, a);
 	}
@@ -41,8 +41,8 @@ struct FromRepr<float> {
 
 /// \brief Convert from compact representation to the regular one (decode). E.g. fixed point to regular `float` type
 ///
-template <class T, Tp::Repr::Flags From>
-inline T fromRepr(const void *num)
+template <class T, Tp::Repr::Flags From, class T2>
+inline T fromRepr(T2 num)
 {
 	return Impl::FromRepr<T>::template call<From>(num, nullptr);
 }
@@ -63,8 +63,13 @@ struct ToRepr<std::uint8_t> {
 
 }  // namespace Impl
 
-template <class T, Tp::Repr::Flags To>
+template <Tp::Repr::Flags To>
 inline auto toRepr(std::uint8_t a) -> typename Tp::Repr::template Type<To>
+{
+}
+
+template <Tp::Repr::Flags To>
+inline auto ToRepr(float a) -> typename Tp::Repr::template Type<To>
 {
 }
 
