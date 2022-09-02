@@ -59,11 +59,14 @@ namespace Ut {
 /// Without this hook, multiplication of a and b would first be converted in normalized fixed point, then denormalized,
 /// multiplied by H, and normalized again. An additional normalization / denormalizaton takes place in this case.
 ///
+/// \tparam ReprGauss Representation for the Fourier-transformed gaussian kernel
+///
 template <
 	Tp::Repr::Flags ReprBuffer,
 	Tp::Repr::Flags ReprHann,
 	Tp::Repr::Flags ReprAb,
-	Tp::Repr::Flags ReprAbHookIntermDiv>
+	Tp::Repr::Flags ReprAbHookIntermDiv,
+	Tp::Repr::Flags ReprGauss>
 class CommonOps : public Ops {
 public:
 	static_assert(ReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
@@ -137,6 +140,16 @@ public:
 		float psr = (maxValue - mean) / stddev;
 
 		return psr;
+	}
+
+	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial) override
+	{
+		auto mapA = Ut::makeEigenMap<ReprAb>(aMatAcomplex, roi());
+		auto mapAimag = Ut::makeEigenMapImag<ReprAb>(aMatAcomplex, roi());
+		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aImageCropFftComplex, roi());
+		auto mapFftImag = Ut::makeEigenMapImag<ReprBuffer>(aImageCropFftComplex, roi());
+		auto mapGauss = Ut::makeEigenMap<ReprGauss>(aImageCropFftComplex, roi());
+		auto mapGaussImag = Ut::makeEigenMap<ReprGauss>(aImageCropFftComplex, roi());
 	}
 private:
 
