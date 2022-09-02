@@ -22,7 +22,7 @@ namespace Impl {
 ///
 template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
 struct MulCplxA3 {
-	void call(ReTp<R1> aRe1, ReTp<R1> aIm1, ReTp<R2> aRe2, ReTp<R2> aIm2, ReTp<O> &aoRe, ReTp<O> &aoIm)
+	static inline void call(ReTp<R1> aRe1, ReTp<R1> aIm1, ReTp<R2> aRe2, ReTp<R2> aIm2, ReTp<O> &aoRe, ReTp<O> &aoIm)
 	{
 		auto aRe1f = fromRepr<float, R1>(aRe1);
 		auto aIm1f = fromRepr<float, R1>(aIm1);
@@ -38,7 +38,7 @@ struct MulCplxA3 {
 }  // namespace Impl
 
 template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
-void mulCplxA3(ReTp<R1> aRe1, ReTp<R1> aIm1, ReTp<R2> aRe2, ReTp<R2> aIm2, ReTp<O> &aoRe, ReTp<O> &aoIm)
+inline void mulCplxA3(ReTp<R1> aRe1, ReTp<R1> aIm1, ReTp<R2> aRe2, ReTp<R2> aIm2, ReTp<O> &aoRe, ReTp<O> &aoIm)
 {
 	Impl::MulCplxA3<R1 & Tp::Repr::MaskTraitScalar, R2 & Tp::Repr::MaskTraitScalar,
 		O & Tp::Repr::MaskTraitScalar>::call(aRe1, aIm1, aRe2, aIm2, aoRe, aoIm);
