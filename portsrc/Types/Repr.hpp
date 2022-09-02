@@ -46,6 +46,10 @@ struct Repr {
 
 		CplxRe1Im1 = Ut::bitb(BaseCplx, 0),  ///< The array is a complex one. Numbers are placed in (Real1, Im1, Real2, Im2, ...) sequence
 		CplxRenImn = Ut::bitb(BaseCplx, 1),  ///< The array is a complex one. Numbers are placed in (Real1, Real2, Im1, Im2, ...) sequence
+
+		// Helper masks
+		MaskTraitScalar = MaskStorage | MaskRepr,  ///< Mask that uniquely identifies a scalar
+		MaskTraitArray = MaskStorage | MaskRepr | MaskCplx,  ///< Mask that uniquely identifies an array (scalar traits + array layout)
 	};
 
 	/// \brief Compile-time type selector
