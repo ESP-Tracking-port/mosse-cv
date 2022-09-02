@@ -17,11 +17,13 @@ constexpr auto kLog2FboReprBuffer = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw | T
 constexpr auto kLog2FboReprHannMatrix = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
 constexpr auto kLog2FboReprAb = Tp::Repr::StorageI16 | Tp::Repr::ReprLog2;
 constexpr auto kLog2FboReprAbDivIntermediary = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
+constexpr auto kLog2FboReprGauss = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
 
 using Log2FloatBufOpsBase = CommonOps<kLog2FboReprBuffer,
 	kLog2FboReprHannMatrix,
 	kLog2FboReprAb,
-	kLog2FboReprAbDivIntermediary>;
+	kLog2FboReprAbDivIntermediary,
+	kLog2FboReprGauss>;
 
 class Log2FloatBufOps : Log2FloatBufOpsBase {
 public:
