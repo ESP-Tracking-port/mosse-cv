@@ -87,7 +87,7 @@ public:
 		imagePreprocess<ReprBuffer, ReprHann>(aCropBufferComplex);
 	}
 
-	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex)
+	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) override
 	{
 		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aioCropFft2Complex, roi());
 		auto mapFftImag = Ut::makeEigenMap<ReprBuffer>(aioCropFft2Complex, roi());
