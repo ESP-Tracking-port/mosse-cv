@@ -142,7 +142,11 @@ public:
 		return psr;
 	}
 
-	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial) override
+	/// \brief
+	///
+	/// \pre It is expected that Gaussian matrix is already multiplied by eta
+	///
+	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, float, bool aInitial) override
 	{
 		auto mapA = Ut::makeEigenMap<ReprAb>(aMatAcomplex, roi());
 		auto mapAimag = Ut::makeEigenMapImag<ReprAb>(aMatAcomplex, roi());
@@ -150,6 +154,26 @@ public:
 		auto mapFftImag = Ut::makeEigenMapImag<ReprBuffer>(aImageCropFftComplex, roi());
 		auto mapGauss = Ut::makeEigenMap<ReprGauss>(aImageCropFftComplex, roi());
 		auto mapGaussImag = Ut::makeEigenMap<ReprGauss>(aImageCropFftComplex, roi());
+
+		if (aInitial) {
+			for (unsigned row = 0; row < roi().rows(); ++row) {
+				for (unsigned col = 0; col < roi().cols(); ++col) {
+					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
+						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));
+				}
+			}
+		} else {
+			for (unsigned row = 0; row < roi().rows(); ++row) {
+				for (unsigned col = 0; col < col().cols(); ++col) {
+					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
+						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), mapA(row, col),
+						mapA(row, col));
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), mapAimag(row, col),
+						mapAimag(row, col));
+				}
+			}
+		}
 	}
 private:
 
