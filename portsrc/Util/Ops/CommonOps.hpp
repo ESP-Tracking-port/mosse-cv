@@ -108,6 +108,36 @@ public:
 			}
 		}
 	}
+
+	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
+		Tp::PointRowCol aMask) override
+	{
+		// Mean value excluding the masked (usually, 11x11 field) around the peak
+		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
+		float mean = 0.0f;
+		Tp::Roi roiMask{{roi().origin + aPeak - (aMask / 2)}, aMask};
+		const float sizeMasked = static_cast<float>(roi().area() - roiMask.area());
+
+		{
+			auto mapMask = map.block(roiMask.origin(0), roiMask.origin(1), roiMask.size(0), roiMask.size(1));
+			FloatSumVisitor<ReTp<ReprBuffer>, ReprBuffer> visitor;
+			mapMask.visit(visitor);
+			sumHint -= visitor.sum;
+			mean = sumHint / sizeMasked;
+		}
+
+		float stddev = 0.0f;
+		{
+			FloatDevSumVisitor<ReprBuffer, true> visitor{0.0f, mean, roiMask};
+			map.visit(visitor);
+			stddev = visitor.devsum / sqrt(sizeMasked);
+		}
+
+		float maxValue = Ut::fromRepr<float, ReprBuffer>(map(aPeak(0), aPeak(1)));
+		float psr = (maxValue - mean) / stddev;
+
+		return psr;
+	}
 private:
 	template <Tp::Repr::Flags F>
 	inline typename Tp::EigenMapType<F>::Type makeMap(void *aBufferCplx)
