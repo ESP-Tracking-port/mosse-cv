@@ -30,6 +30,16 @@ struct Roi {
 
 	std::size_t area() const;
 	bool isInside(const PointRowCol &) const;
+
+	inline auto rows() -> decltype(size(0))
+	{
+		return size(0);
+	}
+
+	inline auto cols() -> decltype(size(1))
+	{
+		return size(1);
+	}
 };
 
 struct TrackingInfo {
