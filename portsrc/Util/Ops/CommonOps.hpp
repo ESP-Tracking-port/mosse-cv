@@ -139,13 +139,6 @@ public:
 		return psr;
 	}
 private:
-	template <Tp::Repr::Flags F>
-	inline typename Tp::EigenMapType<F>::Type makeMap(void *aBufferCplx)
-	{
-		const auto strideOuter = Ut::strideInner<F>() * roi().size.cols();
-		return typename Tp::EigenMapType<F>::Type{aBufferCplx, roi().size.rows(), roi().size.cols(),
-			typename Tp::EigenMapType<F>::StrideType{Ut::strideInner<F>(), strideOuter}};
-	}
 
 	/// \brief Unlike the workflow implied by the API, performs both buffer initialization and image preprocessing,
 	/// because there are certain points which can be optimized by sparing conversions.
