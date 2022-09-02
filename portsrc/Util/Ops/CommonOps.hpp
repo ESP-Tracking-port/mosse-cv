@@ -33,10 +33,35 @@ namespace Ut {
 ///
 /// \tparam ReprBuffer Representation flag for intermediary buffer in which FFT and convolution calculations are
 /// performed
-/// \tparam ReprHann Representation flags for Hann matrices. Present among template arguments, but not used yet.
-/// Point of extension, if the necessity comes
 ///
-template <Tp::Repr::Flags ReprBuffer, Tp::Repr::Flags ReprHann>
+/// \tparam ReprHann Representation flags for Hann matrices. Present among template arguments, but not used yet. Point
+/// of extension, if the necessity comes
+///
+/// \tparam ReprAb Representation for A and B matrices.
+///
+/// \tparam ReprHookConvDivAb Optimization hook. Convolution is performed as `mulElementWise(H, divCplx(A, B))`. Since
+/// using some common intermediate representation or making a redundant conversion may be inefficient, we leave the
+/// possibility to store intermediary in some easy-to-compute representation scheme. For example, it may be useful for
+/// multiplying fixed-point.
+///
+/// Example (simplified, not relevant to the convolution):
+///
+/// fixedOffset = 5
+/// hd = h(row, col) / fixedOffset * 10
+/// ad = a(row, col) / (fixedOffset * 10)
+/// bd = b(row, col) / (fixedOffset * 10)
+/// intermediateDenormalized = ad * bd
+/// hd *= itermediateDenormalized
+/// hd *= (int)(fixedOffset * 10)
+///
+/// Without this hook, multiplication of a and b would first be converted in normalized fixed point, then denormalized,
+/// multiplied by H, and normalized again. An additional normalization / denormalizaton takes place in this case.
+///
+template <
+	Tp::Repr::Flags ReprBuffer,
+	Tp::Repr::Flags ReprHann,
+	Tp::Repr::Flags ReprAb,
+	Tp::Repr::Flags ReprHookConvDivAb>
 class CommonOps : public Ops {
 public:
 	static_assert(ReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
