@@ -39,9 +39,9 @@ public:
 	///
 	/// \arg sum (optional) - stores sum of all the values. The result can be used later in `calcPsr`
 	///
-	virtual void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *sum = nullptr);
-	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
-		Tp::PointRowCol aMask = {11, 11});
+	virtual void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *sum = nullptr) = 0;
+	virtual float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
+		Tp::PointRowCol aMask = {11, 11}) = 0;
 
 	/// \brief Updates the A matrix (ref. to the MOSSE paper:
 	/// https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf)
