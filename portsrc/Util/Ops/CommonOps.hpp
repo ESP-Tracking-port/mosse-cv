@@ -70,6 +70,8 @@ private:
 	/// \brief Unlike the workflow implied by the API, performs both buffer initialization and image preprocessing,
 	/// because there are certain points which can be optimized by sparing conversions.
 	///
+	/// \pre Hann matrix uses raw float representation
+	///
 	template <Tp::Repr::Flags F>
 	void bufferComplexInit(Tp::Image aImage, void *aBufferCplx)
 	{
@@ -101,14 +103,14 @@ private:
 		// Final turn: initializing the array
 
 		const float stddev = devsum / sqrt(static_cast<float>(map.size()));
+		auto mapHann = makeEigenMap<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw>(hannMatrix(), roi());
 
 		for (unsigned row = 0; row < map.rows(); ++row) {
 			for (unsigned col = 0; col < map.cols(); ++col) {
 				constexpr float kEps = 1e-5;  // Small fraction to prevent zero division
-				devsum += abs(mean - logTable[blockImage(row, col)]);
-				map(row, col) = toRepr<F>(logTable[blockImage(row, col)]);  // Optimization, shortcut. The log(0) issue is already taken care of during the table compilation stage.
 				mapImag(row, col) = toRepr<F>(0);
-				map(row, col) = (logTable[blockImage(row, col)] - mean) / (stddev + kEps);
+				float pixel = (logTable[blockImage(row, col)] - mean) / (stddev + kEps) * mapHann(row, col);  // Log table is an optimization shortcut. The log(0) issue is already taken care of during the table compilation stage.
+				map(row, col) = toRepr<F>(pixel);
 			}
 		}
 	}
@@ -141,10 +143,8 @@ private:
 	}
 
 	template <Tp::Repr::Flags B, Tp::Repr::Flags H>
-	inline void imagePreprocess(void *aComplexBuffer)
+	inline void imagePreprocess(void *)
 	{
-		auto matrixHann = Ut::makeEigenMap<H>(hannMatrix(), roi());
-		auto matrixCrop = Ut::makeEigenMap<B>(aComplexBuffer, roi());
 	}
 };
 
