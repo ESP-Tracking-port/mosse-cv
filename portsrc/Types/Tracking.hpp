@@ -31,12 +31,12 @@ struct Roi {
 	std::size_t area() const;
 	bool isInside(const PointRowCol &) const;
 
-	inline auto rows() -> decltype(size(0))
+	inline auto rows() const -> decltype(size(0))
 	{
 		return size(0);
 	}
 
-	inline auto cols() -> decltype(size(1))
+	inline auto cols() const -> decltype(size(1))
 	{
 		return size(1);
 	}
