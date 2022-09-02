@@ -103,7 +103,7 @@ private:
 		// Final turn: initializing the array
 
 		const float stddev = devsum / sqrt(static_cast<float>(map.size()));
-		auto mapHann = makeEigenMap<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw>(hannMatrix(), roi());
+		auto mapHann = makeEigenMap<ReprHann>(hannMatrix(), roi());
 
 		for (unsigned row = 0; row < map.rows(); ++row) {
 			for (unsigned col = 0; col < map.cols(); ++col) {
