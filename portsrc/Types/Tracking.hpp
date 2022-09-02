@@ -29,6 +29,7 @@ struct Roi {
 	PointRowCol size;
 
 	std::size_t area() const;
+	bool isInside(const PointRowCol &) const;
 };
 
 struct TrackingInfo {
