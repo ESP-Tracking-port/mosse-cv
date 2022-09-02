@@ -13,9 +13,11 @@
 #include "Types/EigenAux.hpp"
 #include "Util/Arithm/Conv.hpp"
 #include "Util/Arithm/MemLayout.hpp"
+#include "Util/Arithm/Arithm.hpp"
 #include "Util/Ops.hpp"
 #include "Util/Helper/EigenVisitor.hpp"
 #include "Util/Helper/EigenMem.hpp"
+#include "Util/Helper/ReTp.hpp"
 #include "MosseApi.hpp"
 #include <Eigen/Core>
 #include <type_traits>
@@ -39,7 +41,7 @@ namespace Ut {
 ///
 /// \tparam ReprAb Representation for A and B matrices.
 ///
-/// \tparam ReprHookConvDivAb Optimization hook. Convolution is performed as `mulElementWise(H, divCplx(A, B))`. Since
+/// \tparam ReprAbHookIntermDiv Optimization hook. Convolution is performed as `mulElementWise(H, divCplx(A, B))`. Since
 /// using some common intermediate representation or making a redundant conversion may be inefficient, we leave the
 /// possibility to store intermediary in some easy-to-compute representation scheme. For example, it may be useful for
 /// multiplying fixed-point.
@@ -61,7 +63,7 @@ template <
 	Tp::Repr::Flags ReprBuffer,
 	Tp::Repr::Flags ReprHann,
 	Tp::Repr::Flags ReprAb,
-	Tp::Repr::Flags ReprHookConvDivAb>
+	Tp::Repr::Flags ReprAbHookIntermDiv>
 class CommonOps : public Ops {
 public:
 	static_assert(ReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
@@ -83,6 +85,28 @@ public:
 	void imagePreprocess(void *aCropBufferComplex) override
 	{
 		imagePreprocess<ReprBuffer, ReprHann>(aCropBufferComplex);
+	}
+
+	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex)
+	{
+		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aioCropFft2Complex, roi());
+		auto mapFftImag = Ut::makeEigenMap<ReprBuffer>(aioCropFft2Complex, roi());
+		auto mapA = Ut::makeEigenMap<ReprAb>(aMatrixAcomlex, roi());
+		auto mapAimag = Ut::makeEigenMapImag<ReprAb>(aMatrixAcomlex, roi());
+		auto mapB = Ut::makeEigenMap<ReprAb>(aMatrixBcomplex, roi());
+		auto mapBimag = Ut::makeEigenMapImag<ReprAb>(aMatrixBcomplex, roi());
+		// Intermediate buffers
+		ReTp<ReprAbHookIntermDiv> hRe;  // H = divCplx(A, B)
+		ReTp<ReprAbHookIntermDiv> hIm;
+
+		for (unsigned row = 0; row < roi().size.rows(); ++row) {
+			for (unsigned col = 0; col < roi().size.cols(); ++col) {
+				Ut::divCplxA3<ReprAb, ReprAb, ReprAbHookIntermDiv>(mapA(row, col), mapAimag(row, col), mapB(row, col),
+					mapBimag(row, col), hRe, hIm);
+				Ut::mulCplxA3<ReprBuffer, ReprAbHookIntermDiv, ReprBuffer>(mapFft(row, col), mapFftImag(row, col), hRe,
+					hIm, mapFft(row, col), mapFftImag(row, col));
+			}
+		}
 	}
 private:
 	template <Tp::Repr::Flags F>
