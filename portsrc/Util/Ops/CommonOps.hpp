@@ -166,12 +166,14 @@ public:
 			for (unsigned row = 0; row < roi().rows(); ++row) {
 				for (unsigned col = 0; col < roi().cols(); ++col) {
 					mapFftImag(row, col) = Ut::minus(mapFftImag(row, col));  // Complex conjugate
+					auto aPrev = mapA(row, col);
+					auto aPrevImag = mapAimag(row, col);
 					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
 						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));  // eta * complexMult(gaussfft, conj(imagefft))
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), mapA(row, col),
-						mapA(row, col));
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), mapAimag(row, col),
-						mapAimag(row, col));
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrev, aPrev);
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrevImag, aPrevImag);
+					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapA(row, col), aPrev, mapA(row, col));
+					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapAimag(row, col), aPrevImag, mapAimag(row, col));
 				}
 			}
 		}
