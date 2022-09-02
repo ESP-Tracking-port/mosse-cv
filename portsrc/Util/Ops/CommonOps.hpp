@@ -155,14 +155,14 @@ public:
 		auto mapGauss = Ut::makeEigenMap<ReprGauss>(aImageCropFftComplex, roi());
 		auto mapGaussImag = Ut::makeEigenMap<ReprGauss>(aImageCropFftComplex, roi());
 
-		if (aInitial) {
+		if (aInitial) {  // B = eta * complexMult(gaussfft, conj(imagefft))
 			for (unsigned row = 0; row < roi().rows(); ++row) {
 				for (unsigned col = 0; col < roi().cols(); ++col) {
 					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
 						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));
 				}
 			}
-		} else {
+		} else {  // Weighted sum.  B = eta * complexMult(gaussfft, conj(imagefft)) + (1 - eta) * B
 			for (unsigned row = 0; row < roi().rows(); ++row) {
 				for (unsigned col = 0; col < roi().cols(); ++col) {
 					mapFftImag(row, col) = Ut::minus(mapFftImag(row, col));  // Complex conjugate
