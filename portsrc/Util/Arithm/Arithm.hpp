@@ -120,6 +120,30 @@ inline void mulA3(ReTp<R1> a1, ReTp<R2> a2, ReTp<O> &aOut)
 		O & Tp::Repr::MaskTraitScalar>::call(a1, a2, aOut);
 }
 
+// sum
+
+namespace Impl {
+
+template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
+struct SumA3 {
+	static inline void call(ReTp<R1> a1, ReTp<R2> a2, ReTp<O> &aOut)
+	{
+		float a1f = fromRepr<float, R1>(a1);
+		float a2f = fromRepr<float, R2>(a2);
+		float aOutf = a1f + a2f;
+		aOut = toRepr<O>(aOutf);
+	}
+};
+
+}  // namespace Impl
+
+template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
+inline void sumA3(ReTp<R1> a1, ReTp<R2> a2, ReTp<O> &aOut)
+{
+	Impl::SumA3<R1 & Tp::Repr::MaskTraitScalar, R2 & Tp::Repr::MaskTraitScalar,
+		O & Tp::Repr::MaskTraitScalar>::call(a1, a2, aOut);
+}
+
 }  // namespace Ut
 }  // namespace Mosse
 
