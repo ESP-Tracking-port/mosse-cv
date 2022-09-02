@@ -178,6 +178,46 @@ public:
 			}
 		}
 	}
+
+	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, float, bool aInitial)
+	{
+		auto mapB = Ut::makeEigenMap<ReprAb>(aMatBcomplex, roi());
+		auto mapBimag = Ut::makeEigenMapImag<ReprAb>(aMatBcomplex, roi());
+		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aImageCropFftComplex, roi());
+		auto mapFftImag = Ut::makeEigenMap<ReprBuffer>(aImageCropFftComplex, roi());
+
+		if (aInitial) {
+			for (unsigned row = 0; row < roi().rows(); ++row) {
+				for (unsigned col = 0; col < roi().cols(); ++col) {
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(),
+						mapFft(row, col), mapFft(row, col));
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(),
+						mapFftImag(row, col), mapFftImag(row, col));
+					auto conj = Ut::minus(mapFftImag(row, col));
+					Ut::mulCplxA3<ReprBuffer, ReprBuffer, ReprAb>(mapFft(row, col), mapFftImag(row, col),
+						mapFft(row, col), conj, mapB(row, col), mapBimag(row, col));
+				}
+			}
+		} else {
+			for (unsigned row = 0; row < roi().rows(); ++row) {
+				for (unsigned col = 0; col < roi().cols(); ++col) {
+					auto bPrev = mapB(row, col);
+					auto bPrevImag = mapBimag(row, col);
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), bPrev, bPrev);
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), bPrevImag, bPrevImag);
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(),
+						mapFft(row, col), mapFft(row, col));
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(),
+						mapFftImag(row, col), mapFftImag(row, col));
+					auto conj = Ut::minus(mapFftImag(row, col));
+					Ut::mulCplxA3<ReprBuffer, ReprBuffer, ReprAb>(mapFft(row, col), mapFftImag(row, col),
+						mapFft(row, col), conj, mapB(row, col), mapBimag(row, col));
+					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapB(row, col), bPrev, mapB(row, col));
+					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapBimag(row, col), bPrevImag, mapBimag(row, col));
+				}
+			}
+		}
+	}
 private:
 
 	/// \brief Unlike the workflow implied by the API, performs both buffer initialization and image preprocessing,
