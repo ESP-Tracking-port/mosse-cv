@@ -76,8 +76,8 @@ struct FloatDevSumVisitor {
 		}
 	}
 
-	float devsum = 0.0f;
-	float mean = 0.0f;
+	float devsum;
+	float mean;
 	Tp::Roi mask;
 };
 
