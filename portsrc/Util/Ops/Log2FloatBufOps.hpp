@@ -13,10 +13,17 @@
 namespace Mosse {
 namespace Ut {
 
-static constexpr auto kReprBuffer = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw | Tp::Repr::CplxRe1Im1;
-static constexpr auto kReprHannMatrix = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
+constexpr auto kLog2FboReprBuffer = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw | Tp::Repr::CplxRe1Im1;
+constexpr auto kLog2FboReprHannMatrix = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
+constexpr auto kLog2FboReprAb = Tp::Repr::StorageI16 | Tp::Repr::ReprLog2;
+constexpr auto kLog2FboReprAbDivIntermediary = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
 
-class Log2FloatBufOps : CommonOps<kReprBuffer, kReprHannMatrix> {
+using Log2FloatBufOpsBase = CommonOps<kLog2FboReprBuffer,
+	kLog2FboReprHannMatrix,
+	kLog2FboReprAb,
+	kLog2FboReprAbDivIntermediary>;
+
+class Log2FloatBufOps : Log2FloatBufOpsBase {
 public:
 };
 
