@@ -13,7 +13,7 @@
 namespace Mosse {
 namespace Ut {
 
-/// \brief Shortcut type getter for Ut namespace. ReTp stands for "Representation TyPe"
+/// \brief Shortcut type getter for Ut namespace. ReTp stands for "REpresentation TyPe"
 ///
 template <Tp::Repr::Flags F>
 using ReTp = typename Tp::Repr::Type<F>;
