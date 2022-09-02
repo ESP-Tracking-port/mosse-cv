@@ -110,7 +110,8 @@ private:
 			for (unsigned col = 0; col < map.cols(); ++col) {
 				constexpr float kEps = 1e-5;  // Small fraction to prevent zero division
 				mapImag(row, col) = toRepr<F>(0);
-				float pixel = (logTable[blockImage(row, col)] - mean) / (stddev + kEps) * mapHann(row, col);  // Log table is an optimization shortcut. The log(0) issue is already taken care of during the table compilation stage.
+				float pixel = (logTable[blockImage(row, col)] - mean) / (stddev + kEps)
+					* fromRepr<ReprHann>(mapHann(row, col));  // Log table is an optimization shortcut. The log(0) issue is already taken care of during the table compilation stage.
 				map(row, col) = toRepr<F>(pixel);
 			}
 		}
