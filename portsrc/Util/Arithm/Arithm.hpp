@@ -76,6 +76,24 @@ inline void divCplxA3(ReTp<R1> aRe1, ReTp<R1> aIm1, ReTp<R2> aRe2, ReTp<R2> aIm2
 		O & Tp::Repr::MaskTraitScalar>::call(aRe1, aIm1, aRe2, aIm2, aoRe, aoIm);
 }
 
+namespace Impl {
+
+template <Tp::Repr::Flags F>
+struct Minus {
+	static inline ReTp<F> call(ReTp<F> a)
+	{
+		return -a;
+	}
+};
+
+}  // namespace Impl
+
+template <Tp::Repr::Flags F>
+inline ReTp<F> minus(ReTp<F> a)
+{
+	return Impl::Minus<F & Tp::Repr::MaskTraitScalar>::call(a);
+}
+
 }  // namespace Ut
 }  // namespace Mosse
 
