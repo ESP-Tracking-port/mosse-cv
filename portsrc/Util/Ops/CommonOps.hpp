@@ -33,7 +33,8 @@ namespace Ut {
 ///
 /// \tparam ReprBuffer Representation flag for intermediary buffer in which FFT and convolution calculations are
 /// performed
-/// \tparam ReprHann Representation flags for Hann matrices
+/// \tparam ReprHann Representation flags for Hann matrices. Present among template arguments, but not used yet.
+/// Point of extension, if the necessity comes
 ///
 template <Tp::Repr::Flags ReprBuffer, Tp::Repr::Flags ReprHann>
 class CommonOps : public Ops {
