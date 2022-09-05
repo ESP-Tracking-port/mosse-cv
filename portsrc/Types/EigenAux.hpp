@@ -24,6 +24,14 @@ struct EigenMapType {
 	using Type = Eigen::Map<MatrixType, Eigen::Unaligned, StrideType>;
 };
 
+template <Repr::Flags F>
+struct ConstEigenMapType {
+	using ValueType = Tp::Repr::Type<F>;
+	using MatrixType = const typename Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>;
+	using StrideType = typename Eigen::Stride<Ut::strideInner<F>(), Eigen::Dynamic>;
+	using Type = Eigen::Map<MatrixType, Eigen::Unaligned, StrideType>;
+};
+
 }  // namespace Tp
 }  // namespace Mosse
 
