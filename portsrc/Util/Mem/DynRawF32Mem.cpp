@@ -18,7 +18,7 @@ constexpr auto kDynRawflReprAb = Tp::Repr::StorageI16 | Tp::Repr::ReprLog2;
 constexpr auto kDynRawflReprAbDivIntermediary = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
 constexpr auto kDynRawflReprGauss = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
 
-DynRawF32Mem::DynRawF32Mem() : Mem{}, prevRoi{{0, 0}, {0, 0}}, mata{}, matb{}, buf{}
+DynRawF32Mem::DynRawF32Mem() : Mem{}, roiSizePrev{{0, 0}, {0, 0}}, mata{}, matb{}, buf{}
 {
 }
 
@@ -39,11 +39,11 @@ void *DynRawF32Mem::buffer()
 
 void DynRawF32Mem::init(Tp::Roi aRoi)
 {
-	if (prevRoi != aRoi) {
+	if (roiSizePrev != aRoi.size) {
 		mata.reserve(sizeof(float) * 2 * aRoi.area());
 		mata.reserve(sizeof(float) * 2 * aRoi.area());
 		buf.reserve(sizeof(float) * 2 * aRoi.area());
-		prevRoi = aRoi;
+		roiSizePrev = aRoi.size;
 	}
 }
 

@@ -12,6 +12,12 @@
 #include <vector>
 
 namespace Mosse {
+namespace Tp {
+
+class PointRowCol;
+
+}  // namespace Tp
+
 namespace Ut {
 
 class DynRawF32Mem : public Mem {
@@ -25,7 +31,7 @@ private:
 	std::vector<float> mata;
 	std::vector<float> matb;
 	std::vector<float> buf;
-	Tp::Roi prevRoi;
+	Tp::PointRowCol roiSizePrev;
 };
 
 }  // namespace Ut
