@@ -278,18 +278,14 @@ private:
 	template <Tp::Repr::Flags F>
 	inline void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum)
 	{
-		static constexpr auto kStrideInner = Ut::strideInner<F>();
-		const auto strideOuter = kStrideInner * roi().size.cols;
-		using ValueType = typename Tp::Repr::template Type<F>;
-		typename Tp::EigenMapType<F>::Type map{aComplexBuffer, roi().size.rows, roi().size.cols,
-			typename Tp::EigenMapType<F>::StrideType{kStrideInner, strideOuter}};
+		auto map = Ut::makeEigenMap<F>(aComplexBuffer, roi());
 
 		if (nullptr == sum) {
-			MaxVisitor<ValueType, F> visitor;
+			MaxVisitor<float, F> visitor;
 			map.visit(visitor);
 			aPos = visitor.pos;
 		} else {
-			CompositeVisitor<MaxVisitor<ValueType, F>, FloatSumVisitor<ValueType, F>> visitor;
+			CompositeVisitor<MaxVisitor<float, F>, FloatSumVisitor<float, F>> visitor;
 			map.visit(visitor);
 			*sum = visitor.template get<1>().sum;
 			aPos = visitor.template get<0>().pos;
