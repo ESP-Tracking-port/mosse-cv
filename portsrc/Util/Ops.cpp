@@ -8,6 +8,7 @@
 #include "Types/Tracking.hpp"
 #include "Util/Arithm/Conv.hpp"
 #include "Ops.hpp"
+#include "MosseApi.hpp"
 
 namespace Mosse {
 namespace Ut {
@@ -24,6 +25,14 @@ const Tp::Roi &Ops::roi() const
 
 void Ops::initImpl()
 {
+}
+
+void Ops::roiResize(Mosse::Tp::Roi &aRoi)
+{
+	unsigned rows = aRoi.size(0);
+	unsigned cols = aRoi.size(1);
+	Mosse::getClosestWindow(rows, cols);
+	aRoi.readjust({rows, cols});
 }
 
 }  // namespace Ut

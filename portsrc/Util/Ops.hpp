@@ -31,14 +31,26 @@ private:
 public:
 
 	/// \brief Implementation MUST expect that it will be called multiple times during the tracking process and therefore
-	/// optimize for unnecessary time and memory expenses.
+	/// optimize for unnecessary time and memory expenses. A descendant is, therefore, responsible for maintaining
+	/// consistency.
 	///
-	void init(Tp::Roi);
+	/// \pre Tp::Roi is guaranteed to be of correct size. E.g. if a pre-defined set of window sizes is used, `aRoi` will
+	/// be resized properly before passed into `init`.
+	///
+	void init(Tp::Roi aRoi);
 	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) = 0;
 	virtual void imagePreprocess(void *aCropComplex) = 0;
 	virtual void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex);
 	virtual void fft2(void *aBufferComplex) = 0;
 	virtual void ifft2(void *aBufferComplex) = 0;
+
+	/// \brief Enables enforcing the use of a correct tracking window size. It is intended to only use a set of
+	/// precompiled window sizes to spare computational expenses on Gaussian kernels and Hann windows.
+	///
+	/// \note The behavior described above is the only one that is supposed to be implmemented. However, this method can
+	/// be virtualized and overriden, if the necessity comes.
+	///
+	void roiResize(Tp::Roi &);
 
 	/// \brief Calculates max. value in a matrix.
 	///
