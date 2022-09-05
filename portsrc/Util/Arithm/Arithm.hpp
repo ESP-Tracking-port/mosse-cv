@@ -161,7 +161,35 @@ struct Abs {
 template <Tp::Repr::Flags F>
 inline void abs(ReTp<F> &a)
 {
-	Impl::Abs<F>::call(a);
+	Impl::Abs<F & Tp::Repr::MaskTraitScalar>::call(a);
+}
+
+// gt
+
+namespace Impl {
+
+template <Tp::Repr::Flags F1, Tp::Repr::Flags F2>
+struct Gt {
+	static inline bool call(const ReTp<F1> &aLhs, const ReTp<F2> &aRhs)
+	{
+		return fromRepr<float, F1>(aLhs) > fromRepr<float, F2>(aRhs);
+	}
+};
+
+template <Tp::Repr::Flags F>
+struct Gt<F, F> {
+	static inline bool call(const ReTp<F> &aLhs, const ReTp<F> &aRhs, En<F & Tp::Repr::ReprRaw> = nullptr)
+	{
+		return aLhs > aRhs;
+	}
+};
+
+}  // namespace Impl
+
+template <Tp::Repr::Flags F1, Tp::Repr::Flags F2 = F1>
+inline bool gt(const ReTp<F1> &aLhs, const ReTp<F2>(aRhs))
+{
+	return Impl::Gt<F1 & Tp::Repr::MaskTraitScalar, F2 & Tp::Repr::MaskTraitScalar>::call(aLhs, aRhs);
 }
 
 }  // namespace Ut
