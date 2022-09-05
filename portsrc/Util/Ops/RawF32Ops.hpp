@@ -26,15 +26,21 @@ using RawF32OpsBase = CommonOps< kRawF32ReprBuffer, kRawF32ReprHannMatrix, kRawF
 /// implementing other memory-optimized variants of replaceable Ops instances.
 ///
 class RawF32Ops : public RawF32OpsBase {
+private:
+	struct PrecompiledMatrices {
+		const void *hann;
+		const void *gaussFftScaled;
+	};
 public:
 	virtual void fft2(void *aBufferComplex) = 0;
 	virtual void ifft2(void *aBufferComplex) = 0;
 protected:
 	virtual void initImpl();
 	virtual const void *hannMatrix();  ///< Precompiled hann matrix
-	virtual const void *gaussFft();  ///< Fouried-transformed precompiled Gaussian matrix
+	virtual const void *gaussFft();  ///< Precompiled scaled fourier-transformed Gaussian matrix
 private:
 	Tp::PointRowCol roiSizePrev;
+	PrecompiledMatrices mat;
 };
 
 }  // namespace Ut
