@@ -144,6 +144,26 @@ inline void sumA3(ReTp<R1> a1, ReTp<R2> a2, ReTp<O> &aOut)
 		O & Tp::Repr::MaskTraitScalar>::call(a1, a2, aOut);
 }
 
+// abs
+
+namespace Impl {
+
+template <Tp::Repr::Flags F>
+struct Abs {
+	static inline void call(ReTp<F> &a1)
+	{
+		a1 = toRepr<F>(abs(fromRepr<float, F>(a1)));
+	}
+};
+
+}  // namespace Impl
+
+template <Tp::Repr::Flags F>
+inline void abs(ReTp<F> &a)
+{
+	Impl::Abs<F>::call(a);
+}
+
 }  // namespace Ut
 }  // namespace Mosse
 
