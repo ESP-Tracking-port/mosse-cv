@@ -70,7 +70,7 @@ struct FloatDevSumVisitor {
 
 	void call(const ValueType &aVal)
 	{
-		devsum += abs(Ut::fromRepr<float, F>(aVal) - mean);
+		devsum += fabs(Ut::fromRepr<float, F>(aVal) - mean);
 	}
 
 	template <bool C = Fmask>
