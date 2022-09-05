@@ -31,7 +31,7 @@ public:
 	/// optimize for unnecessary time and memory expenses (e.g. to not to reallocate memory, if the new ROI's size does
 	/// not exceed that of the previous one;
 	///
-	virtual void *init(Tp::Roi);
+	virtual void init(Tp::Roi);
 };
 
 }  // namespace Ut

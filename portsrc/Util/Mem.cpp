@@ -12,7 +12,7 @@
 namespace Mosse {
 namespace Ut {
 
-void *Mem::init(Tp::Roi)
+void Mem::init(Tp::Roi)
 {
 }
 
