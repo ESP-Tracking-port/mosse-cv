@@ -45,7 +45,7 @@ struct FromRepr<float> {
 template <class T, Tp::Repr::Flags From>
 inline T fromRepr(const ReTp<From> &num)
 {
-	return Impl::FromRepr<T>::template call<From>(num, nullptr);
+	return Impl::FromRepr<T>::template call<From & Tp::Repr::MaskTraitScalar>(num);
 }
 
 namespace Impl {
