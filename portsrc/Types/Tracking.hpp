@@ -40,6 +40,9 @@ struct Roi {
 	{
 		return size(1);
 	}
+
+	friend bool operator==(const Roi &, const Roi&);
+	friend bool operator!=(const Roi &, const Roi&);
 };
 
 struct TrackingInfo {
