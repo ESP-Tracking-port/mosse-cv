@@ -231,7 +231,7 @@ private:
 		auto map = makeEigenMap<F>(aBufferCplx, roi());
 		auto mapImag = makeEigenMapImag<F>(aBufferCplx, roi());
 		auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
-		float *logTable = Mosse::getLogTable8bit();
+		const float *logTable = Mosse::getLogTable8bit();
 		float sum = 0.0f;
 
 		// Calculating mean value
