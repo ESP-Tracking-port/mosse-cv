@@ -29,6 +29,12 @@ static constexpr auto kHannMap = makeArray(
 	kHann32x64Raw
 );
 
+static constexpr auto kGaussKernelFftScaled125 = makeArray(
+	kGaussKernelFft64x64Scaled125Raw,
+	kGaussKernelFft64x32Scaled125Raw,
+	kGaussKernelFft32x64Scaled125Raw
+);
+
 static constexpr auto kGaussKernelFft3dScaled125 = makeArray(
 	kGaussKernelFft64x643dScaled125Raw,
 	kGaussKernelFft64x323dScaled125Raw,
@@ -141,6 +147,17 @@ const float *getGaussKernelFft3dScaled125(unsigned &aRows, unsigned &aCols)
 	}
 
 	return kGaussKernelFft3dScaled125[id];
+}
+
+const float *getGaussKernelFftScaled125(unsigned &aRows, unsigned &aCols)
+{
+	int id = checkWindowExists(aRows, aCols);
+
+	if (id < 0) {
+		return nullptr;
+	}
+
+	return kGaussKernelFftScaled125[id];
 }
 
 
