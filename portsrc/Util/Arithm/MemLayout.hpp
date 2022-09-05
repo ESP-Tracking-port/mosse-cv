@@ -53,7 +53,7 @@ constexpr unsigned strideInner(En<F & Tp::Repr::CplxRenImn> = nullptr)
 
 /// \brief Override for non-complex array (ReRe...Re layout)
 template <Tp::Repr::Flags F>
-constexpr unsigned strideInner(En<!(F & Tp::Repr::MaskRepr)> = nullptr)
+constexpr unsigned strideInner(En<!(F & Tp::Repr::MaskCplx)> = nullptr)
 {
 	return Ut::szof<F>();
 }
