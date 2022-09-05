@@ -123,7 +123,7 @@ public:
 
 		{
 			auto mapMask = map.block(roiMask.origin(0), roiMask.origin(1), roiMask.size(0), roiMask.size(1));
-			FloatSumVisitor<ReTp<ReprBuffer>, ReprBuffer> visitor;
+			FloatSumVisitor<ReprBuffer> visitor;
 			mapMask.visit(visitor);
 			sumHint -= visitor.sum;
 			mean = sumHint / sizeMasked;
@@ -249,7 +249,7 @@ private:
 
 		for (unsigned row = 0; row < map.rows(); ++row) {
 			for (unsigned col = 0; col < map.cols(); ++col) {
-				devsum += abs(mean - logTable[blockImage(row, col)]);
+				devsum += fabs(mean - logTable[blockImage(row, col)]);
 			}
 		}
 
@@ -281,11 +281,11 @@ private:
 		auto map = Ut::makeEigenMap<F>(aComplexBuffer, roi());
 
 		if (nullptr == sum) {
-			MaxVisitor<float, F> visitor;
+			MaxVisitor<F> visitor;
 			map.visit(visitor);
 			aPos = visitor.pos;
 		} else {
-			CompositeVisitor<MaxVisitor<float, F>, FloatSumVisitor<float, F>> visitor;
+			CompositeVisitor<F, MaxVisitor<F>, FloatSumVisitor<F>> visitor;
 			map.visit(visitor);
 			*sum = visitor.template get<1>().sum;
 			aPos = visitor.template get<0>().pos;
