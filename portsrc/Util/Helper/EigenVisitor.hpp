@@ -99,14 +99,14 @@ struct CompositeVisitor {
 	static constexpr auto kN = sizeof...(Vs);
 	std::tuple<Vs...> visitors;
 
-	template <std::size_t ...Is>
+	template <unsigned ...Is>
 	inline void initAll(const ValueType &aValue, unsigned row, unsigned col, IndexSequence<Is...>)
 	{
 		using List = int[];
 		(void)List{(void(std::get<Is>(visitors).init(aValue, row, col)), 0)...};
 	}
 
-	template <std::size_t ...Is>
+	template <unsigned ...Is>
 	inline void invokeAll(const ValueType &aValue, unsigned row, unsigned col, IndexSequence<Is...>)
 	{
 		using List = int[];
