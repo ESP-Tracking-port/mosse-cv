@@ -12,34 +12,39 @@
 #include "Util/Helper/ReTp.hpp"
 #include "Util/Helper/En.h"
 #include "Util/Arithm/Conv.hpp"
+#include "Util/Arithm/Arithm.hpp"
 #include "Types/Tracking.hpp"
 #include <utility>
 
 namespace Mosse {
 namespace Ut {
 
-template <class T, Tp::Repr::Flags R>
+template <Tp::Repr::Flags R>
 struct MaxVisitor {
-	inline void init(const T &aValueType, unsigned row, unsigned col)
+	using ValueType = ReTp<R>;
+
+	inline void init(const ValueType &aValueType, unsigned row, unsigned col)
 	{
 		max = aValueType;
 		pos = {row, col};
 	}
 
-	inline void operator()(const T &aValueType, unsigned row, unsigned col)
+	inline void operator()(const ValueType &aValueType, unsigned row, unsigned col)
 	{
-		if (max < aValueType) {
+		if (Ut::gt<R, R>(aValueType, max)) {
 			max = aValueType;
 			pos = {row, col};
 		}
 	}
 
-	T max;
+	ValueType max;
 	Tp::PointRowCol pos;
 };
 
-template <class ValueType, Tp::Repr::Flags F>
+template <Tp::Repr::Flags F>
 struct FloatSumVisitor {
+	using ValueType = ReTp<F>;
+
 	inline void init(const ValueType &, unsigned, unsigned)
 	{
 		sum = 0.0f;
@@ -55,24 +60,30 @@ struct FloatSumVisitor {
 
 /// \brief Calculates sum of absolute deviations from the mean value, taking mask into account
 ///
-template <Tp::Repr::Flags F, bool Fmask>
+template <Tp::Repr::Flags F, bool Fmask = true>
 struct FloatDevSumVisitor {
-	inline void init(const ReTp<F> &, unsigned, unsigned)
+	using ValueType = ReTp<F>;
+	inline void init(const ValueType &, unsigned, unsigned)
 	{
 		devsum = 0.0f;
 	}
 
-	template <bool C = Fmask>
-	inline typename std::enable_if<C>::type operator()(const ReTp<F> &aValueType, unsigned row, unsigned col)
+	void call(const ValueType &aVal)
 	{
-		devsum += fromRepr<float, F>(&aValueType);
+		devsum += abs(Ut::fromRepr<float, F>(aVal) - mean);
 	}
 
 	template <bool C = Fmask>
-	inline typename std::enable_if<!C>::type operator()(const ReTp<F> &aValueType, unsigned row, unsigned col)
+	inline typename std::enable_if<C>::type operator()(const ValueType &aValueType, unsigned row, unsigned col)
+	{
+		call(aValueType);
+	}
+
+	template <bool C = Fmask>
+	inline typename std::enable_if<!C>::type operator()(const ValueType &aValueType, unsigned row, unsigned col)
 	{
 		if (!mask.isInside({row, col})) {
-			devsum += fromRepr<float, F>(&aValueType);
+			call(aValueType);
 		}
 	}
 
@@ -81,31 +92,33 @@ struct FloatDevSumVisitor {
 	Tp::Roi mask;
 };
 
-template <class T, class ...Vs>
+template <Tp::Repr::Flags F, class ...Vs>
 struct CompositeVisitor {
+	using ValueType = ReTp<F>;
+
 	static constexpr auto kN = sizeof...(Vs);
 	std::tuple<Vs...> visitors;
 
 	template <std::size_t ...Is>
-	inline void initAll(const T &aValue, unsigned row, unsigned col, IndexSequence<Is...>)
+	inline void initAll(const ValueType &aValue, unsigned row, unsigned col, IndexSequence<Is...>)
 	{
 		using List = int[];
 		(void)List{(void(std::get<Is>(visitors).init(aValue, row, col)), 0)...};
 	}
 
 	template <std::size_t ...Is>
-	inline void invokeAll(const T &aValue, unsigned row, unsigned col, IndexSequence<Is...>)
+	inline void invokeAll(const ValueType &aValue, unsigned row, unsigned col, IndexSequence<Is...>)
 	{
 		using List = int[];
 		(void)List{(void(std::get<Is>(visitors)(aValue, row, col)), 0)...};
 	}
 
-	inline void init(const T &val, unsigned row, unsigned col)
+	inline void init(const ValueType &val, unsigned row, unsigned col)
 	{
 		initAll(val, row, col, makeIndexSequence<kN>());
 	}
 
-	inline void operator()(const T &val, unsigned row, unsigned col)
+	inline void operator()(const ValueType &val, unsigned row, unsigned col)
 	{
 		invokeAll(val, row, col, makeIndexSequence<kN>());
 	}
