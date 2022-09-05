@@ -9,6 +9,7 @@
 #define MOSSE_UTIL_ARITHM_CONV_HPP_
 
 #include "Types/Repr.hpp"
+#include "Util/Helper/ReTp.hpp"
 #include <cmath>
 
 namespace Mosse {
@@ -24,14 +25,14 @@ struct FromRepr;
 template <>
 struct FromRepr<float> {
 
-	template <Tp::Repr::Flags F>
-	static inline float call(float a, En<F & Tp::Repr::ReprRaw>)
+	template <Tp::Repr::Flags F, class T>
+	static inline float call(const T &repr)
 	{
-		return a;
+		return static_cast<float>(repr);
 	}
 
 	template <Tp::Repr::Flags F>
-	static inline float call(std::int16_t a, En<F & Tp::Repr::ReprLog2>)
+	static inline float call(std::int16_t a, En<F & Tp::Repr::ReprLog2> = nullptr)
 	{
 		return pow(2.0f, a);
 	}
@@ -41,8 +42,8 @@ struct FromRepr<float> {
 
 /// \brief Convert from compact representation to the regular one (decode). E.g. fixed point to regular `float` type
 ///
-template <class T, Tp::Repr::Flags From, class T2>
-inline T fromRepr(T2 num)
+template <class T, Tp::Repr::Flags From>
+inline T fromRepr(const ReTp<From> &num)
 {
 	return Impl::FromRepr<T>::template call<From>(num, nullptr);
 }
