@@ -11,7 +11,6 @@
 #include "Util/Mem.hpp"
 #include "Util/Ops.hpp"
 #include "Tracker.hpp"
-#include "MosseApi.hpp"
 
 namespace Mosse {
 
@@ -22,13 +21,7 @@ Tracker::Tracker(Ut::Port aPort, float aEta) : tracking{{}, 0.0f, aEta}, port{aP
 void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 {
 	// A set of precompiled gaussian matrices is used, so the window's size will be changed to the closest one
-	{
-		unsigned rows = aRoi.size(0);
-		unsigned cols = aRoi.size(1);
-		Mosse::getClosestWindow(rows, cols);
-		tracking.roi.readjust({rows, cols});
-	}
-
+	port.ops.roiResize(aRoi);
 	port.mem.init(tracking.roi);
 	port.ops.init(tracking.roi);
 	port.ops.imageCropInto(aImage, port.mem.buffer());
