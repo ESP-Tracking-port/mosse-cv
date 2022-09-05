@@ -20,7 +20,7 @@ public:
 	virtual void *matA() override;
 	virtual void *matB() override;
 	virtual void *buffer() override;
-	virtual void *init(Tp::Roi) override;
+	virtual void init(Tp::Roi) override;
 private:
 	std::vector<float> mata;
 	std::vector<float> matb;

@@ -37,7 +37,7 @@ void *DynRawF32Mem::buffer()
 	return buf.data();
 }
 
-void *DynRawF32Mem::init(Tp::Roi aRoi)
+void DynRawF32Mem::init(Tp::Roi aRoi)
 {
 	if (prevRoi != aRoi) {
 		mata.reserve(sizeof(float) * 2 * aRoi.area());
