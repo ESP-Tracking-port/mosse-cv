@@ -52,7 +52,7 @@ struct FloatSumVisitor {
 
 	inline void operator()(const ValueType &aValueType, unsigned row, unsigned col)
 	{
-		sum += fromRepr<float, F>(&aValueType);
+		sum += fromRepr<float, F>(aValueType);
 	}
 
 	float sum;
