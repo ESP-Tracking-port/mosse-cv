@@ -62,14 +62,14 @@ struct FloatDevSumVisitor {
 		devsum = 0.0f;
 	}
 
-	template <typename std::enable_if<!Fmask, bool>::type = true>
-	inline void operator()(const ReTp<F> &aValueType, unsigned row, unsigned col)
+	template <bool C = Fmask>
+	inline typename std::enable_if<C>::type operator()(const ReTp<F> &aValueType, unsigned row, unsigned col)
 	{
 		devsum += fromRepr<float, F>(&aValueType);
 	}
 
-	template <typename std::enable_if<Fmask, bool>::type = true>
-	inline void operator()(const ReTp<F> &aValueType, unsigned row, unsigned col)
+	template <bool C = Fmask>
+	inline typename std::enable_if<!C>::type operator()(const ReTp<F> &aValueType, unsigned row, unsigned col)
 	{
 		if (!mask.isInside({row, col})) {
 			devsum += fromRepr<float, F>(&aValueType);
