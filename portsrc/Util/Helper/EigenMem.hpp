@@ -31,10 +31,12 @@ template <Tp::Repr::Flags F>
 inline typename Tp::template ConstEigenMapType<F>::Type makeEigenMap(const void *bufferComplexOrReal,
 	const Tp::Roi &roi)
 {
+	using ValueType = const ReTp<F> *;
 	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
 
-	return typename Tp::ConstEigenMapType<F>::Type{Ut::at<F>(Ut::offsetFirstReal<F>(roi), bufferComplexOrReal),
-		roi.size.rows(), roi.size.cols(), typename Tp::EigenMapType<F>::StrideType{Ut::strideInner<F>(), strideOuter}};
+	return typename Tp::ConstEigenMapType<F>::Type{static_cast<ValueType>(Ut::at<F>(Ut::offsetFirstReal<F>(roi),
+		bufferComplexOrReal)), roi.size.rows(), roi.size.cols(), typename Tp::EigenMapType<F>::StrideType{
+		Ut::strideInner<F>(), strideOuter}};
 }
 
 template <Tp::Repr::Flags F>
@@ -52,10 +54,12 @@ template <Tp::Repr::Flags F>
 inline typename Tp::ConstEigenMapType<F>::Type makeEigenMapImag(const void *bufferComplex, const Tp::Roi &roi,
 	En<F & Tp::Repr::MaskCplx> = nullptr)
 {
+	using ValueType = const ReTp<F> *;
 	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
 
-	return typename Tp::ConstEigenMapType<F>::Type{Ut::at<F>(Ut::offsetFirstImag<F>(roi), bufferComplex),
-		roi.size.rows(), roi.size.cols(), typename Tp::EigenMapType<F>::StrideType{Ut::strideInner<F>(), strideOuter}};
+	return typename Tp::ConstEigenMapType<F>::Type{static_cast<ValueType>(Ut::at<F>(Ut::offsetFirstImag<F>(roi),
+		bufferComplex)), roi.size.rows(), roi.size.cols(), typename Tp::EigenMapType<F>::StrideType{
+		Ut::strideInner<F>(), strideOuter}};
 }
 
 }  // namespace Ut
