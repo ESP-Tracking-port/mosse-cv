@@ -11,6 +11,7 @@
 #include "Types/Repr.hpp"
 #include "Util/Helper/ReTp.hpp"
 #include <cmath>
+#include <type_traits>
 
 namespace Mosse {
 namespace Ut {
@@ -51,27 +52,20 @@ inline T fromRepr(const ReTp<From> &num)
 namespace Impl {
 
 template <class T>
-struct ToRepr;
-
-template <>
-struct ToRepr<std::uint8_t> {
+struct ToRepr {
 	template <Tp::Repr::Flags F>
-	inline static auto call(...) -> typename Tp::Repr::template Type<F>
+	static inline ReTp<F> call(T a, En<F & Tp::Repr::ReprRaw> = nullptr)
 	{
-		return 0;
+		return static_cast<ReTp<F>>(a);
 	}
 };
 
 }  // namespace Impl
 
-template <Tp::Repr::Flags To>
-inline auto toRepr(std::uint8_t a) -> typename Tp::Repr::template Type<To>
+template <Tp::Repr::Flags To, class T>
+inline ReTp<To> toRepr(T a)
 {
-}
-
-template <Tp::Repr::Flags To>
-inline auto ToRepr(float a) -> typename Tp::Repr::template Type<To>
-{
+	return Impl::template ToRepr<typename std::remove_reference<T>::type>::template call<To>(a);
 }
 
 }  // namespace Ut
