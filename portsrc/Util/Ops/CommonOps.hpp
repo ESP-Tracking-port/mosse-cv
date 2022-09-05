@@ -118,7 +118,7 @@ public:
 		// Mean value excluding the masked (usually, 11x11 field) around the peak
 		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
 		float mean = 0.0f;
-		Tp::Roi roiMask{{roi().origin + aPeak - (aMask / 2)}, aMask};
+		Tp::Roi roiMask{roi().origin + aPeak - (aMask / 2), aMask};
 		const float sizeMasked = static_cast<float>(roi().area() - roiMask.area());
 
 		{
