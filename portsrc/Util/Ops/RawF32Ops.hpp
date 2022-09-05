@@ -31,10 +31,8 @@ public:
 	virtual void ifft2(void *aBufferComplex) = 0;
 protected:
 	virtual void initImpl();
-	virtual float eta() = 0;  ///< eta
-	virtual float invEta() = 0;  ///< 1 - \eta
-	virtual const void *hannMatrix() = 0;  ///< Precompiled hann matrix
-	virtual const void *gaussFft() = 0;  ///< Fouried-transformed precompiled Gaussian matrix
+	virtual const void *hannMatrix();  ///< Precompiled hann matrix
+	virtual const void *gaussFft();  ///< Fouried-transformed precompiled Gaussian matrix
 private:
 	Tp::Roi roiPrev;
 };
