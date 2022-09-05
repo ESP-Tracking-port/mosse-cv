@@ -13,8 +13,9 @@ namespace Ut {
 
 void RawF32Ops::initImpl()
 {
-	if (roiPrev != roi()) {
-		roiPrev = roi();
+	if (roiSizePrev != roi().size) {
+		roiSizePrev = roi().size;
+		//TODO: The rest of the initialization routine
 	}
 }
 

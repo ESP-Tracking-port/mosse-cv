@@ -34,7 +34,7 @@ protected:
 	virtual const void *hannMatrix();  ///< Precompiled hann matrix
 	virtual const void *gaussFft();  ///< Fouried-transformed precompiled Gaussian matrix
 private:
-	Tp::Roi roiPrev;
+	Tp::PointRowCol roiSizePrev;
 };
 
 }  // namespace Ut
