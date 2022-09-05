@@ -165,11 +165,11 @@ public:
 		} else {  // Weighted sum.  B = eta * complexMult(gaussfft, conj(imagefft)) + (1 - eta) * B
 			for (unsigned row = 0; row < roi().rows(); ++row) {
 				for (unsigned col = 0; col < roi().cols(); ++col) {
-					mapFftImag(row, col) = Ut::minus<ReprBuffer>(mapFftImag(row, col));  // Complex conjugate
+					auto conj = Ut::minus<ReprBuffer>(mapFftImag(row, col));  // Complex conjugate
 					auto aPrev = mapA(row, col);
 					auto aPrevImag = mapAimag(row, col);
 					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
-						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));  // eta * complexMult(gaussfft, conj(imagefft)), the precompiled FFT-transformed gaussian kernel is already multiplied by eta
+						mapFft(row, col), conj, mapA(row, col), mapAimag(row, col));  // eta * complexMult(gaussfft, conj(imagefft)), the precompiled FFT-transformed gaussian kernel is already multiplied by eta
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrev, aPrev);
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrevImag, aPrevImag);
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapA(row, col), aPrev, mapA(row, col));
