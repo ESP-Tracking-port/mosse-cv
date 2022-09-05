@@ -54,8 +54,8 @@ public:
 	/// \arg eta - learning rate. Authors of the paper suggest using `0.125`
 	/// \arg aInitial - if false, a weighted element-wise sum of the current and the previous element will be used.
 	///
-	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial) = 0;
-	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial) = 0;
+	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial) = 0;
+	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial) = 0;
 protected:
 	inline float eta() const
 	{
