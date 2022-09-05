@@ -13,7 +13,7 @@
 namespace Mosse {
 namespace Ut {
 
-constexpr auto kRawF32ReprBuffer = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw | Tp::Repr::CplxRe1Im1;
+constexpr auto kRawF32ReprBuffer = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw | Tp::Repr::CplxRenImn;
 constexpr auto kRawF32ReprHannMatrix = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
 constexpr auto kRawF32ReprAb = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw | Tp::Repr::CplxRe1Im1;
 constexpr auto kRawF32ReprAbDivIntermediary = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
@@ -32,8 +32,8 @@ private:
 		const void *gaussFftScaled;
 	};
 public:
-	virtual void fft2(void *aBufferComplex) = 0;
-	virtual void ifft2(void *aBufferComplex) = 0;
+	virtual void fft2(void *aBufferComplex);
+	virtual void ifft2(void *aBufferComplex);
 protected:
 	virtual void initImpl();
 	virtual const void *hannMatrix();  ///< Precompiled hann matrix

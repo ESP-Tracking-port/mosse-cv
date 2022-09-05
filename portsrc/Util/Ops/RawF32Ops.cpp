@@ -7,13 +7,18 @@
 
 #include "MosseApi.hpp"
 #include "RawF32Ops.hpp"
+#include "Util/Arithm/MemLayout.hpp"
 
 namespace Mosse {
 namespace Ut {
 
+void RawF32Ops::fft2(void *aBufferComplex)
+{
+}
+
 void RawF32Ops::initImpl()
 {
-	static constexpr auto gaussKernelScaledGet = Mosse::getGaussKernelFft3dScaled125;
+	static constexpr auto gaussKernelScaledGet = Mosse::getGaussKernelFftScaled125;
 	static constexpr auto kEta = 0.125f;
 
 	if (roiSizePrev != roi().size) {
