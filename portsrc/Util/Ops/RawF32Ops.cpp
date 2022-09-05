@@ -18,7 +18,7 @@ void RawF32Ops::initImpl()
 
 	if (roiSizePrev != roi().size) {
 		roiSizePrev = roi().size;
-		mat = {
+		precompiledMatrices = {
 			Mosse::getHann(roi().size(0), roi().size(1)),
 			gaussKernelScaledGet(roi().size(0), roi().size(1))
 		};

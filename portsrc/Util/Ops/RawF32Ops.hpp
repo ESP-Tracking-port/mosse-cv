@@ -40,7 +40,7 @@ protected:
 	virtual const void *gaussFft();  ///< Precompiled scaled fourier-transformed Gaussian matrix
 private:
 	Tp::PointRowCol roiSizePrev;
-	PrecompiledMatrices mat;
+	PrecompiledMatrices precompiledMatrices;
 };
 
 }  // namespace Ut
