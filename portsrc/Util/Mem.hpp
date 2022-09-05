@@ -14,7 +14,6 @@ namespace Mosse {
 namespace Tp {
 
 class Roi;
-class Geometry;
 
 }  // namespace Tp
 
@@ -22,20 +21,16 @@ namespace Ut {
 
 class Mem {
 public:
-	Mem(Tp::Geometry);
 	virtual void *matA() = 0;
 	virtual void *matB() = 0;
 	virtual void *buffer() = 0;  ///< A big intermediary buffer for operations like FFT
-	const Tp::Geometry &geometry() const;
 
 	/// \brief Implementation MUST ensure that it is able to provide a sufficient buffer taking its internal numeric
 	/// representation into account. Implementation MUST expect, that it will be called multiple times and therefore
 	/// optimize for unnecessary time and memory expenses (e.g. to not to reallocate memory, if the new ROI's size does
 	/// not exceed that of the previous one;
 	///
-	virtual void *init(Tp::Roi) = 0;
-private:
-	Tp::Geometry geo;
+	virtual void *init(Tp::Roi);
 };
 
 }  // namespace Ut

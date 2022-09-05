@@ -5,19 +5,15 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
+#include "Types/Tracking.hpp"
 #include "Types/Repr.hpp"
 #include "Util/Mem.hpp"
 
 namespace Mosse {
 namespace Ut {
 
-Mem::Mem(Tp::Geometry aGeometry) : geo{aGeometry}
+void *Mem::init(Tp::Roi)
 {
-}
-
-const Tp::Geometry &Mem::geometry() const
-{
-	return geo;
 }
 
 }  // namespace Ut
