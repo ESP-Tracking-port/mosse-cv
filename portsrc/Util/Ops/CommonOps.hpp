@@ -189,13 +189,15 @@ public:
 		if (aInitial) {
 			for (unsigned row = 0; row < roi().rows(); ++row) {
 				for (unsigned col = 0; col < roi().cols(); ++col) {
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(),
-						mapFft(row, col), mapFft(row, col));
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(),
-						mapFftImag(row, col), mapFftImag(row, col));
-					auto conj = Ut::minus<ReprBuffer>(mapFftImag(row, col));
-					Ut::mulCplxA3<ReprBuffer, ReprBuffer, ReprAb>(mapFft(row, col), mapFftImag(row, col),
-						mapFft(row, col), conj, mapB(row, col), mapBimag(row, col));
+					auto fftTemp = mapFft(row, col);
+					auto fftImagTemp = mapFftImag(row, col);
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(), fftTemp,
+						fftTemp);
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(), fftImagTemp,
+						fftImagTemp);
+					auto conj = Ut::minus<ReprBuffer>(fftImagTemp);
+					Ut::mulCplxA3<ReprBuffer, ReprBuffer, ReprAb>(fftTemp, fftImagTemp, fftTemp, conj, mapB(row, col),
+						mapBimag(row, col));
 				}
 			}
 		} else {
@@ -203,15 +205,15 @@ public:
 				for (unsigned col = 0; col < roi().cols(); ++col) {
 					auto bPrev = mapB(row, col);
 					auto bPrevImag = mapBimag(row, col);
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), bPrev, bPrev);
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), bPrevImag, bPrevImag);
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(),
-						mapFft(row, col), mapFft(row, col));
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(),
-						mapFftImag(row, col), mapFftImag(row, col));
-					auto conj = Ut::minus<ReprBuffer>(mapFftImag(row, col));
-					Ut::mulCplxA3<ReprBuffer, ReprBuffer, ReprAb>(mapFft(row, col), mapFftImag(row, col),
-						mapFft(row, col), conj, mapB(row, col), mapBimag(row, col));
+					auto fftTemp = mapFft(row, col);
+					auto fftImagTemp = mapFftImag(row, col);
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(), fftTemp,
+						fftTemp);
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(), fftImagTemp,
+						fftImagTemp);
+					auto conj = Ut::minus<ReprBuffer>(fftImagTemp);
+					Ut::mulCplxA3<ReprBuffer, ReprBuffer, ReprAb>(fftTemp, fftImagTemp, fftTemp, conj, mapB(row, col),
+						mapBimag(row, col));
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapB(row, col), bPrev, mapB(row, col));
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapBimag(row, col), bPrevImag, mapBimag(row, col));
 				}
