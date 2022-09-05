@@ -169,7 +169,7 @@ public:
 					auto aPrev = mapA(row, col);
 					auto aPrevImag = mapAimag(row, col);
 					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
-						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));  // eta * complexMult(gaussfft, conj(imagefft))
+						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));  // eta * complexMult(gaussfft, conj(imagefft)), the precompiled FFT-transformed gaussian kernel is already multiplied by eta
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrev, aPrev);
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrevImag, aPrevImag);
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapA(row, col), aPrev, mapA(row, col));
@@ -193,7 +193,7 @@ public:
 						mapFft(row, col), mapFft(row, col));
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(),
 						mapFftImag(row, col), mapFftImag(row, col));
-					auto conj = Ut::minus(mapFftImag(row, col));
+					auto conj = Ut::minus<ReprBuffer>(mapFftImag(row, col));
 					Ut::mulCplxA3<ReprBuffer, ReprBuffer, ReprAb>(mapFft(row, col), mapFftImag(row, col),
 						mapFft(row, col), conj, mapB(row, col), mapBimag(row, col));
 				}
@@ -209,7 +209,7 @@ public:
 						mapFft(row, col), mapFft(row, col));
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(),
 						mapFftImag(row, col), mapFftImag(row, col));
-					auto conj = Ut::minus(mapFftImag(row, col));
+					auto conj = Ut::minus<ReprBuffer>(mapFftImag(row, col));
 					Ut::mulCplxA3<ReprBuffer, ReprBuffer, ReprAb>(mapFft(row, col), mapFftImag(row, col),
 						mapFft(row, col), conj, mapB(row, col), mapBimag(row, col));
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapB(row, col), bPrev, mapB(row, col));
