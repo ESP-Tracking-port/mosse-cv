@@ -18,7 +18,17 @@ namespace Mosse {
 namespace Ut {
 
 template <Tp::Repr::Flags F>
-inline typename Tp::EigenMapType<F>::Type makeEigenMap(void *bufferComplexOrReal, const Tp::Roi &roi)
+inline typename Tp::template EigenMapType<F>::Type makeEigenMap(void *bufferComplexOrReal, const Tp::Roi &roi)
+{
+	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
+
+	return typename Tp::EigenMapType<F>::Type{Ut::at(Ut::offsetFirstReal<F>(roi), bufferComplexOrReal),
+		roi.size.rows(), roi.size.cols(), typename Tp::EigenMapType<F>::StrideType{Ut::strideInner<F>(), strideOuter}};
+}
+
+template <Tp::Repr::Flags F>
+inline const typename Tp::template EigenMapType<F>::Type makeEigenMap(const void *bufferComplexOrReal,
+	const Tp::Roi &roi)
 {
 	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
 
@@ -28,6 +38,16 @@ inline typename Tp::EigenMapType<F>::Type makeEigenMap(void *bufferComplexOrReal
 
 template <Tp::Repr::Flags F>
 inline typename Tp::EigenMapType<F>::Type makeEigenMapImag(void *bufferComplex, const Tp::Roi &roi,
+	En<F & Tp::Repr::MaskCplx> = nullptr)
+{
+	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
+
+	return typename Tp::EigenMapType<F>::Type{Ut::at(Ut::offsetFirstImag<F>(roi), bufferComplex),
+		roi.size.rows(), roi.size.cols(), typename Tp::EigenMapType<F>::StrideType{Ut::strideInner<F>(), strideOuter}};
+}
+
+template <Tp::Repr::Flags F>
+inline const typename Tp::EigenMapType<F>::Type makeEigenMapImag(const void *bufferComplex, const Tp::Roi &roi,
 	En<F & Tp::Repr::MaskCplx> = nullptr)
 {
 	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
