@@ -41,6 +41,10 @@ struct Roi {
 		return size(1);
 	}
 
+	/// \brief Adjust the ROI geometry for the new size preserving the ROI's center coordinates
+	///
+	void readjust(const PointRowCol &aSize);
+
 	friend bool operator==(const Roi &, const Roi&);
 	friend bool operator!=(const Roi &, const Roi&);
 };
