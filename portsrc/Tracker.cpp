@@ -35,8 +35,8 @@ void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 	port.ops.imageCropInto(aImage, port.mem.buffer());
 	port.ops.imagePreprocess(port.mem.buffer());
 	port.ops.fft2(port.mem.buffer());
-	port.ops.mataUpdate(port.mem.matA(), port.mem.buffer(), tracking.eta, true);
-	port.ops.matbUpdate(port.mem.matB(), port.mem.buffer(), tracking.eta, true);
+	port.ops.mataUpdate(port.mem.matA(), port.mem.buffer(), true);
+	port.ops.matbUpdate(port.mem.matB(), port.mem.buffer(), true);
 
 	// TODO: rand warp-based pretraining
 }
@@ -70,8 +70,8 @@ void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
 	port.ops.imageCropInto(aImage, port.mem.buffer());
 	port.ops.imagePreprocess(port.mem.buffer());
 	port.ops.fft2(port.mem.buffer());
-	port.ops.mataUpdate(port.mem.matA(), port.mem.buffer(), tracking.eta, false);
-	port.ops.matbUpdate(port.mem.matB(), port.mem.buffer(), tracking.eta, false);
+	port.ops.mataUpdate(port.mem.matA(), port.mem.buffer(), false);
+	port.ops.matbUpdate(port.mem.matB(), port.mem.buffer(), false);
 }
 
 const Tp::Roi &Tracker::roi() const
