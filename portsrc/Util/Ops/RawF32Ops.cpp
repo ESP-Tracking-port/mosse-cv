@@ -26,5 +26,15 @@ void RawF32Ops::initImpl()
 	}
 }
 
+const void *RawF32Ops::hannMatrix()
+{
+	return precompiledMatrices.hann;
+}
+
+const void *RawF32Ops::gaussFft()
+{
+	return precompiledMatrices.gaussFftScaled;
+}
+
 }  // namespace Ut
 }  // namespace Mosse
