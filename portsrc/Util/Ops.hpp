@@ -23,6 +23,11 @@ namespace Ut {
 /// matrix operations are delegated to descendants of `Ops`
 ///
 class Ops {
+private:
+	struct Coeffs {
+		float eta;
+		float invEta;
+	};
 public:
 
 	/// \brief Implementation MUST expect that it will be called multiple times during the tracking process and therefore
@@ -52,13 +57,27 @@ public:
 	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial) = 0;
 	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, float aEta, bool aInitial) = 0;
 protected:
+	inline float eta() const
+	{
+		return coeffs.eta;
+	}
+
+	inline float invEta() const
+	{
+		return coeffs.invEta;
+	}
+
+	inline void setEta(float eta)
+	{
+		coeffs = {eta, 1.0f - eta};
+	}
+
 	const Tp::Roi &roi() const;
 	virtual void initImpl();
-	virtual float eta() = 0;  ///< eta
-	virtual float invEta() = 0;  ///< 1 - \eta
 	virtual const void *hannMatrix() = 0;  ///< Precompiled hann matrix
 	virtual const void *gaussFft() = 0;  ///< Fouried-transformed precompiled Gaussian matrix
 private:
+	Coeffs coeffs;
 	Tp::Roi mRoi;
 };
 
