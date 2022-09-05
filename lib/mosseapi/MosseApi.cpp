@@ -29,6 +29,12 @@ static constexpr auto kHannMap = makeArray(
 	kHann32x64Raw
 );
 
+static constexpr auto kGaussKernelFft3dScaled125 = makeArray(
+	kGaussKernelFft64x643dScaled125Raw,
+	kGaussKernelFft64x323dScaled125Raw,
+	kGaussKernelFft32x643dScaled125Raw
+);
+
 static constexpr auto kGaussKernelFftMapImReal = makeArray(
 	std::pair<const float *, const float *>{&kGaussKernelFft64x64ImReal[0][0], &kGaussKernelFft64x64ImReal[1][0]},
 	std::pair<const float *, const float *>{&kGaussKernelFft64x32ImReal[0][0], &kGaussKernelFft64x32ImReal[1][0]},
@@ -126,5 +132,17 @@ const float *getLogTable8bit()  ///< Returns a float log table for integers from
 	return kLogMatrix8bit;
 }
 
-}  // namespace Mosse
+const float *getGaussKernelFft3dScaled125(unsigned &aRows, unsigned &aCols)
+{
+	int id = checkWindowExists(aRows, aCols);
 
+	if (id < 0) {
+		return nullptr;
+	}
+
+	return kGaussKernelFft3dScaled125[id];
+}
+
+
+
+}  // namespace Mosse
