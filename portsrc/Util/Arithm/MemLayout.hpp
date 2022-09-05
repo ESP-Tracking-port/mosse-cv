@@ -31,7 +31,12 @@ inline constexpr std::size_t szof()
 	return sizeof(typename Tp::Repr::template Type<F>);
 }
 
-/// \brief Stride between two consecutive real or imaginary numbers in a chosen layout
+// Check that overrides provided for various array layouts are comprehensive
+
+static_assert(countBit(Tp::Repr::MaskCplx) == 2, "It is expected that there are only 2 array layouts available."
+	"If that is not the case, the implementation better be double checked");
+
+/// \brief Stride between two consecutive real or imaginary numbers in a chosen layout. Override for ReImReIm layout.
 ///
 template <Tp::Repr::Flags F>
 constexpr unsigned strideInner(En<F & Tp::Repr::CplxRe1Im1> = nullptr)
@@ -39,18 +44,17 @@ constexpr unsigned strideInner(En<F & Tp::Repr::CplxRe1Im1> = nullptr)
 	return Ut::szof<F>() * 2;
 }
 
+/// \brief Override for ReReRe...ImImIm... layout
 template <Tp::Repr::Flags F>
 constexpr unsigned strideInner(En<F & Tp::Repr::CplxRenImn> = nullptr)
 {
 	return Ut::szof<F>();
 }
 
-/// \brief Override for non-complex array
+/// \brief Override for non-complex array (ReRe...Re layout)
 template <Tp::Repr::Flags F>
 constexpr unsigned strideInner(En<!(F & Tp::Repr::MaskRepr)> = nullptr)
 {
-	static_assert(countBit(Tp::Repr::MaskCplx) == 2, "It is expected that there are only 2 array layouts available."
-		"If that is not the case, the implementation better be double checked");
 	return Ut::szof<F>();
 }
 
