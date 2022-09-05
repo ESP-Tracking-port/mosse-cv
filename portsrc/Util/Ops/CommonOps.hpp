@@ -146,7 +146,7 @@ public:
 	///
 	/// \pre It is expected that Gaussian matrix is already multiplied by eta
 	///
-	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, float, bool aInitial) override
+	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial) override
 	{
 		auto mapA = Ut::makeEigenMap<ReprAb>(aMatAcomplex, roi());
 		auto mapAimag = Ut::makeEigenMapImag<ReprAb>(aMatAcomplex, roi());
@@ -179,7 +179,7 @@ public:
 		}
 	}
 
-	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, float, bool aInitial)
+	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial)
 	{
 		auto mapB = Ut::makeEigenMap<ReprAb>(aMatBcomplex, roi());
 		auto mapBimag = Ut::makeEigenMapImag<ReprAb>(aMatBcomplex, roi());
