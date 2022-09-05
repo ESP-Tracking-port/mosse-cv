@@ -165,7 +165,7 @@ public:
 		} else {  // Weighted sum.  B = eta * complexMult(gaussfft, conj(imagefft)) + (1 - eta) * B
 			for (unsigned row = 0; row < roi().rows(); ++row) {
 				for (unsigned col = 0; col < roi().cols(); ++col) {
-					mapFftImag(row, col) = Ut::minus(mapFftImag(row, col));  // Complex conjugate
+					mapFftImag(row, col) = Ut::minus<ReprBuffer>(mapFftImag(row, col));  // Complex conjugate
 					auto aPrev = mapA(row, col);
 					auto aPrevImag = mapAimag(row, col);
 					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
