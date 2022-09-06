@@ -8,7 +8,7 @@
 #include "Types/Repr.hpp"
 #include "Types/Tracking.hpp"
 #include "DynRawF32Mem.hpp"
-#include "Util/OhDebug.hpp"
+#include "OhDebug.hpp"
 
 namespace Mosse {
 namespace Ut {
