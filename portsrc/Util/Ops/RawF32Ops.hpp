@@ -32,12 +32,12 @@ private:
 		const void *gaussFftScaled;
 	};
 public:
-	virtual void fft2(void *aBufferComplex);
-	virtual void ifft2(void *aBufferComplex);
+	void fft2(void *aBufferComplex) override;
+	void ifft2(void *aBufferComplex) override;
 protected:
-	virtual void initImpl();
-	virtual const void *hannMatrix();  ///< Precompiled hann matrix
-	virtual const void *gaussFft();  ///< Precompiled scaled fourier-transformed Gaussian matrix
+	void initImpl() override;
+	const void *hannMatrix() override;  ///< Precompiled hann matrix
+	const void *gaussFft() override;  ///< Precompiled scaled fourier-transformed Gaussian matrix
 private:
 	/// \brief Boilerplate-reducing method
 	/// \arg aFwd Performs fft, if true, ifft otherwise.
