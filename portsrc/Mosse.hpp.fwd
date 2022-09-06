@@ -1,0 +1,23 @@
+//
+// Mosse.hpp.fwd
+//
+// Created on: Sep 06, 2022
+//     Author: Dmitry Murashov (d.murashov@geoscan.aero)
+//
+
+// Forward declaration API
+
+#if !defined(MOSSE_MOSSE_HPP_FWD_)
+#define MOSSE_MOSSE_HPP_FWD_
+
+namespace Mosse {
+
+class Tracker;
+
+/// \brief No effective representations are used. Buffers store raw floats. Primarily, it is used for testing purposes.
+///
+Tracker &getNaive();
+
+}  // namespace Mosse
+
+#endif // MOSSE_MOSSE_HPP_FWD_
