@@ -43,6 +43,7 @@ public:
 	virtual void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex);
 	virtual void fft2(void *aBufferComplex) = 0;
 	virtual void ifft2(void *aBufferComplex) = 0;
+	virtual ~Ops() = default;
 
 	/// \brief Enables enforcing the use of a correct tracking window size. It is intended to only use a set of
 	/// precompiled window sizes to spare computational expenses on Gaussian kernels and Hann windows.
