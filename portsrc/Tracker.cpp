@@ -30,7 +30,7 @@ void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 	port.ops.mataUpdate(port.mem.matA(), port.mem.buffer(), true);
 	port.ops.matbUpdate(port.mem.matB(), port.mem.buffer(), true);
 
-	// TODO: rand warp-based pretraining
+	// TODO: rand warp-based pretraining XXX: It seems to work without
 }
 
 void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
