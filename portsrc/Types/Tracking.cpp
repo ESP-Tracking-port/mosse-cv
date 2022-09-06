@@ -6,6 +6,7 @@
 //
 
 #include "Tracking.hpp"
+#include "Util/Arithm/Algo.hpp"
 
 namespace Mosse {
 namespace Tp {
@@ -26,6 +27,19 @@ void Roi::readjust(const PointRowCol &aSize)
 {
 	origin = origin + size / 2 - aSize / 2;
 	size = aSize;
+}
+
+void Roi::setCenter(const PointRowCol &aCenter)
+{
+	origin = aCenter - (size / 2);
+}
+
+void Roi::fitShift(const PointRowCol &aOuterBoundSize)
+{
+	for (auto c : {0, 1}) {
+		assert(size(c) < aOuterBoundSize(c));  ///< The ROI must fit
+		Ut::clamp(origin(c), 0, aOuterBoundSize(c) - size(c));
+	}
 }
 
 bool operator==(const Roi &aLhs, const Roi &aRhs)
