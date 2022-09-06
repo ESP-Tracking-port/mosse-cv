@@ -18,7 +18,7 @@ constexpr auto kDynRawflReprAb = Tp::Repr::StorageI16 | Tp::Repr::ReprLog2;
 constexpr auto kDynRawflReprAbDivIntermediary = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
 constexpr auto kDynRawflReprGauss = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
 
-DynRawF32Mem::DynRawF32Mem() : Mem{}, roiSizePrev{{0, 0}, {0, 0}}, mata{}, matb{}, buf{}
+DynRawF32Mem::DynRawF32Mem() : Mem{}, roiSizePrev{0, 0}, mata{}, matb{}, buf{}
 {
 }
 
