@@ -1,6 +1,7 @@
 add_subdirectory(fft)
 add_subdirectory(mosseapi)
+add_subdirectory(ohdebug)
 add_library(mosselibs INTERFACE)
 add_library(eigen INTERFACE)
 target_include_directories(eigen INTERFACE eigen)
-target_link_libraries(mosselibs INTERFACE fft mosseapi eigen)
+target_link_libraries(mosselibs INTERFACE fft mosseapi eigen ohdebug)
