@@ -40,7 +40,7 @@ public:
 	void init(Tp::Roi aRoi);
 	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) = 0;
 	virtual void imagePreprocess(void *aCropComplex) = 0;
-	virtual void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex);
+	virtual void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) = 0;
 	virtual void fft2(void *aBufferComplex) = 0;
 	virtual void ifft2(void *aBufferComplex) = 0;
 	virtual ~Ops() = default;
