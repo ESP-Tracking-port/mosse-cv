@@ -35,12 +35,12 @@ void runPort()
 		{
 			roi = box.add(trackingWindow, frame);
 			Mosse::Tp::Roi mosseRoi{{roi.x, roi.y}, {roi.size().height, roi.size().width}};
-			Mosse::Tp::Image mosseImage{frame.data, frame.size().height, frame.size().width};
+			Mosse::Tp::Image mosseImage{gray.data, gray.size().height, gray.size().width};
 			sTracker->init(mosseImage, mosseRoi);
 			init = false;
 		}
 		else {
-			Mosse::Tp::Image mosseImage{frame.data, frame.size().height, frame.size().width};
+			Mosse::Tp::Image mosseImage{gray.data, gray.size().height, gray.size().width};
 			sTracker->update(mosseImage, false);
 			auto mosseRoi = sTracker->roi();
 			roi = {mosseRoi.origin(1), mosseRoi.origin(0), mosseRoi.size(1), mosseRoi.size(0)};  // Create cv-compatible row-major ROI
