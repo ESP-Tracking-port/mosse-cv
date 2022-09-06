@@ -14,7 +14,7 @@
 
 namespace Mosse {
 
-Tracker::Tracker(Ut::Port aPort, float aEta) : tracking{{}, 0.0f, aEta}, port{aPort}
+Tracker::Tracker(Ut::Port aPort) : tracking{{}, 0.0f}, port{aPort}
 {
 }
 
