@@ -14,7 +14,7 @@ namespace Ut {
 class Ops;
 class Mem;
 
-/// \brief Replaceable operations which take number representation into account
+/// \brief Replaceable operations
 ///
 struct Port {
 	Ops &ops;
