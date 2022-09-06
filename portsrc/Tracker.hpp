@@ -16,7 +16,6 @@ namespace Tp {
 
 class Image;
 class Roi;
-class TrackingInfo;
 class PointRowCol;
 
 }  // namespace Tp
