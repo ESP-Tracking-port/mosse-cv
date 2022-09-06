@@ -55,7 +55,8 @@ void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
 	}
 
 	// Update ROI
-	tracking.roi = {tracking.roi.origin + maxResponsePos - tracking.roi.size / 2, tracking.roi.size};
+	tracking.roi.setCenter(maxResponsePos);  // Shift the window
+	tracking.roi.fitShift({aImage.rows(), aImage.cols()});  // Make sure the window fits the image. Adjust its coordinates while preserving the size
 	port.ops.init(tracking.roi);
 	port.mem.init(tracking.roi);
 	// Retrain w/ the new ROI
