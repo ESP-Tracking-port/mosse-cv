@@ -3,6 +3,7 @@
 #include "selectROI.h"
 #include "MallocCounter.hpp"
 #include "Mosse.hpp"
+#include "OhDebug.hpp"
 
 Mosse::Tracker *sTracker;
 
@@ -36,6 +37,7 @@ void runPort()
 			roi = box.add(trackingWindow, frame);
 			Mosse::Tp::Roi mosseRoi{{roi.x, roi.y}, {roi.size().height, roi.size().width}};
 			Mosse::Tp::Image mosseImage{gray.data, gray.size().height, gray.size().width};
+			ohdebugstr("MARKER");
 			sTracker->init(mosseImage, mosseRoi);
 			init = false;
 		}
