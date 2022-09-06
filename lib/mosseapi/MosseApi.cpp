@@ -138,7 +138,7 @@ const float *getLogTable8bit()  ///< Returns a float log table for integers from
 	return kLogMatrix8bit;
 }
 
-const float *getGaussKernelFft3dScaled125(unsigned &aRows, unsigned &aCols)
+const float *getGaussKernelFft3dScaled125(unsigned aRows, unsigned aCols)
 {
 	int id = checkWindowExists(aRows, aCols);
 
@@ -149,7 +149,7 @@ const float *getGaussKernelFft3dScaled125(unsigned &aRows, unsigned &aCols)
 	return kGaussKernelFft3dScaled125[id];
 }
 
-const float *getGaussKernelFftScaled125(unsigned &aRows, unsigned &aCols)
+const float *getGaussKernelFftScaled125(unsigned aRows, unsigned aCols)
 {
 	int id = checkWindowExists(aRows, aCols);
 
