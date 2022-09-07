@@ -18,6 +18,7 @@ void Ops::init(Tp::Roi aRoi)
 {
 	mRoi = aRoi;
 	ohdebug(Ops::init, aRoi);
+	initImpl();
 }
 
 const Tp::Roi &Ops::roi() const
