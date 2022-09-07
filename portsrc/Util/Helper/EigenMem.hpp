@@ -20,10 +20,10 @@ namespace Ut {
 template <Tp::Repr::Flags F>
 inline typename Tp::template EigenMapType<F>::Type makeEigenMap(void *bufferComplexOrReal, const Tp::Roi &roi)
 {
-	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
+	const auto strideOuter = Ut::strideInner<F>() * roi.cols();
 
 	return typename Tp::EigenMapType<F>::Type{static_cast<ReTp<F> *>(Ut::at<F>(Ut::offsetFirstReal<F>(roi),
-		bufferComplexOrReal)), roi.size.rows(), roi.size.cols(), typename Tp::EigenMapType<F>::StrideType{
+		bufferComplexOrReal)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{
 		Ut::strideInner<F>(), strideOuter}};
 }
 
@@ -32,10 +32,10 @@ inline typename Tp::template ConstEigenMapType<F>::Type makeEigenMap(const void 
 	const Tp::Roi &roi)
 {
 	using ValueType = const ReTp<F> *;
-	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
+	const auto strideOuter = Ut::strideInner<F>() * roi.cols();
 
 	return typename Tp::ConstEigenMapType<F>::Type{static_cast<ValueType>(Ut::at<F>(Ut::offsetFirstReal<F>(roi),
-		bufferComplexOrReal)), roi.size.rows(), roi.size.cols(), typename Tp::EigenMapType<F>::StrideType{
+		bufferComplexOrReal)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{
 		Ut::strideInner<F>(), strideOuter}};
 }
 
@@ -43,10 +43,10 @@ template <Tp::Repr::Flags F>
 inline typename Tp::EigenMapType<F>::Type makeEigenMapImag(void *bufferComplex, const Tp::Roi &roi,
 	En<F & Tp::Repr::MaskCplx> = nullptr)
 {
-	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
+	const auto strideOuter = Ut::strideInner<F>() * roi.cols();
 
 	return typename Tp::EigenMapType<F>::Type{static_cast<ReTp<F> *>(Ut::at<F>(Ut::offsetFirstImag<F>(roi),
-		bufferComplex)), roi.size.rows(), roi.size.cols(), typename Tp::EigenMapType<F>::StrideType{
+		bufferComplex)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{
 		Ut::strideInner<F>(), strideOuter}};
 }
 
@@ -55,10 +55,10 @@ inline typename Tp::ConstEigenMapType<F>::Type makeEigenMapImag(const void *buff
 	En<F & Tp::Repr::MaskCplx> = nullptr)
 {
 	using ValueType = const ReTp<F> *;
-	const auto strideOuter = Ut::strideInner<F>() * roi.size.cols();
+	const auto strideOuter = Ut::strideInner<F>() * roi.cols();
 
 	return typename Tp::ConstEigenMapType<F>::Type{static_cast<ValueType>(Ut::at<F>(Ut::offsetFirstImag<F>(roi),
-		bufferComplex)), roi.size.rows(), roi.size.cols(), typename Tp::EigenMapType<F>::StrideType{
+		bufferComplex)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{
 		Ut::strideInner<F>(), strideOuter}};
 }
 
