@@ -11,13 +11,14 @@
 #if 1
 # define OHDEBUG  // Flag macro. Can be used to configure depending functionality
 
-#if !defined(OHDEBUG_ENABLE_ALL_BY_DEFAULT)
-# define OHDEBUG_ENABLE_ALL_BY_DEFAULT 1
-#endif  // OHDEBUG_ENABLE_ALL_BY_DEFAULT
+# if !defined(OHDEBUG_ENABLE_ALL_BY_DEFAULT)
+#  define OHDEBUG_ENABLE_ALL_BY_DEFAULT 1
+# endif  // OHDEBUG_ENABLE_ALL_BY_DEFAULT
 
 # include <iostream>
-#include <tuple>
-#include <type_traits>
+# include <tuple>
+# include <type_traits>
+# include <limits>
 
 namespace OhDebug {
 
@@ -209,12 +210,14 @@ void ohDebugPrintNl()
 
 # define ohdebugeveryn(bump, ...) \
 	do { \
-		static unsigned n = 0; \
-		if (n % bump == 0) { \
-			n = 0; \
-			__VA_ARGS__; \
+		if (bump > 0) { \
+			static unsigned n = 0; \
+			if (n % bump == 0) { \
+				n = 0; \
+				__VA_ARGS__; \
+			} \
+			++n; \
 		} \
-		++n; \
 	} while (0)
 
 #else
