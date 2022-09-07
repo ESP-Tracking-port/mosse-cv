@@ -5,6 +5,7 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
+#include "Util/MosseDebug.hpp"
 #include "Types/Port.hpp"
 #include "Types/Tracking.hpp"
 #include "Types/Repr.hpp"
@@ -21,6 +22,7 @@ Tracker::Tracker(Ut::Port aPort) : tracking{{}, 0.0f}, port{aPort}
 void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 {
 	// A set of precompiled gaussian matrices is used, so the window's size will be changed to the closest one
+	ohdebug(Tracker::init, aRoi);
 	port.ops.roiResize(aRoi);
 	port.mem.init(tracking.roi);
 	port.ops.init(tracking.roi);
