@@ -9,6 +9,7 @@
 #include "Util/Arithm/Conv.hpp"
 #include "Ops.hpp"
 #include "MosseApi.hpp"
+#include <OhDebug.hpp>
 
 namespace Mosse {
 namespace Ut {
@@ -16,6 +17,7 @@ namespace Ut {
 void Ops::init(Tp::Roi aRoi)
 {
 	mRoi = aRoi;
+	ohdebug(Ops::init, aRoi.size(0), mRoi.size(0));
 }
 
 const Tp::Roi &Ops::roi() const

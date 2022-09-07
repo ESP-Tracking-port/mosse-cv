@@ -19,6 +19,7 @@
 #include "Util/Helper/EigenMem.hpp"
 #include "Util/Helper/ReTp.hpp"
 #include "MosseApi.hpp"
+#include <OhDebug.hpp>
 #include <Eigen/Core>
 #include <type_traits>
 #include <cassert>
@@ -230,6 +231,7 @@ private:
 	template <Tp::Repr::Flags F>
 	void bufferComplexInit(Tp::Image aImage, void *aBufferCplx)
 	{
+		ohdebug(CommonOps::bufferComplexInit, roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
 		auto map = makeEigenMap<F>(aBufferCplx, roi());
 		auto mapImag = makeEigenMapImag<F>(aBufferCplx, roi());
 		auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
