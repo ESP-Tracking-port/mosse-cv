@@ -9,7 +9,7 @@
 #include "MosseApi.hpp"
 #include "RawF32Ops.hpp"
 #include "Util/Arithm/MemLayout.hpp"
-#include "Util/MosseDebug.hpp"
+#include "MossePort.hpp"
 
 #if MOSSE_USE_OPENCV
 # include <opencv2/opencv.hpp>
