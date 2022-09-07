@@ -13,8 +13,6 @@
 
 #if defined(OHDEBUG)
 
-//static_assert(false, "");
-
 # include "Types/Tracking.hpp"
 
 namespace std {
