@@ -6,7 +6,7 @@
 //
 
 #include "Mosse.hpp"
-#include "OhDebug.hpp"
+#include "Util/MosseDebug.hpp"
 
 namespace Mosse {
 
