@@ -161,6 +161,7 @@ public:
 				for (unsigned col = 0; col < roi().cols(); ++col) {
 					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
 						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));
+					ohdebug(CommonOps::mataUpdate, mapFft(row, col), row, col);
 				}
 			}
 		} else {  // Weighted sum.  B = eta * complexMult(gaussfft, conj(imagefft)) + (1 - eta) * B
@@ -175,6 +176,7 @@ public:
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrevImag, aPrevImag);
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapA(row, col), aPrev, mapA(row, col));
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapAimag(row, col), aPrevImag, mapAimag(row, col));
+					ohdebug(CommonOps::mataUpdate, mapFft(row, col));
 				}
 			}
 		}
@@ -190,6 +192,12 @@ public:
 		if (aInitial) {
 			for (unsigned row = 0; row < roi().rows(); ++row) {
 				for (unsigned col = 0; col < roi().cols(); ++col) {
+					ohdebug(CommonOps::matbUpdate, aMatBcomplex != nullptr);
+					ohdebug(CommonOps::matbUpdate, row, col);
+					ohdebug(CommonOps::matbUpdate, mapFft(row, col));
+					ohdebug(CommonOps::matbUpdate, mapFftImag(row, col));
+					ohdebug(CommonOps::matbUpdate, mapB(row, col));
+					ohdebug(CommonOps::matbUpdate, mapBimag(row, col));
 					auto fftTemp = mapFft(row, col);
 					auto fftImagTemp = mapFftImag(row, col);
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(), fftTemp,
