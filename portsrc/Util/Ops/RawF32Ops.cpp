@@ -33,6 +33,7 @@ void RawF32Ops::initImpl()
 {
 	static constexpr auto gaussKernelScaledGet = Mosse::getGaussKernelFft3dScaled125;
 	static constexpr auto kEta = 0.125f;
+	ohdebug(RawF32OpsBase::initImpl, roiSizePrev);
 
 	if (roiSizePrev != roi().size) {
 		roiSizePrev = roi().size;
