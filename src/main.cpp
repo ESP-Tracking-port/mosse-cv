@@ -124,6 +124,7 @@ int main()
 	//img2avi((char*)"img");
 	sTracker = &Mosse::getNaive();
 	runPort();
+//	run();
 	debug(MallocCounter::getPeakCount());
 	return 0;
 }
