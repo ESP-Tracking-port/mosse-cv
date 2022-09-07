@@ -36,7 +36,7 @@ void runPort()
 		{
 			roi = box.add(trackingWindow, frame);
 			ohdebug(runPort, roi);
-			Mosse::Tp::Roi mosseRoi{{roi.x, roi.y}, {roi.size().height, roi.size().width}};
+			Mosse::Tp::Roi mosseRoi{{roi.y, roi.x}, {roi.size().height, roi.size().width}};
 			ohdebug(runPort, mosseRoi);
 			Mosse::Tp::Image mosseImage{gray.data, gray.size().height, gray.size().width};
 			sTracker->init(mosseImage, mosseRoi);
