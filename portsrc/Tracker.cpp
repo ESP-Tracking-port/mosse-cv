@@ -12,6 +12,7 @@
 #include "Util/Mem.hpp"
 #include "Util/Ops.hpp"
 #include "Tracker.hpp"
+#include "MossePort.hpp"
 
 namespace Mosse {
 
@@ -28,8 +29,13 @@ void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 	port.ops.init(tracking.roi);
 	port.ops.imageCropInto(aImage, port.mem.buffer());
 	port.ops.imagePreprocess(port.mem.buffer());
+	ohdebug(Tracker::init, "fft2");
 	port.ops.fft2(port.mem.buffer());
+	ohdebug(Tracker::init, "mataUpdate");
 	port.ops.mataUpdate(port.mem.matA(), port.mem.buffer(), true);
+	ohdebug(Tracker::init, port.mem.matA() != nullptr);
+	ohdebug(Tracker::init, port.mem.matB() != nullptr);
+	ohdebug(Tracker::init, "matbUpdate");
 	port.ops.matbUpdate(port.mem.matB(), port.mem.buffer(), true);
 
 	// TODO: rand warp-based pretraining XXX: It seems to work without
