@@ -7,6 +7,7 @@
 
 #include "Tracking.hpp"
 #include "Util/Arithm/Algo.hpp"
+#include "Util/MosseDebug.hpp"
 
 namespace Mosse {
 namespace Tp {
