@@ -5,10 +5,15 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
+#include "Mosse.hpp"
 #include "MosseApi.hpp"
 #include "RawF32Ops.hpp"
 #include "Util/Arithm/MemLayout.hpp"
-#include <opencv2/opencv.hpp>
+#include "Util/MosseDebug.hpp"
+
+#if MOSSE_USE_OPENCV
+# include <opencv2/opencv.hpp>
+#endif  // MOSSE_USE_OPENCV
 
 namespace Mosse {
 namespace Ut {
@@ -37,6 +42,7 @@ void RawF32Ops::initImpl()
 			gaussKernelScaledGet(roi().size(0), roi().size(1))
 		};
 		setEta(kEta);
+		ohdebug(RawF32Ops::initImpl, precompiledMatrices.hann != nullptr);
 	}
 }
 
@@ -50,6 +56,7 @@ const void *RawF32Ops::gaussFft()
 	return precompiledMatrices.gaussFftScaled;
 }
 
+#if MOSSE_USE_OPENCV
 void RawF32Ops::fft2Common(void *aBufferComplex, bool aFwd)
 {
 	static_assert(kRawF32ReprBuffer & Tp::Repr::CplxRe1Im1, "");
@@ -58,6 +65,11 @@ void RawF32Ops::fft2Common(void *aBufferComplex, bool aFwd)
 	auto reim = cv::Mat(2, sizes, CV_32FC2, aBufferComplex);
 	cv::dft(reim, reim, aFwd ? cv::DFT_SCALE : cv::DFT_INVERSE);
 }
+#else
+void RawF32Ops::fft2Common(void *, bool)
+{
+}
+#endif
 
 }  // namespace Ut
 }  // namespace Mosse
