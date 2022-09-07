@@ -206,10 +206,22 @@ void ohDebugPrintNl()
 	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(ohdebugfl(__LINE__)); \
 	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(#context); \
 	std::cout << (a) << std::endl;
+
+# define ohdebugeveryn(bump, ...) \
+	do { \
+		static unsigned n = 0; \
+		if (n % bump == 0) { \
+			n = 0; \
+			__VA_ARGS__; \
+		} \
+		++n; \
+	} while (0)
+
 #else
 # define ohdebug(...)
 # define ohdebugstr(...)
 # define ohdebuggroup(...)
+# define ohdebugeveryn(...)
 #endif
 
 #if defined(OHDEBUG_ENABLE_ALL_BY_DEFAULT)
