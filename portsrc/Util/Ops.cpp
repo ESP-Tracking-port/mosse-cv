@@ -36,6 +36,7 @@ void Ops::roiResize(Mosse::Tp::Roi &aRoi)
 	Mosse::getClosestWindow(rows, cols);
 	ohdebug(Ops::roiResize, "closest window", rows, cols);
 	aRoi.readjust({rows, cols});
+	ohdebug(Ops::roiResize, "after resize", aRoi);
 }
 
 }  // namespace Ut
