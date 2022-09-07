@@ -94,7 +94,7 @@ struct MM<size, size, dummy>{
 
 #if OHDEBUG_ENABLE_ALL_BY_DEFAULT
 
-template <int G>
+template <unsigned G>
 struct Enabled : std::true_type {
 };
 
@@ -106,7 +106,7 @@ struct Enabled : std::true_type {
 	}  // namespace OhDebug
 #else
 
-template <int G>
+template <unsigned G>
 struct Enabled : std::false_type {
 };
 
@@ -122,12 +122,12 @@ struct Enabled : std::false_type {
 struct Stub {
 };
 
-template <int G, class ...Ts>
+template <unsigned G, class ...Ts>
 void ohdebugImpl(const char *, Stub, Ts &&...)
 {
 }
 
-template <int G, class T>
+template <unsigned G, class T>
 void ohdebugImpl(const char *aName, T &&aT)
 {
 	if (!OhDebug::Enabled<G>::value) {
@@ -137,7 +137,21 @@ void ohdebugImpl(const char *aName, T &&aT)
 	std::cout << aName << "=" << aT << "  ";
 }
 
-template <int G>
+template <unsigned G>
+void ohdebugImpl(const char *aName, const char *aValue)
+{
+	if (!OhDebug::Enabled<G>::value) {
+		return;
+	}
+
+	if (aName[0] == '"') {  // aName is a stringified ("-quoted) const char. It, therefore, contains the same value as `aValue`.
+		std::cout << aName << "  ";
+	} else {
+		std::cout << aName << "=" << aValue << "  ";
+	}
+}
+
+template <unsigned G>
 void ohDebugPrintGroup(const char *aGroup)
 {
 	if (!OhDebug::Enabled<G>::value) {
@@ -147,7 +161,7 @@ void ohDebugPrintGroup(const char *aGroup)
 	std::cout << aGroup << " :   ";
 }
 
-template <int G>
+template <unsigned G>
 void ohDebugPrintNl()
 {
 	if (OhDebug::Enabled<G>::value) {
