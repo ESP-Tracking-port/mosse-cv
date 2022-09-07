@@ -9,6 +9,7 @@
 #define ONE_HEADER_DEBUG_HPP_
 
 #if 1
+# define OHDEBUG  // Flag macro. Can be used to configure depending functionality
 
 #if !defined(OHDEBUG_ENABLE_ALL_BY_DEFAULT)
 # define OHDEBUG_ENABLE_ALL_BY_DEFAULT 1
@@ -143,7 +144,7 @@ void ohDebugPrintGroup(const char *aGroup)
 		return;
 	}
 
-	std::cout << aGroup << ": ";
+	std::cout << aGroup << " :   ";
 }
 
 template <int G>
@@ -173,12 +174,24 @@ void ohDebugPrintNl()
 # define ohdebug5__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
 	ohdebug6__(static_cast<int>(context), ## __VA_ARGS__);
 # define ohdebug6__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
+	ohdebug7__(static_cast<int>(context), ## __VA_ARGS__);
+# define ohdebug7__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
+	ohdebug8__(static_cast<int>(context), ## __VA_ARGS__);
+# define ohdebug8__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
+	ohdebug9__(static_cast<int>(context), ## __VA_ARGS__);
+# define ohdebug9__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
+	ohdebug10__(static_cast<int>(context), ## __VA_ARGS__);
+# define ohdebug10__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
 	ohdebugend__(static_cast<int>(context), ## __VA_ARGS__);
 # define ohdebugend__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
 	OhDebug::ohDebugPrintNl<static_cast<int>(context)>()
 # define ohdebug(context, ...) ohdebug0__(context, ##__VA_ARGS__, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, \
-	OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{})
-# define ohdebugstr(a) std::cout << (a) << std::endl;
+	OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, \
+	OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{})
+# define ohdebugstr(context, a) \
+	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(ohdebugfl(__LINE__)); \
+	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(#context); \
+	std::cout << (a) << std::endl;
 #else
 # define ohdebug(...)
 # define ohdebugstr(...)
