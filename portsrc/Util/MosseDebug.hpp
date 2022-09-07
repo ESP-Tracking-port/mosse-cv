@@ -26,6 +26,12 @@ std::ostream &operator<<(std::basic_ostream<T> &out, const Mosse::Tp::Roi &roi)
 		<< " cols: " << roi.size(1);
 }
 
+template <class T>
+std::ostream &operator<<(std::basic_ostream<T> &out, const Mosse::Tp::PointRowCol &point)
+{
+	return out << "Tp::PointRowCol " << "row: " << point(0) << " col: " << point(1);
+}
+
 }  // namespace std
 
 #endif  // OH_DEBUG
