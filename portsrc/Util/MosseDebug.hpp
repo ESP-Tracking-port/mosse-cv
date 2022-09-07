@@ -36,4 +36,6 @@ std::ostream &operator<<(std::basic_ostream<T> &out, const Mosse::Tp::PointRowCo
 
 #endif  // OH_DEBUG
 
+#define MOSSE_USE_OPENCV 1  // There is a testing implementation of MOSSE that uses Open CV, particularly, Open CV's DFT (FFT) procedure. Set to 0 to enable portability
+
 #endif // MOSSE_UTIL_MOSSEDEBUG_HPP_
