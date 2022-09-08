@@ -15,7 +15,6 @@ TEST_CASE("Ut real/imaginary mapping") {
 	constexpr auto kRows = 5;
 	constexpr auto kCols = 5;
 	float matrix[kRows][kCols * 2] = {0.f};
-
 	float counter = 0.0f;
 
 	for (unsigned row = 0; row < kRows; ++row) {
