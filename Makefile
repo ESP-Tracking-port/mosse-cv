@@ -8,5 +8,5 @@ test: build
 	./build/test/test
 
 clean:
-	rm -rf build
+	cd build && make clean
 .PHONY: clean
