@@ -13,7 +13,7 @@ TEST_CASE("Ut real/imaginary mapping") {
 		| Mosse::Tp::Repr::StorageF32;
 	constexpr float kCounterMult = 10.0f;
 	constexpr auto kRows = 5;
-	constexpr auto kCols = 3;
+	constexpr auto kCols = 5;
 	float matrix[kRows][kCols * 2] = {0.f};
 
 	float counter = 0.0f;
@@ -22,6 +22,7 @@ TEST_CASE("Ut real/imaginary mapping") {
 		for (unsigned col = 0; col < kCols; col += 2) {
 			matrix[row][col] = counter;
 			matrix[row][col + 1] = counter * kCounterMult;
+			counter += 1.0f;
 		}
 	}
 
@@ -31,9 +32,11 @@ TEST_CASE("Ut real/imaginary mapping") {
 
 	for (unsigned row = 0; row < kRows; ++row) {
 		for (unsigned col = 0; col < kCols; ++col) {
-			ohdebugassert(testUtRealImaginaryMapping, map(row, col) == matrix[row][col]
-				&& mapImag(row, col) == matrix[row][col + 1], map(row, col), mapImag(row, col), matrix[row][col],
-				matrix[row][col + 1]);
+			CAPTURE(map(row, col));
+			CAPTURE(row);
+			CAPTURE(col);
+			CHECK_EQ(map(row, col), matrix[row][col]);
+			CHECK_EQ(mapImag(row, col), matrix[row][col + 1]);
 		}
 	}
 }
