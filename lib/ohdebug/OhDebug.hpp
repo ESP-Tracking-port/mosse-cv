@@ -19,6 +19,7 @@
 # include <tuple>
 # include <type_traits>
 # include <limits>
+# include <cassert>
 
 namespace OhDebug {
 
@@ -145,7 +146,7 @@ void ohdebugImpl(const char *aName, const char *aValue)
 		return;
 	}
 
-	if (aName[0] == '"') {  // aName is a stringified ("-quoted) const char. It, therefore, contains the same value as `aValue`.
+	if (aName[0] == '"' || aValue[0] == '\0') {  // aName is a stringified ("-quoted) const char. It, therefore, contains the same value as `aValue`.
 		std::cout << aName << "  ";
 	} else {
 		std::cout << aName << "=" << aValue << "  ";
@@ -172,41 +173,43 @@ void ohDebugPrintNl()
 
 }  // namespace OhDebug
 
+# define ohdebugstringify__(a) #a
 # define ohdebugflimpl(line) __FILE__ ":" #line
 # define ohdebugfl(line) ohdebugflimpl(line)
+# define ohdebugvoid(a) (a, "")
 
 # define ohdebug0__(context, a, ...) OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(ohdebugfl(__LINE__)); \
 	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(#context); \
 	ohdebug1__(OHDEBUG_COMPILE_TIME_CRC32_STR(#context), a, ## __VA_ARGS__)
-# define ohdebug1__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
-	ohdebug2__(static_cast<int>(context), ## __VA_ARGS__);
-# define ohdebug2__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
-	ohdebug3__(static_cast<int>(context), ## __VA_ARGS__);
-# define ohdebug3__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
-	ohdebug4__(static_cast<int>(context), ## __VA_ARGS__);
-# define ohdebug4__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
-	ohdebug5__(static_cast<int>(context), ## __VA_ARGS__);
-# define ohdebug5__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
-	ohdebug6__(static_cast<int>(context), ## __VA_ARGS__);
-# define ohdebug6__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
-	ohdebug7__(static_cast<int>(context), ## __VA_ARGS__);
-# define ohdebug7__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
-	ohdebug8__(static_cast<int>(context), ## __VA_ARGS__);
-# define ohdebug8__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
-	ohdebug9__(static_cast<int>(context), ## __VA_ARGS__);
-# define ohdebug9__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
-	ohdebug10__(static_cast<int>(context), ## __VA_ARGS__);
-# define ohdebug10__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
-	ohdebugend__(static_cast<int>(context), ## __VA_ARGS__);
-# define ohdebugend__(context, a, ...) OhDebug::ohdebugImpl<static_cast<int>(context)>(#a, a); \
-	OhDebug::ohDebugPrintNl<static_cast<int>(context)>()
+# define ohdebug1__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug2__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug2__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug3__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug3__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug4__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug4__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug5__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug5__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug6__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug6__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug7__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug7__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug8__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug8__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug9__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug9__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug10__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug10__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebugend__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebugend__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	OhDebug::ohDebugPrintNl<static_cast<unsigned>(context)>()
 # define ohdebug(context, ...) ohdebug0__(context, ##__VA_ARGS__, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, \
 	OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, \
 	OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{})
 # define ohdebugstr(context, a) \
 	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(ohdebugfl(__LINE__)); \
 	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(#context); \
-	std::cout << (a) << std::endl;
+	std::cout << ((void)a, #a) << std::endl;
 
 # define ohdebugeveryn(bump, ...) \
 	do { \
@@ -220,11 +223,41 @@ void ohDebugPrintNl()
 		} \
 	} while (0)
 
+# define ohdebugonce(hit, ...) \
+	do { \
+		static int n = 0; \
+		if (n == hit && hit >= 0) { \
+			__VA_ARGS__ ; \
+		}; \
+		++n; \
+	} while (0)
+
+# define ohdebugif(cond, ...) \
+	do { \
+		if ( cond ) { \
+			__VA_ARGS__ ; \
+		} \
+	} while(0)
+
+# define ohdebugsection(...) \
+	do { \
+		__VA_ARGS__ ; \
+	} while (0)
+
+# define ohdebugassert(ctx, cond, ...) \
+	do { \
+		if (!(cond)) { \
+			ohdebug(ctx, "assertion triggered", #cond, ## __VA_ARGS__ ) ; \
+			assert(false); \
+		} \
+	} while(0)
+
 #else
 # define ohdebug(...)
 # define ohdebugstr(...)
 # define ohdebuggroup(...)
 # define ohdebugeveryn(...)
+# define ohdebugif(...)
 #endif
 
 #if defined(OHDEBUG_ENABLE_ALL_BY_DEFAULT)
