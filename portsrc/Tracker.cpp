@@ -58,8 +58,10 @@ void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
 		port.ops.maxReal(port.mem.buffer(), maxResponsePos, &sum);
 		const Tp::PointRowCol kMaskSize{11, 11};
 		tracking.psr = port.ops.calcPsr(port.mem.buffer(), maxResponsePos, sum, kMaskSize);
+		ohdebug(Tracker::update, maxResponsePos);
 	} else {
 		port.ops.maxReal(port.mem.buffer(), maxResponsePos, nullptr);
+		ohdebug(Tracker::update, maxResponsePos);
 	}
 
 	// Update ROI
