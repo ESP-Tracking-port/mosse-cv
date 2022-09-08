@@ -36,44 +36,47 @@ inline constexpr std::size_t szof()
 static_assert(countBit(Tp::Repr::MaskCplx) == 2, "It is expected that there are only 2 array layouts available."
 	"If that is not the case, the implementation better be double checked");
 
-/// \brief Stride between two consecutive real or imaginary numbers in a chosen layout. Override for ReImReIm layout.
+/// \brief Pointer increment between two consecutive real or imaginary numbers in a chosen layout. Override for
+/// ReImReIm layout.
 ///
 template <Tp::Repr::Flags F>
 constexpr unsigned strideInner(En<F & Tp::Repr::CplxRe1Im1> = nullptr)
 {
-	return Ut::szof<F>() * 2;
+	return 2;
 }
 
 /// \brief Override for ReReRe...ImImIm... layout
+///
 template <Tp::Repr::Flags F>
 constexpr unsigned strideInner(En<F & Tp::Repr::CplxRenImn> = nullptr)
 {
-	return Ut::szof<F>();
+	return 1;
 }
 
 /// \brief Override for non-complex array (ReRe...Re layout)
+///
 template <Tp::Repr::Flags F>
 constexpr unsigned strideInner(En<!(F & Tp::Repr::MaskCplx)> = nullptr)
 {
-	return Ut::szof<F>();
+	return 1;
 }
 
-template <Tp::Repr::Flags F, class R = std::uint8_t>
+template <Tp::Repr::Flags F>
 constexpr unsigned offsetFirstReal(const Tp::Roi &)
 {
-	return 0 * sizeof(R);
+	return 0;
 }
 
 template <Tp::Repr::Flags F, class R = std::uint8_t>
 constexpr unsigned offsetFirstImag(const Tp::Roi &, En<F & Tp::Repr::CplxRe1Im1> = nullptr)
 {
-	return Ut::szof<F>() * sizeof(R);
+	return 1;
 }
 
 template <Tp::Repr::Flags F, class R = std::uint8_t>
 inline unsigned offsetFirstImag(const Tp::Roi &roi, En<F & Tp::Repr::CplxRenImn> = nullptr)
 {
-	return Ut::szof<F>() * roi.size.rows() * roi.size.cols() * sizeof(R);
+	return roi.rows() * roi.cols();
 }
 
 template <Tp::Repr::Flags F>
@@ -84,7 +87,7 @@ inline void *at(unsigned offset, void *mem)
 }
 
 template <Tp::Repr::Flags F>
-inline const void *at(unsigned offset, const void *mem)
+inline const void *  at(unsigned offset, const void *mem)
 {
 	using ValueType = typename Tp::Repr::Type<F>;
 	return static_cast<const void *>(static_cast<const ValueType *>(mem) + offset);
