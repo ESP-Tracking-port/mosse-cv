@@ -8,9 +8,10 @@
 #if !defined(MOSSE_TYPES_REPR_HPP_)
 #define MOSSE_TYPES_REPR_HPP_
 
-#include <cstdint>
 #include "Util/Helper/Bitop.hpp"
 #include "Util/Helper/StoreType.hpp"
+#include <cstdint>
+#include <type_traits>
 
 namespace Mosse {
 namespace Tp {
@@ -62,6 +63,12 @@ struct Repr {
 	template <Flags F>
 	using Type = typename TypeImpl<F & MaskStorage>::Type;
 
+	template <class T>
+	struct StorageImpl;
+
+	template <class T>
+	using Storage = typename StorageImpl<T>::value;
+
 	template <Flags F>
 	static constexpr bool isValid()
 	{
@@ -75,6 +82,14 @@ struct Repr::TypeImpl<Repr::StorageI16> : Ut::StoreType<std::int16_t> {
 
 template <>
 struct Repr::TypeImpl<Repr::StorageF32> : Ut::StoreType<float> {
+};
+
+template <>
+struct Repr::StorageImpl<float> : std::integral_constant<Tp::Repr::Flags, Tp::Repr::StorageF32> {
+};
+
+template <>
+struct Repr::StorageImpl<std::int16_t> : std::integral_constant<Tp::Repr::Flags, Tp::Repr::StorageI16> {
 };
 
 class Geometry {
