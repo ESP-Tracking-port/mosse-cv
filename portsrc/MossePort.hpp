@@ -36,9 +36,6 @@ std::ostream &operator<<(std::basic_ostream<T> &out, const Mosse::Tp::PointRowCo
 
 // Disable certain output groups
 
-ohdebuggroup(CommonOps::mataUpdate)
-ohdebuggroup(CommonOps::matbUpdate)
-ohdebuggroup(CommonOps::bufferComplexInit)
 ohdebuggroup(RawF32OpsBase::initImpl)
 ohdebuggroup(Ops::init)
 
@@ -49,18 +46,25 @@ ohdebuggroup(Ops::init)
 # include <cmath>
 # define MOSSE_USE_OPENCV 1  // There is a testing implementation of MOSSE that uses Open CV, particularly, Open CV's DFT (FFT) procedure. Set to 0 to enable portability
 
-inline void mosseAssertNotNan(float a)
+namespace Mosse {
+
+inline bool isNan(float a)
 {
-	assert(!std::isnan(a));
+	return std::isnan(a);
 }
 
-template <class T>
-inline void mosseAssertNotNan(const T a)
+inline bool isNan(...)
 {
+	ohdebug(Mosse::isNan, "stub, fallback");
+	return false;
 }
+
+}  // namespace Mosse
+
+# define mosseassertnotnan(ctx, a, ...) ohdebugassert(ctx, Mosse::isNan(a), ## __VA_ARGS__ )
 
 #else
-# define mosseAssertNonNan(...)
+# define mosseassertnotnan(...)
 #endif
 
 #endif // MOSSE_UTIL_MOSSEDEBUG_HPP_
