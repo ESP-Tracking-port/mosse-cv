@@ -5,7 +5,7 @@ build:
 .PHONY: build
 
 test: build
-	./build/test/test
+	./build/mossetest
 
 clean:
 	cd build && make clean
