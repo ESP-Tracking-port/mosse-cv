@@ -159,9 +159,14 @@ public:
 		if (aInitial) {  // B = eta * complexMult(gaussfft, conj(imagefft))
 			for (unsigned row = 0; row < roi().rows(); ++row) {
 				for (unsigned col = 0; col < roi().cols(); ++col) {
+					mapA(row, col) = Ut::toRepr<ReprAb>(0);
+					mapAimag(row, col) = Ut::toRepr<ReprAb>(0);
+					mosseassertnotnan(CommonOps::mataUpdate, mapFft(row, col), row, col);
+					mosseassertnotnan(CommonOps::mataUpdate, mapFftImag(row, col), row, col);
 					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
 						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));
-					ohdebug(CommonOps::mataUpdate, mapFft(row, col), row, col);
+					mosseassertnotnan(CommonOps::mataUpdate, mapA(row, col), row, col);
+					mosseassertnotnan(CommonOps::mataUpdate, mapAimag(row, col), row, col);
 				}
 			}
 		} else {  // Weighted sum.  B = eta * complexMult(gaussfft, conj(imagefft)) + (1 - eta) * B
@@ -176,7 +181,8 @@ public:
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrevImag, aPrevImag);
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapA(row, col), aPrev, mapA(row, col));
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapAimag(row, col), aPrevImag, mapAimag(row, col));
-					ohdebug(CommonOps::mataUpdate, mapFft(row, col));
+					mosseassertnotnan(CommonOps::mataUpdate, mapA(row, col), row, col);
+					mosseassertnotnan(CommonOps::mataUpdate, mapAimag(row, col), row, col);
 				}
 			}
 		}
@@ -192,12 +198,6 @@ public:
 		if (aInitial) {
 			for (unsigned row = 0; row < roi().rows(); ++row) {
 				for (unsigned col = 0; col < roi().cols(); ++col) {
-					ohdebug(CommonOps::matbUpdate, aMatBcomplex != nullptr);
-					ohdebug(CommonOps::matbUpdate, row, col);
-					ohdebug(CommonOps::matbUpdate, mapFft(row, col));
-					ohdebug(CommonOps::matbUpdate, mapFftImag(row, col));
-					ohdebug(CommonOps::matbUpdate, mapB(row, col));
-					ohdebug(CommonOps::matbUpdate, mapBimag(row, col));
 					auto fftTemp = mapFft(row, col);
 					auto fftImagTemp = mapFftImag(row, col);
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(), fftTemp,
@@ -244,13 +244,23 @@ private:
 		auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
 		const float *logTable = Mosse::getLogTable8bit();
 		float sum = 0.0f;
-		ohdebug(CommonOps::bufferComplexInit, roi(), map.rows(), map.cols());
 
 		// Calculating mean value
+
+		ohdebugonce(0, {
+			for (unsigned row = 0; row < map.rows(); ++row) {
+				for (unsigned col = 0; col < map.cols(); ++col) {
+					ohdebug(CommonOps::bufferComplexInit, map(row, col), static_cast<int>(aImage(row, col)), row, col);
+				}
+			}
+		});
 
 		for (unsigned row = 0; row < map.rows(); ++row) {
 			for (unsigned col = 0; col < map.cols(); ++col) {
 				sum += logTable[blockImage(row, col)];
+				mosseassertnotnan(CommonOps::bufferComplexInit, blockImage(row, col), roi());
+				mosseassertnotnan(CommonOps::bufferComplexinit, logTable[blockImage(row, col)], row, col,
+					blockImage(row, col));
 			}
 		}
 
@@ -273,14 +283,15 @@ private:
 		for (unsigned row = 0; row < map.rows(); ++row) {
 			for (unsigned col = 0; col < map.cols(); ++col) {
 				constexpr float kEps = 1e-5;  // Small fraction to prevent zero division
-				mapImag(row, col) = toRepr<F>(0);
+				mapImag(row, col) = toRepr<F>(0.0f);
 				float pixel = (logTable[blockImage(row, col)] - mean) / (stddev + kEps)
 					* fromRepr<float, ReprHann>(mapHann(row, col));  // Log table is an optimization shortcut. The log(0) issue is already taken care of during the table compilation stage.
 				map(row, col) = toRepr<F>(pixel);
+				mosseassertnotnan(CommonOps::bufferComplexInit, map(row, col), row, col);
+				mosseassertnotnan(CommonOps::bufferComplexInit, mapImag(row, col), row, col);
 			}
 		}
 
-		ohdebug(CommonOps::bufferComplexInit, "finished initializing the array");
 	}
 
 	/// \brief Finds the max element
