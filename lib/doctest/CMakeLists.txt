@@ -1,0 +1,1 @@
+add_subdirectory(doctest EXCLUDE_FROM_ALL)
