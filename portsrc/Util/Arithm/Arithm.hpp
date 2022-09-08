@@ -12,6 +12,7 @@
 #include "Util/Helper/En.h"
 #include "Util/Helper/ReTp.hpp"
 #include "Util/Arithm/Conv.hpp"
+#include "MossePort.hpp"
 
 namespace Mosse {
 namespace Ut {
@@ -34,6 +35,7 @@ struct MulCplxA3 {
 		float oImf = aRe1f * aIm2f + aIm1f * aRe2f;
 		aoRe = toRepr<O>(oRef);
 		aoIm = toRepr<O>(oImf);
+		ohdebug(MuxCplxA3::call, R1, R2, O, aRe1f, aIm1f, aRe2f, aIm2f, oRef, oImf);
 	}
 };
 
@@ -64,6 +66,10 @@ struct DivCplxA3 {
 		float oImf = (b * c - a * d) / (c * c + d * d);
 		aoRe = toRepr<O>(oRef);
 		aoIm = toRepr<O>(oImf);
+		ohdebugif(std::isnan(oRef) || std::isnan(oImf), {
+			ohdebug(DivCplxA3::call, R1, R2, O, oRef, oImf);
+			assert(false);
+		});
 	}
 };
 
