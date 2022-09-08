@@ -67,7 +67,7 @@ struct Repr {
 	struct StorageImpl;
 
 	template <class T>
-	using Storage = typename StorageImpl<T>::value;
+	using Storage = StorageImpl<T>;
 
 	template <Flags F>
 	static constexpr bool isValid()
