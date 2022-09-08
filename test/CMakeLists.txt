@@ -1,6 +1,0 @@
-project(test)
-cmake_minimum_required(VERSION 2.8)
-file(GLOB SRC "*.cpp")
-add_executable(test ${SRC})
-target_link_libraries(test PRIVATE embmosse)
-target_compile_options(test PRIVATE "-g")
