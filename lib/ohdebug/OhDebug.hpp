@@ -8,7 +8,7 @@
 #if !defined(ONE_HEADER_DEBUG_HPP_)
 #define ONE_HEADER_DEBUG_HPP_
 
-#if 1
+#if 1 && !defined(OHDEBUG_DISABLE)  // OHDEBUG_DISABLE can be used to disable OHDEBUG locally
 # define OHDEBUG  // Flag macro. Can be used to configure depending functionality
 
 # if !defined(OHDEBUG_ENABLE_ALL_BY_DEFAULT)
@@ -181,6 +181,7 @@ void ohDebugPrintNl()
 # define ohdebug0__(context, a, ...) OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(ohdebugfl(__LINE__)); \
 	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(#context); \
 	ohdebug1__(OHDEBUG_COMPILE_TIME_CRC32_STR(#context), a, ## __VA_ARGS__)
+
 # define ohdebug1__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
 	ohdebug2__(static_cast<unsigned>(context), ## __VA_ARGS__);
 # define ohdebug2__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
@@ -200,12 +201,92 @@ void ohDebugPrintNl()
 # define ohdebug9__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
 	ohdebug10__(static_cast<unsigned>(context), ## __VA_ARGS__);
 # define ohdebug10__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug11__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug11__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug12__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug12__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug13__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug13__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug14__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug14__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug15__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug15__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug16__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug16__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug17__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug17__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug18__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug18__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug19__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug19__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug20__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug20__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug21__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug21__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug22__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug22__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug23__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug23__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug24__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug24__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug25__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug25__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug26__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug26__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug27__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug27__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug28__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug28__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug29__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug29__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug30__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug30__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug31__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug31__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug32__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug32__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug33__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug33__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug34__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug34__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug35__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug35__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug36__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug36__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug37__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug37__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug38__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug38__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug39__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug39__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug40__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug40__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug41__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug41__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug42__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug42__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug43__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug43__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug44__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug44__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug45__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug45__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug46__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug46__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug47__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug47__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug48__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug48__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug49__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug49__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
+	ohdebug50__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug50__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
 	ohdebugend__(static_cast<unsigned>(context), ## __VA_ARGS__);
+# define ohdebug(context, ...) ohdebug0__(context, ##__VA_ARGS__, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{})
+
 # define ohdebugend__(context, a, ...) OhDebug::ohdebugImpl<static_cast<unsigned>(context)>(#a, a); \
 	OhDebug::ohDebugPrintNl<static_cast<unsigned>(context)>()
-# define ohdebug(context, ...) ohdebug0__(context, ##__VA_ARGS__, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, \
-	OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, \
-	OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{}, OhDebug::Stub{})
+
 # define ohdebugstr(context, a) \
 	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(ohdebugfl(__LINE__)); \
 	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(#context); \
