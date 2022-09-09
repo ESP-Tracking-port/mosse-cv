@@ -46,6 +46,7 @@ ohdebuggroup(MuxCplxA3::call)
 # include <cassert>
 # include <cmath>
 # define MOSSE_USE_OPENCV 1  // There is a testing implementation of MOSSE that uses Open CV, particularly, Open CV's DFT (FFT) procedure. Set to 0 to enable portability
+# include <opencv2/opencv.hpp>
 
 namespace Mosse {
 
