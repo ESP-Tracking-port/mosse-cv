@@ -247,18 +247,10 @@ private:
 
 		// Calculating mean value
 
-		ohdebugonce(0, {
-			for (unsigned row = 0; row < map.rows(); ++row) {
-				for (unsigned col = 0; col < map.cols(); ++col) {
-					ohdebug(CommonOps::bufferComplexInit, map(row, col), static_cast<int>(aImage(row, col)), row, col);
-				}
-			}
-		});
-
 		for (unsigned row = 0; row < map.rows(); ++row) {
 			for (unsigned col = 0; col < map.cols(); ++col) {
 				sum += logTable[blockImage(row, col)];
-				mosseassertnotnan(CommonOps::bufferComplexInit, blockImage(row, col), roi());
+				mosseassertnotnan(CommonOps::bufferComplexInit, blockImage(row, col), blockImage(row, col), roi());
 				mosseassertnotnan(CommonOps::bufferComplexinit, logTable[blockImage(row, col)], row, col,
 					blockImage(row, col));
 			}
