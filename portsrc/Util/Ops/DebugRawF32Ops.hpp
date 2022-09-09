@@ -16,7 +16,7 @@ class RawF32Ops;
 /// \brief Decorator class for gradually reimplementing the reference CV-based MOSSE tracking algorithm implementation
 /// w/ the custom one.
 ///
-class DebugRawF32Ops : Ops {
+class DebugRawF32Ops : public Ops {
 private:
 	/// \brief All the calls from opencvNative... will be gradually rerouted to rawF32...
 	///
