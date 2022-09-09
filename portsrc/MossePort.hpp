@@ -38,6 +38,7 @@ std::ostream &operator<<(std::basic_ostream<T> &out, const Mosse::Tp::PointRowCo
 
 ohdebuggroup(RawF32OpsBase::initImpl)
 ohdebuggroup(Ops::init)
+ohdebuggroup(MuxCplxA3::call)
 
 // Portable assert
 
