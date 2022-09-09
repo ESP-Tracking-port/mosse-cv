@@ -16,9 +16,6 @@ struct Mat {
 struct Size {
 };
 
-struct Rect {
-};
-
 }
 
 #endif
