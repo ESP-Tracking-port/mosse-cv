@@ -61,7 +61,7 @@ void DebugRawF32Ops::ifft2(void *aBufferComplex)
 #endif
 }
 
-void DebugRawF32Ops::maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *sum)
+void DebugRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol &aPeakPos, float *sum)
 {
 #if 1
 	wrapped.opencvNativeRawF32Ops.maxReal(aBufferComplex, aPeakPos, sum);
@@ -70,12 +70,12 @@ void DebugRawF32Ops::maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakP
 #endif
 }
 
-float DebugRawF32Ops::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint, Tp::PointRowCol aMask)
+float DebugRawF32Ops::calcPsr(const void *aBufferComplex, const Tp::PointRowCol &aPeak, float sumHint, Tp::PointRowCol aMask)
 {
 #if 1
-	wrapped.opencvNativeRawF32Ops.calcPsr(aComplexBuffer, aPeak, sumHint, aMask);
+	wrapped.opencvNativeRawF32Ops.calcPsr(aBufferComplex, aPeak, sumHint, aMask);
 #else
-	wrapped.rawF32Ops.calcPsr(aComplexBuffer, aPeak, sumHint, aMask);
+	wrapped.rawF32Ops.calcPsr(aBufferComplex, aPeak, sumHint, aMask);
 #endif
 }
 
@@ -109,7 +109,7 @@ void DebugRawF32Ops::initImpl()
 const void *DebugRawF32Ops::hannMatrix()
 {
 #if 1
-	return wrapped.opencvNativeRawF32Ops.hannMatrix();
+	return static_cast<Ops &>(wrapped.opencvNativeRawF32Ops).hannMatrix();
 #else
 	return wrapped.rawF32Ops.hannMatrix();
 #endif
