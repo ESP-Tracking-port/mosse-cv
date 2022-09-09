@@ -14,74 +14,88 @@ OpencvNativeRawF32Ops::OpencvNativeRawF32Ops()
 
 void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
 {
-	assert(false);
-	(void)aImageReal;
-	(void)aBufferComplex;
+	auto image = bufferToMat<CV_8SC1>(aImageReal.data(), aImageReal.rows(), aImageReal.cols());
+	image = imcrop(_roi, image);
+	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
+	cv::merge(planes, 2, image);
+	bufferToMat<CV_32FC2>(aBufferComplex, roi().origin(1), roi().origin(0)) = image;
 }
 
 void OpencvNativeRawF32Ops::imagePreprocess(void *aCropComplex)
 {
-	assert(false);
-	(void)aCropComplex;
+	auto image = bufferToMat<CV_32FC2>(aCropComplex, roi());
+	preprocess(image);
 }
 
 void OpencvNativeRawF32Ops::imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomplex, void *aMatrixBcomplex)
 {
-	assert(false);
-	(void)aioCropFft2Complex;
-	(void)aMatrixAcomplex;
-	(void)aMatrixBcomplex;
+	auto out = bufferToMat<CV_32FC2>(aioCropFft2Complex, roi());
+	auto mata = bufferToMat<CV_32FC2>(aMatrixAcomplex, roi());
+	auto matb = bufferToMat<CV_32FC2>(aMatrixBcomplex, roi());
+
+	out = complexMultiplication(complexDivision(mata, matb), out);
 }
 
 void OpencvNativeRawF32Ops::fft2(void *aBufferComplex)
 {
-	assert(false);
-	(void)aBufferComplex;
+	auto mat = bufferToMat<CV_32FC2>(aBufferComplex, roi());
+	mat = fft(mat);
 }
 
 void OpencvNativeRawF32Ops::ifft2(void *aBufferComplex)
 {
-	assert(false);
-	(void)aBufferComplex;
+	auto mat = bufferToMat<CV_32FC2>(aBufferComplex, roi());
+	mat = fft(mat, true);
 }
 
 void OpencvNativeRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol &aPeakPos, float *aSum)
 {
-	assert(false);
-	(void)aBufferComplex;
-	(void)aPeakPos;
-	(void)aSum;
+	auto image = bufferToMat<CV_32FC2>(aBufferComplex, roi());
+	cv::Point ps;
+	cv::minMaxLoc(image, NULL, NULL, NULL, &ps);
+	aPeakPos = {ps.y, ps.x};
+
+	if (nullptr != aSum) {
+		*aSum = cv::sum(image)[0];
+	}
 }
 
 float OpencvNativeRawF32Ops::calcPsr(const void *aBufferComplex, const Tp::PointRowCol &aPeak, float aSumHint,
 	Tp::PointRowCol aMask)
 {
-	assert(false);
-	(void)aBufferComplex;
-	(void)aPeak;
-	(void)aSumHint;
-	(void)aMask;
+	return 0.0f;
 }
 
 void OpencvNativeRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
-	assert(false);
-	(void)aMatAcomplex;
-	(void)aImageCropFftComplex;
-	(void)aInitial;
+	// TODO: eta multiplication by gauss matrix is already taken care of
+	auto gaussfft = bufferToMat<CV_32FC2>(gaussFft(), roi());
+	auto imagefft = bufferToMat<CV_32FC2>(aImageCropFftComplex, roi());
+	auto mata = bufferToMat<CV_32FC2>(aMatAcomplex, roi());
+
+	if (aInitial) {
+		mata = eta() * complexMultiplication(gaussfft, conj(imagefft));
+	} else {
+		mata = eta() * complexMultiplication(gaussfft, conj(imagefft)) + (1 - eta()) * mata;
+	}
 }
 
 void OpencvNativeRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
-	assert(false);
-	(void)aMatBcomplex;
-	(void)aImageCropFftComplex;
-	(void)aInitial;
+	auto imagefft = bufferToMat<CV_32FC2>(aImageCropFftComplex, roi());
+	auto matb = bufferToMat<CV_32FC2>(aMatBcomplex, roi());
+
+	if (aInitial) {
+		matb = eta() * complexMultiplication(imagefft, conj(imagefft));
+	} else {
+		matb = eta() * complexMultiplication(imagefft, conj(imagefft)) + (1 - eta()) * matb;
+	}
 }
 
 void OpencvNativeRawF32Ops::initImpl()
 {
 	assert(false);
+	// TODO (XXX): Init ROI
 }
 
 const void *OpencvNativeRawF32Ops::hannMatrix()
@@ -92,8 +106,15 @@ const void *OpencvNativeRawF32Ops::hannMatrix()
 
 const void *OpencvNativeRawF32Ops::gaussFft()
 {
+	// TODO: Precompiled gauss (take the chunk from init(...))
 	assert(false);
 	return nullptr;
+}
+
+cv::Rect2i OpencvNativeRawF32Ops::roiCv()
+{
+	return {static_cast<int>(roi().origin(1)), static_cast<int>(roi().origin(0)), static_cast<int>(roi().size(1)),
+		static_cast<int>(roi().origin(0))};
 }
 
 void OpencvNativeRawF32Ops::init_param()

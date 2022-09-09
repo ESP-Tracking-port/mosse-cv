@@ -42,6 +42,26 @@ public:
 	const void *hannMatrix() override;  ///< Precompiled hann matrix
 	const void *gaussFft() override;  ///< Fouried-transformed precompiled Gaussian matrix
 private:
+	/// \tparam Open CV type, e.g. CV_8SC1
+	///
+	template <int Cvtype, class T>
+	static cv::Mat bufferToMat(T aBuf, unsigned aRows, unsigned aCols)
+	{
+#if MOSSE_USE_OPENCV
+		int sizes[2] = {static_cast<int>(aCols), static_cast<int>(aRows)};
+		return cv::Mat{2, sizes, Cvtype, const_cast<void *>(static_cast<const void *>(aBuf))};
+#else
+		return {};
+#endif
+	}
+
+	template <int Cvtype, class T>
+	static cv::Mat bufferToMat(T aBuf, const Tp::Roi &aRoi)
+	{
+		return bufferToMat<Cvtype>(aBuf, static_cast<int>(aRoi.size(1)), static_cast<int>(aRoi.size(0)));
+	}
+
+	cv::Rect2i roiCv();
 	void init(cv::Rect roi, const cv::Mat& image);
 	cv::Rect update(const cv::Mat& image);
 	void init_param();
