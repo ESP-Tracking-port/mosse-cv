@@ -14,7 +14,7 @@
 namespace Mosse {
 namespace Tp {
 
-using ImageBase = Eigen::Map<Eigen::Matrix<std::uint8_t, Eigen::Dynamic, Eigen::Dynamic>>;
+using ImageBase = Eigen::Map<Eigen::Matrix<std::uint8_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>;
 
 struct Image : ImageBase {
 	using ImageBase::ImageBase;
