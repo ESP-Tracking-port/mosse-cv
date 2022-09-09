@@ -10,21 +10,31 @@
 #include <doctest/doctest.h>
 #include <cstdint>
 #include <array>
+#include <OhDebug.hpp>
 
-template <class T, std::size_t Rows, std::size_t Cols, std::size_t Depth>
-void arrayInit(std::array<T, Rows * Cols * Depth> &aArr)
+#define foreachrowcol(rowvar, colvar, rows, cols) \
+	for (std::size_t rowvar = 0; rowvar < rows; ++rowvar) \
+		for (std::size_t colvar = 0; colvar < cols; ++colvar)
+
+template <class T, std::size_t Rows, std::size_t Cols, std::size_t Depth, std::size_t N>
+void arrayInit(std::array<T, N> &aArr)
 {
-	auto ***arr2d = reinterpret_cast<T ***>(aArr.data());
 	T counter = static_cast<T>(0);
 
 	for (std::size_t row = 0; row < Rows; ++row) {
 		for (std::size_t col = 0; col < Cols; ++col) {
 			for (std::size_t dep = 0; dep < Depth; ++dep) {
-				arr2d[row][col][dep] = counter + static_cast<T>(10) * static_cast<T>(dep);
+				aArr[row * Cols * Depth + col * Depth + dep] = counter + static_cast<T>(10) * static_cast<T>(dep);
 				counter += static_cast<T>(1);
 			}
 		}
 	}
+}
+
+inline std::size_t rowColToPlain(std::size_t aRow, std::size_t aCol, std::size_t aCols, std::size_t aStride,
+	std::size_t aOffset)
+{
+	return aCol * aStride + aRow * aCols * aStride;
 }
 
 TEST_CASE_TEMPLATE("Memory layout : lower-level memory accessing functions", T, float, std::int16_t)
@@ -38,7 +48,7 @@ TEST_CASE_TEMPLATE("Memory layout : lower-level memory accessing functions", T, 
 
 	SUBCASE("at") {
 		SUBCASE("real array") {
-			constexpr auto kRepr = Mosse::Tp::Repr::template Storage<T>::value | Mosse::Tp::Repr::ReprRaw;
+			constexpr auto kRepr = Mosse::Tp::Repr::template Storage<T>::value | Mosse::Tp::Repr::ReprLog2;
 			CHECK_EQ(static_cast<void *>(Mosse::Ut::at<kRepr>(3, begin)), begin + 3);
 			CHECK_EQ(static_cast<const void *>(Mosse::Ut::at<kRepr>(2, cbegin)), cbegin + 2);
 		}
@@ -77,35 +87,29 @@ TEST_CASE_TEMPLATE("Memory layout : lower-level memory accessing functions", T, 
 	}
 }
 
-TEST_CASE("Memory layout : eigen wrappers")
+TEST_CASE_TEMPLATE("Memory layout : eigen wrappers", T, float, std::int16_t)
 {
-	constexpr auto kRepresentationFlags = Mosse::Tp::Repr::ReprRaw | Mosse::Tp::Repr::CplxRe1Im1
-		| Mosse::Tp::Repr::StorageF32;
-	constexpr float kCounterMult = 10.0f;
-	constexpr auto kRows = 5;
-	constexpr auto kCols = 5;
-	float matrix[kRows][kCols * 2] = {0.f};
-	float counter = 0.0f;
+	constexpr std::size_t kRows = 3;
+	constexpr std::size_t kCols = 10;
+	std::array<T, kRows * kCols * 2> arr{{static_cast<T>(0)}};
+	const Mosse::Tp::Roi roi{{0, 0}, {kRows, kCols}};
 
-	for (unsigned row = 0; row < kRows; ++row) {
-		for (unsigned col = 0; col < kCols; col += 2) {
-			matrix[row][col] = counter;
-			matrix[row][col + 1] = counter * kCounterMult;
-			counter += 1.0f;
+	SUBCASE("Non-complex array") {
+		constexpr auto kRepresentationFlags = Mosse::Tp::Repr::ReprRaw | Mosse::Tp::Repr::Storage<T>::value;
+		auto map = Mosse::Ut::makeEigenMap<kRepresentationFlags>(static_cast<void *>(arr.data()), {{0, 0},
+			{kRows, kCols}});
+		arrayInit<T, kRows, kCols, 1>(arr);
+
+		foreachrowcol(row, col, kRows, kCols) {
+			ohdebug(, arr[rowColToPlain(row, col, kCols, 1, 0)], row, col);
+			ohdebug(, map(row, col), row, col);
 		}
-	}
 
-	auto map = Mosse::Ut::makeEigenMap<kRepresentationFlags>(static_cast<void *>(matrix), {{0, 0}, {kRows, kCols}});
-	auto mapImag = Mosse::Ut::makeEigenMapImag<kRepresentationFlags>(static_cast<void *>(matrix), {{0, 0},
-		{kRows, kCols}});
-
-	for (unsigned row = 0; row < kRows; ++row) {
-		for (unsigned col = 0; col < kCols; ++col) {
-			CAPTURE(map(row, col));
+		foreachrowcol(row, col, kRows, kCols) {
 			CAPTURE(row);
 			CAPTURE(col);
-			CHECK_EQ(map(row, col), matrix[row][col]);
-			CHECK_EQ(mapImag(row, col), matrix[row][col + 1]);
+			CAPTURE(rowColToPlain(row, col, kCols, 1, 0));
+			CHECK_EQ(map(row, col), arr[rowColToPlain(row, col, kCols, 1, 0)]);
 		}
 	}
 }
