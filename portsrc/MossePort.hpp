@@ -61,7 +61,7 @@ inline bool isNan(...)
 
 }  // namespace Mosse
 
-# define mosseassertnotnan(ctx, a, ...) ohdebugassert(ctx, Mosse::isNan(a), ## __VA_ARGS__ )
+# define mosseassertnotnan(ctx, a, ...) ohdebugassert(ctx, !Mosse::isNan(a), ## __VA_ARGS__ )
 
 #else
 # define mosseassertnotnan(...)
