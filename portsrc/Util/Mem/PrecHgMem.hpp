@@ -23,8 +23,8 @@ private:
 	};
 public:
 	PrecHgMem(const void *kGauss, const void *kHann);
-	const void *hannMatrix() override;
-	const void *gaussKernel() override;
+	const void *hannMatrix();
+	const void *gaussKernel();
 private:
 	PrecompiledMatrices mat;
 };
