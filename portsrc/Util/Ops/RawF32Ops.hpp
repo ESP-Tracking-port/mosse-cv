@@ -8,6 +8,7 @@
 #if !defined(MOSSE_OPS_RAWF32OPS_HPP_)
 #define MOSSE_OPS_RAWF32OPS_HPP_
 
+#include "Util/Helper/PrecompiledMatrixHelper.hpp"
 #include "Util/Ops/CommonOps.hpp"
 
 namespace Mosse {
@@ -26,14 +27,10 @@ using RawF32OpsBase = CommonOps< kRawF32ReprBuffer, kRawF32ReprHannMatrix, kRawF
 /// implementing other memory-optimized variants of replaceable Ops instances.
 ///
 class RawF32Ops : public RawF32OpsBase {
-private:
-	struct PrecompiledMatrices {
-		const void *hann;
-		const void *gaussFftScaled;
-	};
 public:
 	void fft2(void *aBufferComplex) override;
 	void ifft2(void *aBufferComplex) override;
+	RawF32Ops();
 protected:
 	void initImpl() override;
 	const void *hannMatrix() override;  ///< Precompiled hann matrix
@@ -44,8 +41,7 @@ private:
 	///
 	void fft2Common(void *aBufferComplex, bool aFwd);
 private:
-	Tp::PointRowCol roiSizePrev;
-	PrecompiledMatrices precompiledMatrices;
+	PrecompiledMatrixHelper<const float> pmHelper;
 };
 
 }  // namespace Ut

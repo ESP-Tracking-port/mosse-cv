@@ -13,10 +13,19 @@
 #if MOSSE_USE_OPENCV
 #endif  // MOSSE_USE_OPENCV
 
+static constexpr auto kEta = 0.125f;
+static constexpr auto kGetGauss = Mosse::getGaussKernelFft3dScaled125;
+static constexpr auto kGetHann = Mosse::getHann;
+
 namespace Mosse {
 namespace Ut {
 
 static_assert(kRawF32ReprBuffer & Tp::Repr::CplxRe1Im1, "");  // fft depends on that condition
+
+RawF32Ops::RawF32Ops() : pmHelper{kGetGauss, kGetHann}
+{
+	setEta(kEta);
+}
 
 void RawF32Ops::fft2(void *aBufferComplex)
 {
@@ -30,29 +39,17 @@ void RawF32Ops::ifft2(void *aBufferComplex)
 
 void RawF32Ops::initImpl()
 {
-	static constexpr auto gaussKernelScaledGet = Mosse::getGaussKernelFft3dScaled125;
-	static constexpr auto kEta = 0.125f;
-	ohdebug(RawF32OpsBase::initImpl, roiSizePrev);
-
-	if (roiSizePrev != roi().size) {
-		roiSizePrev = roi().size;
-		precompiledMatrices = {
-			Mosse::getHann(roi().size(0), roi().size(1)),
-			gaussKernelScaledGet(roi().size(0), roi().size(1))
-		};
-		setEta(kEta);
-		ohdebug(RawF32Ops::initImpl, precompiledMatrices.hann != nullptr);
-	}
+	pmHelper.update(roi());
 }
 
 const void *RawF32Ops::hannMatrix()
 {
-	return precompiledMatrices.hann;
+	return pmHelper.hann();
 }
 
 const void *RawF32Ops::gaussFft()
 {
-	return precompiledMatrices.gaussFftScaled;
+	return pmHelper.gauss();
 }
 
 #if MOSSE_USE_OPENCV
