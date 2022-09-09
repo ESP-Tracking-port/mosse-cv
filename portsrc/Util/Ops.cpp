@@ -21,6 +21,10 @@ void Ops::init(Tp::Roi aRoi)
 	initImpl();
 }
 
+void Ops::imagePreprocess(void *)
+{
+}
+
 const Tp::Roi &Ops::roi() const
 {
 	return mRoi;
