@@ -99,29 +99,29 @@ void DebugRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCropFftCom
 
 void DebugRawF32Ops::initImpl()
 {
-#if 1
-	wrapped.opencvNativeRawF32Ops.initImpl();
-#else
-	wrapped.rawF32Ops.initImpl();
-#endif
+//#if 1
+//	wrapped.opencvNativeRawF32Ops.initImpl();
+//#else
+//	wrapped.rawF32Ops.initImpl();
+//#endif
 }
 
 const void *DebugRawF32Ops::hannMatrix()
 {
-#if 1
-	return static_cast<Ops &>(wrapped.opencvNativeRawF32Ops).hannMatrix();
-#else
-	return wrapped.rawF32Ops.hannMatrix();
-#endif
+//#if 1
+//	return static_cast<Ops &>(wrapped.opencvNativeRawF32Ops).hannMatrix();
+//#else
+//	return wrapped.rawF32Ops.hannMatrix();
+//#endif
 }
 
 const void *DebugRawF32Ops::gaussFft()
 {
-#if 1
-	return wrapped.opencvNativeRawF32Ops.gaussFft();
-#else
-	return wrapped.rawF32Ops.gaussFft();
-#endif
+//#if 1
+//	return wrapped.opencvNativeRawF32Ops.gaussFft();
+//#else
+//	return wrapped.rawF32Ops.gaussFft();
+//#endif
 }
 
 }  // namespace Ut
