@@ -24,11 +24,11 @@ struct Size {
 namespace Mosse {
 namespace Ut {
 
-class OpencvTracker : Ops
+class OpencvNativeRawF32Ops : Ops
 {
 public:
-	OpencvTracker();
-	virtual ~OpencvTracker();
+	OpencvNativeRawF32Ops();
+	virtual ~OpencvNativeRawF32Ops();
 	void init(cv::Rect roi, const cv::Mat& image);
 	cv::Rect update(const cv::Mat& image);
 	void init_param();

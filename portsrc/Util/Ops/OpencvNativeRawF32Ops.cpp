@@ -3,26 +3,26 @@
 #include <stdlib.h>
 #include <time.h>
 #include <MosseApi.hpp>
-#include "OpencvTracker.hpp"
+#include "OpencvNativeRawF32Ops.hpp"
 
 namespace Mosse {
 namespace Ut {
 
-OpencvTracker::OpencvTracker()
+OpencvNativeRawF32Ops::OpencvNativeRawF32Ops()
 {
 }
 
-OpencvTracker::~OpencvTracker()
+OpencvNativeRawF32Ops::~OpencvNativeRawF32Ops()
 {
 }
 
-void OpencvTracker::init_param()
+void OpencvNativeRawF32Ops::init_param()
 {
 	_sigma = 100;
 	_eta = 0.125;
 }
 
-cv::Mat OpencvTracker::imcrop(cv::Rect roi, const cv::Mat& image)
+cv::Mat OpencvNativeRawF32Ops::imcrop(cv::Rect roi, const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	cv::Rect img = cv::Rect(0,0,image.cols,image.rows);
@@ -34,7 +34,7 @@ cv::Mat OpencvTracker::imcrop(cv::Rect roi, const cv::Mat& image)
 #endif
 }
 
-cv::Mat OpencvTracker::fft(cv::Mat image, bool backwards)
+cv::Mat OpencvNativeRawF32Ops::fft(cv::Mat image, bool backwards)
 {
 #if MOSSE_USE_OPENCV
 	if(image.channels() == 1)
@@ -53,7 +53,7 @@ cv::Mat OpencvTracker::fft(cv::Mat image, bool backwards)
 #endif
 }
 
-cv::Mat OpencvTracker::conj(const cv::Mat& image)
+cv::Mat OpencvNativeRawF32Ops::conj(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	assert(image.channels() == 2);
@@ -70,7 +70,7 @@ cv::Mat OpencvTracker::conj(const cv::Mat& image)
 #endif
 }
 
-cv::Mat OpencvTracker::createHanningMats(int rows, int cols)
+cv::Mat OpencvNativeRawF32Ops::createHanningMats(int rows, int cols)
 {
 #if MOSSE_USE_OPENCV
 	cv::Mat hann1t = cv::Mat(cv::Size(cols, 1), CV_32F, cv::Scalar(0));
@@ -89,7 +89,7 @@ cv::Mat OpencvTracker::createHanningMats(int rows, int cols)
 #endif
 }
 
-cv::Mat OpencvTracker::preprocess(const cv::Mat& image)
+cv::Mat OpencvNativeRawF32Ops::preprocess(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	cv::Mat win = createHanningMats(image.rows, image.cols);
@@ -107,7 +107,7 @@ cv::Mat OpencvTracker::preprocess(const cv::Mat& image)
 #endif
 }
 
-cv::Mat OpencvTracker::rand_warp(const cv::Mat& image)
+cv::Mat OpencvNativeRawF32Ops::rand_warp(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	srand((unsigned)time(NULL));
@@ -132,7 +132,7 @@ cv::Mat OpencvTracker::rand_warp(const cv::Mat& image)
 #endif
 }
 
-cv::Mat OpencvTracker::complexMultiplication(cv::Mat a, cv::Mat b)
+cv::Mat OpencvNativeRawF32Ops::complexMultiplication(cv::Mat a, cv::Mat b)
 {
 #if MOSSE_USE_OPENCV
 	std::vector<cv::Mat> pa;
@@ -163,7 +163,7 @@ cv::Mat OpencvTracker::complexMultiplication(cv::Mat a, cv::Mat b)
 /// When calculating mean and std. dev., a 11x11 window should be excluded from the response (according to the MOSSE
 /// paper)
 ///
-double OpencvTracker::calculatePsr(const cv::Mat &aResponse)
+double OpencvNativeRawF32Ops::calculatePsr(const cv::Mat &aResponse)
 {
 
 #if MOSSE_USE_OPENCV
@@ -187,7 +187,7 @@ double OpencvTracker::calculatePsr(const cv::Mat &aResponse)
 #endif
 }
 
-void OpencvTracker::init(cv::Rect roi, const cv::Mat& gray)
+void OpencvNativeRawF32Ops::init(cv::Rect roi, const cv::Mat& gray)
 {
 #if MOSSE_USE_OPENCV
 	init_param();
@@ -225,7 +225,7 @@ void OpencvTracker::init(cv::Rect roi, const cv::Mat& gray)
 #endif
 }
 
-cv::Mat OpencvTracker::convert(const cv::Mat& src)
+cv::Mat OpencvNativeRawF32Ops::convert(const cv::Mat& src)
 {
 #if MOSSE_USE_OPENCV
 	cv::Mat cv8uc1 = cv::Mat::zeros(src.size(), CV_8UC1);
@@ -244,7 +244,7 @@ cv::Mat OpencvTracker::convert(const cv::Mat& src)
 #endif
 }
 
-cv::Mat OpencvTracker::real(cv::Mat image)
+cv::Mat OpencvNativeRawF32Ops::real(cv::Mat image)
 {
 #if MOSSE_USE_OPENCV
 	std::vector<cv::Mat> mats;
@@ -256,7 +256,7 @@ cv::Mat OpencvTracker::real(cv::Mat image)
 #endif
 }
 
-cv::Mat OpencvTracker::imag(cv::Mat image)
+cv::Mat OpencvNativeRawF32Ops::imag(cv::Mat image)
 {
 #if MOSSE_USE_OPENCV
 	std::vector<cv::Mat> mats;
@@ -268,7 +268,7 @@ cv::Mat OpencvTracker::imag(cv::Mat image)
 #endif
 }
 
-cv::Mat OpencvTracker::complexDivision(cv::Mat a, cv::Mat b)
+cv::Mat OpencvNativeRawF32Ops::complexDivision(cv::Mat a, cv::Mat b)
 {
 #if MOSSE_USE_OPENCV
 	std::vector<cv::Mat> pa;
@@ -295,7 +295,7 @@ cv::Mat OpencvTracker::complexDivision(cv::Mat a, cv::Mat b)
 #endif
 }
 
-cv::Rect OpencvTracker::update(const cv::Mat& gray)
+cv::Rect OpencvNativeRawF32Ops::update(const cv::Mat& gray)
 {
 #if MOSSE_USE_OPENCV
 	fi = imcrop(_roi, gray);
@@ -331,7 +331,7 @@ cv::Rect OpencvTracker::update(const cv::Mat& gray)
 #endif
 }
 
-void OpencvTracker::train(const cv::Mat& image)
+void OpencvNativeRawF32Ops::train(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	fi = imcrop(_roi, image);
