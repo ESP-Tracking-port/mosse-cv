@@ -18,6 +18,11 @@ class Tracker;
 ///
 Tracker &getNaive();
 
+/// \brief For debugging purposes: the implementation incorporates parts from the reference Open CV and the new
+/// (swappable) implementation, while the former gets gradually stripped away as bugs in the latter one get fixed.
+///
+Tracker &getDebugStub();
+
 }  // namespace Mosse
 
 #endif // MOSSE_MOSSE_HPP_FWD_
