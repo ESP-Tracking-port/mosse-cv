@@ -16,7 +16,7 @@ namespace Ut {
 template <class T>
 class PrecompiledMatrixHelper {
 public:
-	using GetterType = T(*)(unsigned, unsigned);
+	using GetterType = const T *(*)(unsigned, unsigned);
 private:
 	struct Mat {
 		const void *gauss;
@@ -28,7 +28,7 @@ private:
 		GetterType getHann;
 	};
 public:
-	constexpr PrecompiledMatrixHelper(GetterType aGetterGauss, GetterType aGetterHann) :
+	PrecompiledMatrixHelper(GetterType aGetterGauss, GetterType aGetterHann) :
 		getter{aGetterGauss, aGetterHann}
 	{
 	}
@@ -43,12 +43,12 @@ public:
 		}
 	}
 
-	void *gauss()
+	const void *gauss()
 	{
 		return mat.gauss;
 	}
 
-	void *hann()
+	const void *hann()
 	{
 		return mat.hann;
 	}
