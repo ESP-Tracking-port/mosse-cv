@@ -153,8 +153,8 @@ public:
 		auto mapAimag = Ut::makeEigenMapImag<ReprAb>(aMatAcomplex, roi());
 		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aImageCropFftComplex, roi());
 		auto mapFftImag = Ut::makeEigenMapImag<ReprBuffer>(aImageCropFftComplex, roi());
-		auto mapGauss = Ut::makeEigenMap<ReprGauss>(aImageCropFftComplex, roi());
-		auto mapGaussImag = Ut::makeEigenMap<ReprGauss>(aImageCropFftComplex, roi());
+		auto mapGauss = Ut::makeEigenMap<ReprGauss>(gaussFft(), roi());
+		auto mapGaussImag = Ut::makeEigenMap<ReprGauss>(gaussFft(), roi());
 
 		if (aInitial) {  // B = eta * complexMult(gaussfft, conj(imagefft))
 			for (unsigned row = 0; row < roi().rows(); ++row) {
