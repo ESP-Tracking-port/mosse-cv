@@ -24,6 +24,8 @@ public:
 	virtual void *matA() = 0;
 	virtual void *matB() = 0;
 	virtual void *buffer() = 0;  ///< A big intermediary buffer for operations like FFT
+	virtual void *hannMatrix();
+	virtual void *gaussKernel();
 	virtual ~Mem() = default;
 
 	/// \brief Implementation MUST ensure that it is able to provide a sufficient buffer taking its internal numeric

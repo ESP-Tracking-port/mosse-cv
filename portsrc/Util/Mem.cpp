@@ -12,6 +12,16 @@
 namespace Mosse {
 namespace Ut {
 
+void *Mem::hannMatrix()
+{
+	return nullptr;
+}
+
+void *Mem::gaussKernel()
+{
+	return nullptr;
+}
+
 void Mem::init(Tp::Roi)
 {
 }
