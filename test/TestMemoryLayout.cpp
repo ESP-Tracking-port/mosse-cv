@@ -101,11 +101,6 @@ TEST_CASE_TEMPLATE("Memory layout : eigen wrappers", T, float, std::int16_t)
 		arrayInit<T, kRows, kCols, 1>(arr);
 
 		foreachrowcol(row, col, kRows, kCols) {
-			ohdebug(, arr[rowColToPlain(row, col, kCols, 1, 0)], row, col);
-			ohdebug(, map(row, col), row, col);
-		}
-
-		foreachrowcol(row, col, kRows, kCols) {
 			CAPTURE(row);
 			CAPTURE(col);
 			CAPTURE(rowColToPlain(row, col, kCols, 1, 0));
