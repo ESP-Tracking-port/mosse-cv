@@ -22,13 +22,10 @@ struct Size {
 
 class mosseTracker
 {
-public:
 	mosseTracker();
 	virtual ~mosseTracker();
-public:
 	void init(cv::Rect roi, const cv::Mat& image);
 	cv::Rect update(const cv::Mat& image);
-protected:
 	void init_param();
 	void train(const cv::Mat& image);
 	cv::Mat imcrop(cv::Rect roi, const cv::Mat& image);
