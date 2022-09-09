@@ -19,16 +19,16 @@ namespace Tp {
 template <Repr::Flags F>
 struct EigenMapType {
 	using ValueType = Tp::Repr::Type<F>;
-	using MatrixType = typename Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>;
-	using StrideType = typename Eigen::Stride<Ut::strideInner<F>(), Eigen::Dynamic>;
+	using MatrixType = typename Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+	using StrideType = typename Eigen::Stride<Eigen::Dynamic, Ut::strideInner<F>()>;
 	using Type = Eigen::Map<MatrixType, Eigen::Unaligned, StrideType>;
 };
 
 template <Repr::Flags F>
 struct ConstEigenMapType {
 	using ValueType = Tp::Repr::Type<F>;
-	using MatrixType = const typename Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>;
-	using StrideType = typename Eigen::Stride<Ut::strideInner<F>(), Eigen::Dynamic>;
+	using MatrixType = const typename Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+	using StrideType = typename Eigen::Stride<Eigen::Dynamic, Ut::strideInner<F>()>;
 	using Type = Eigen::Map<MatrixType, Eigen::Unaligned, StrideType>;
 };
 
