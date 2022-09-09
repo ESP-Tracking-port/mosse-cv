@@ -2,6 +2,7 @@
 #define _TRACKER_H_HH
 
 #include "MossePort.hpp"
+#include "Util/Ops.hpp"
 
 # if !MOSSE_USE_OPENCV
 
@@ -23,8 +24,9 @@ struct Size {
 namespace Mosse {
 namespace Ut {
 
-class OpencvTracker
+class OpencvTracker : Ops
 {
+public:
 	OpencvTracker();
 	virtual ~OpencvTracker();
 	void init(cv::Rect roi, const cv::Mat& image);
