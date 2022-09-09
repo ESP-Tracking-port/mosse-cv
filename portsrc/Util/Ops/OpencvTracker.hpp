@@ -20,10 +20,10 @@ struct Size {
 
 #endif
 
-class mosseTracker
+class OpencvTracker
 {
-	mosseTracker();
-	virtual ~mosseTracker();
+	OpencvTracker();
+	virtual ~OpencvTracker();
 	void init(cv::Rect roi, const cv::Mat& image);
 	cv::Rect update(const cv::Mat& image);
 	void init_param();

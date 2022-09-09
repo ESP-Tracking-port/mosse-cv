@@ -5,21 +5,21 @@
 #include <MosseApi.hpp>
 #include "OpencvTracker.hpp"
 
-mosseTracker::mosseTracker()
+OpencvTracker::OpencvTracker()
 {
 }
 
-mosseTracker::~mosseTracker()
+OpencvTracker::~OpencvTracker()
 {
 }
 
-void mosseTracker::init_param()
+void OpencvTracker::init_param()
 {
 	_sigma = 100;
 	_eta = 0.125;
 }
 
-cv::Mat mosseTracker::imcrop(cv::Rect roi, const cv::Mat& image)
+cv::Mat OpencvTracker::imcrop(cv::Rect roi, const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	cv::Rect img = cv::Rect(0,0,image.cols,image.rows);
@@ -31,7 +31,7 @@ cv::Mat mosseTracker::imcrop(cv::Rect roi, const cv::Mat& image)
 #endif
 }
 
-cv::Mat mosseTracker::fft(cv::Mat image, bool backwards)
+cv::Mat OpencvTracker::fft(cv::Mat image, bool backwards)
 {
 #if MOSSE_USE_OPENCV
 	if(image.channels() == 1)
@@ -50,7 +50,7 @@ cv::Mat mosseTracker::fft(cv::Mat image, bool backwards)
 #endif
 }
 
-cv::Mat mosseTracker::conj(const cv::Mat& image)
+cv::Mat OpencvTracker::conj(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	assert(image.channels() == 2);
@@ -67,7 +67,7 @@ cv::Mat mosseTracker::conj(const cv::Mat& image)
 #endif
 }
 
-cv::Mat mosseTracker::createHanningMats(int rows, int cols)
+cv::Mat OpencvTracker::createHanningMats(int rows, int cols)
 {
 #if MOSSE_USE_OPENCV
 	cv::Mat hann1t = cv::Mat(cv::Size(cols, 1), CV_32F, cv::Scalar(0));
@@ -86,7 +86,7 @@ cv::Mat mosseTracker::createHanningMats(int rows, int cols)
 #endif
 }
 
-cv::Mat mosseTracker::preprocess(const cv::Mat& image)
+cv::Mat OpencvTracker::preprocess(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	cv::Mat win = createHanningMats(image.rows, image.cols);
@@ -104,7 +104,7 @@ cv::Mat mosseTracker::preprocess(const cv::Mat& image)
 #endif
 }
 
-cv::Mat mosseTracker::rand_warp(const cv::Mat& image)
+cv::Mat OpencvTracker::rand_warp(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	srand((unsigned)time(NULL));
@@ -129,7 +129,7 @@ cv::Mat mosseTracker::rand_warp(const cv::Mat& image)
 #endif
 }
 
-cv::Mat mosseTracker::complexMultiplication(cv::Mat a, cv::Mat b)
+cv::Mat OpencvTracker::complexMultiplication(cv::Mat a, cv::Mat b)
 {
 #if MOSSE_USE_OPENCV
 	std::vector<cv::Mat> pa;
@@ -160,7 +160,7 @@ cv::Mat mosseTracker::complexMultiplication(cv::Mat a, cv::Mat b)
 /// When calculating mean and std. dev., a 11x11 window should be excluded from the response (according to the MOSSE
 /// paper)
 ///
-double mosseTracker::calculatePsr(const cv::Mat &aResponse)
+double OpencvTracker::calculatePsr(const cv::Mat &aResponse)
 {
 
 #if MOSSE_USE_OPENCV
@@ -184,7 +184,7 @@ double mosseTracker::calculatePsr(const cv::Mat &aResponse)
 #endif
 }
 
-void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
+void OpencvTracker::init(cv::Rect roi, const cv::Mat& gray)
 {
 #if MOSSE_USE_OPENCV
 	init_param();
@@ -222,7 +222,7 @@ void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
 #endif
 }
 
-cv::Mat mosseTracker::convert(const cv::Mat& src)
+cv::Mat OpencvTracker::convert(const cv::Mat& src)
 {
 #if MOSSE_USE_OPENCV
 	cv::Mat cv8uc1 = cv::Mat::zeros(src.size(), CV_8UC1);
@@ -241,7 +241,7 @@ cv::Mat mosseTracker::convert(const cv::Mat& src)
 #endif
 }
 
-cv::Mat mosseTracker::real(cv::Mat image)
+cv::Mat OpencvTracker::real(cv::Mat image)
 {
 #if MOSSE_USE_OPENCV
 	std::vector<cv::Mat> mats;
@@ -253,7 +253,7 @@ cv::Mat mosseTracker::real(cv::Mat image)
 #endif
 }
 
-cv::Mat mosseTracker::imag(cv::Mat image)
+cv::Mat OpencvTracker::imag(cv::Mat image)
 {
 #if MOSSE_USE_OPENCV
 	std::vector<cv::Mat> mats;
@@ -265,7 +265,7 @@ cv::Mat mosseTracker::imag(cv::Mat image)
 #endif
 }
 
-cv::Mat mosseTracker::complexDivision(cv::Mat a, cv::Mat b)
+cv::Mat OpencvTracker::complexDivision(cv::Mat a, cv::Mat b)
 {
 #if MOSSE_USE_OPENCV
 	std::vector<cv::Mat> pa;
@@ -292,7 +292,7 @@ cv::Mat mosseTracker::complexDivision(cv::Mat a, cv::Mat b)
 #endif
 }
 
-cv::Rect mosseTracker::update(const cv::Mat& gray)
+cv::Rect OpencvTracker::update(const cv::Mat& gray)
 {
 #if MOSSE_USE_OPENCV
 	fi = imcrop(_roi, gray);
@@ -328,7 +328,7 @@ cv::Rect mosseTracker::update(const cv::Mat& gray)
 #endif
 }
 
-void mosseTracker::train(const cv::Mat& image)
+void OpencvTracker::train(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	fi = imcrop(_roi, image);
