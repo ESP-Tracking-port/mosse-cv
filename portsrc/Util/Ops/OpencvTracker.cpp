@@ -5,6 +5,9 @@
 #include <MosseApi.hpp>
 #include "OpencvTracker.hpp"
 
+namespace Mosse {
+namespace Ut {
+
 OpencvTracker::OpencvTracker()
 {
 }
@@ -342,3 +345,6 @@ void OpencvTracker::train(const cv::Mat& image)
 	(void)image;
 #endif
 }
+
+}  // namespace Ut
+}  // namespace Mosse

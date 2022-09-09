@@ -20,6 +20,9 @@ struct Size {
 
 #endif
 
+namespace Mosse {
+namespace Ut {
+
 class OpencvTracker
 {
 	OpencvTracker();
@@ -54,3 +57,6 @@ private:
 	cv::Rect _roi;								/*每一帧跟踪结果*/
 };
 #endif
+
+}  // namespace Ut
+}  // namespace Mosse
