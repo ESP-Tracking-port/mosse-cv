@@ -12,8 +12,88 @@ OpencvNativeRawF32Ops::OpencvNativeRawF32Ops()
 {
 }
 
-OpencvNativeRawF32Ops::~OpencvNativeRawF32Ops()
+void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
 {
+	assert(false);
+	(void)aImageReal;
+	(void)aBufferComplex;
+}
+
+void OpencvNativeRawF32Ops::imagePreprocess(void *aCropComplex)
+{
+	assert(false);
+	(void)aCropComplex;
+}
+
+void OpencvNativeRawF32Ops::imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomplex, void *aMatrixBcomplex)
+{
+	assert(false);
+	(void)aioCropFft2Complex;
+	(void)aMatrixAcomplex;
+	(void)aMatrixBcomplex;
+}
+
+void OpencvNativeRawF32Ops::fft2(void *aBufferComplex)
+{
+	assert(false);
+	(void)aBufferComplex;
+}
+
+void OpencvNativeRawF32Ops::ifft2(void *aBufferComplex)
+{
+	assert(false);
+	(void)aBufferComplex;
+}
+
+void OpencvNativeRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol &aPeakPos, float *aSum)
+{
+	assert(false);
+	(void)aBufferComplex;
+	(void)aPeakPos;
+	(void)aSum;
+}
+
+float OpencvNativeRawF32Ops::calcPsr(const void *aBufferComplex, const Tp::PointRowCol &aPeak, float aSumHint,
+	Tp::PointRowCol aMask)
+{
+	assert(false);
+	(void)aBufferComplex;
+	(void)aPeak;
+	(void)aSumHint;
+	(void)aMask;
+}
+
+void OpencvNativeRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial)
+{
+	assert(false);
+	(void)aMatAcomplex;
+	(void)aImageCropFftComplex;
+	(void)aInitial;
+}
+
+void OpencvNativeRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial)
+{
+	assert(false);
+	(void)aMatBcomplex;
+	(void)aImageCropFftComplex;
+	(void)aInitial;
+}
+
+void OpencvNativeRawF32Ops::initImpl()
+{
+	assert(false);
+}
+
+const void *OpencvNativeRawF32Ops::hannMatrix()
+{
+	assert(false);
+	return nullptr;
+}
+
+const void *OpencvNativeRawF32Ops::gaussFft()
+{
+	assert(false);
+	return nullptr;
 }
 
 void OpencvNativeRawF32Ops::init_param()
