@@ -11,7 +11,6 @@
 #include "Util/Arithm/MemLayout.hpp"
 #include "MossePort.hpp"
 #if MOSSE_USE_OPENCV
-# include <opencv2/opencv.hpp>
 #endif  // MOSSE_USE_OPENCV
 
 namespace Mosse {
