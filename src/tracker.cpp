@@ -249,7 +249,7 @@ cv::Rect mosseTracker::update(const cv::Mat& gray)
 	Hi = complexDivision(Ai, Bi);
 	cv::Mat response = fft(complexMultiplication(Hi, fft(fi)), true);
 
-	cv::normalize(response, response, 0, 1, cv::NORM_MINMAX);
+//	cv::normalize(response, response, 0, 1, cv::NORM_MINMAX);
 
 	response *= 255.0;
 
