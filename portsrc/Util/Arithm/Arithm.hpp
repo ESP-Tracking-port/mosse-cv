@@ -66,7 +66,7 @@ struct DivCplxA3 {
 		float oImf = (b * c - a * d) / (c * c + d * d);
 		aoRe = toRepr<O>(oRef);
 		aoIm = toRepr<O>(oImf);
-		ohdebugif(std::isnan(oRef) || std::isnan(oImf), {
+		ohdebugsectif(std::isnan(oRef) || std::isnan(oImf), {
 			ohdebug(DivCplxA3::call, R1, R2, O, oRef, oImf);
 			assert(false);
 		});
