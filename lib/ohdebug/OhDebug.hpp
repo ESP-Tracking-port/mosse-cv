@@ -174,11 +174,12 @@ void ohDebugPrintNl()
 }  // namespace OhDebug
 
 # define ohdebugstringify__(a) #a
-# define ohdebugflimpl(line) __FILE__ ":" #line
-# define ohdebugfl(line) ohdebugflimpl(line)
+# define ohdebugflimpl__(line) __FILE__ ":" #line
+# define ohdebugfl__(line) ohdebugflimpl__(line)
 # define ohdebugvoid(a) (a, "")
 
-# define ohdebug0__(context, a, ...) OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(ohdebugfl(__LINE__)); \
+# define ohdebug0__(context, a, ...) \
+	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(ohdebugfl__(__LINE__)); \
 	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(#context); \
 	ohdebug1__(OHDEBUG_COMPILE_TIME_CRC32_STR(#context), a, ## __VA_ARGS__)
 
@@ -288,11 +289,11 @@ void ohDebugPrintNl()
 	OhDebug::ohDebugPrintNl<static_cast<unsigned>(context)>()
 
 # define ohdebugstr(context, a) \
-	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(ohdebugfl(__LINE__)); \
+	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(ohdebugfl__(__LINE__)); \
 	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(#context); \
 	std::cout << ((void)a, #a) << std::endl;
 
-# define ohdebugeveryn(bump, ...) \
+# define ohdebugsecteveryn(bump, ...) \
 	do { \
 		if (bump > 0) { \
 			static unsigned n = 0; \
@@ -313,14 +314,14 @@ void ohDebugPrintNl()
 		++n; \
 	} while (0)
 
-# define ohdebugif(cond, ...) \
+# define ohdebugsectif(cond, ...) \
 	do { \
 		if ( cond ) { \
 			__VA_ARGS__ ; \
 		} \
 	} while(0)
 
-# define ohdebugsection(...) \
+# define ohdebugsect(...) \
 	do { \
 		__VA_ARGS__ ; \
 	} while (0)
@@ -337,8 +338,10 @@ void ohDebugPrintNl()
 # define ohdebug(...)
 # define ohdebugstr(...)
 # define ohdebuggroup(...)
-# define ohdebugeveryn(...)
-# define ohdebugif(...)
+# define ohdebugsecteveryn(...)
+# define ohdebugsectif(...)
+# define ohdebugsect(...)
+# define ohdebugassert(...)
 #endif
 
 #if defined(OHDEBUG_ENABLE_ALL_BY_DEFAULT)
