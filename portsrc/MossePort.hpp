@@ -27,10 +27,6 @@
 
 // Disable certain output groups
 
-ohdebuggroup(RawF32OpsBase::initImpl)
-ohdebuggroup(Ops::init)
-ohdebuggroup(MuxCplxA3::call)
-
 #if !MOSSE_PORTABLE
 
 namespace std {
