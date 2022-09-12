@@ -8,9 +8,10 @@
 Mosse::Tracker *sTracker;
 constexpr static bool sUsePredefinedRoi = true;
 const std::array<cv::Rect, 2> sPredefinedRoiArr {{
-	{273, 141, 74, 78}
+	{273, 141, 74, 78},
+	{182, 144, 81, 84}
 }};
-const cv::Rect &sPredefinedRoi = sPredefinedRoiArr[0];
+const cv::Rect &sPredefinedRoi = sPredefinedRoiArr[1];
 
 static cv::Mat bgr2gray(const cv::Mat& image)
 {
