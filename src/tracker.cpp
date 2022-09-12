@@ -43,14 +43,14 @@ void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
 	fi_fft = fft(fi);
 	Ai = complexMultiplication(gauss_fft, conj(fi_fft));
 	Bi = complexMultiplication(fi_fft, conj(fi_fft));
-	int N = 128;
+//	int N = 0;
 
-	for (int i = 0; i < N; i++) {
-		fi = preprocess(rand_warp(gray_crop));
-		fi_fft = fft(fi);
-		Ai += complexMultiplication(gauss_fft, conj(fi_fft));
-		Bi += complexMultiplication(fi_fft, conj(fi_fft));
-	}
+//	for (int i = 0; i < N; i++) {
+//		fi = preprocess(rand_warp(gray_crop));
+//		fi_fft = fft(fi);
+//		Ai += complexMultiplication(gauss_fft, conj(fi_fft));
+//		Bi += complexMultiplication(fi_fft, conj(fi_fft));
+//	}
 
 	Ai *= _eta;
 	Bi *= _eta;
