@@ -32,6 +32,7 @@ const Tp::Roi &Ops::roi() const
 
 void Ops::initImpl()
 {
+	ohdebug(Ops::initImpl);
 }
 
 void Ops::roiResize(Mosse::Tp::Roi &aRoi)
