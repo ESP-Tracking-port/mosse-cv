@@ -24,7 +24,7 @@ void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferCom
 	image = imcrop(_roi, image);
 	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
 	cv::merge(planes, 2, image);
-	bufferToMat<CV_32FC2>(aBufferComplex, roi().origin(1), roi().origin(0)) = image;
+	bufferToMat<CV_32FC2>(aBufferComplex, roi()) = image;
 #else
 	(void)aImageReal;
 	(void)aBufferComplex;
@@ -45,10 +45,10 @@ void OpencvNativeRawF32Ops::imagePreprocess(void *aCropComplex)
 void OpencvNativeRawF32Ops::imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomplex, void *aMatrixBcomplex)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::imageConvFftDomain);
 	auto out = bufferToMat<CV_32FC2>(aioCropFft2Complex, roi());
 	auto mata = bufferToMat<CV_32FC2>(aMatrixAcomplex, roi());
 	auto matb = bufferToMat<CV_32FC2>(aMatrixBcomplex, roi());
+	ohdebug(OpencvNativeRawF32Ops::imageConvFftDomain, out, mata, matb);
 
 	out = complexMultiplication(complexDivision(mata, matb), out);
 #else
@@ -94,6 +94,8 @@ void OpencvNativeRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol 
 	if (nullptr != aSum) {
 		*aSum = cv::sum(channels[0])[0];
 	}
+
+	ohdebug(OpencvNativeRawF32Ops::maxReal, aPeakPos, (aSum ? *aSum : 0.0f));
 #else
 	(void)aBufferComplex;
 	(void)aPeakPos;
