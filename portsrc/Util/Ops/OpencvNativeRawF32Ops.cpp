@@ -156,6 +156,7 @@ void OpencvNativeRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCro
 void OpencvNativeRawF32Ops::initImpl()
 {
 #if MOSSE_USE_OPENCV
+	sPrecompiledMatrixHelper.update(roi());
 	ohdebug(OpencvNativeRawF32Ops::initImpl);
 	ohdebug(OpencvNativeRawF32Ops::initImpl, _roi, roiCv(), roi());
 	_roi = roiCv();
@@ -177,6 +178,7 @@ const void *OpencvNativeRawF32Ops::gaussFft()
 {
 #if MOSSE_USE_OPENCV
 	ohdebug(void *OpencvNativeRawF32Ops::gaussFft);
+	ohdebugassert(OpencvNativeRawF32Ops::gaussFft, sPrecompiledMatrixHelper.gauss() != nullptr);
 	return sPrecompiledMatrixHelper.gauss();
 #else
 	return nullptr;
@@ -326,7 +328,7 @@ cv::Mat OpencvNativeRawF32Ops::rand_warp(const cv::Mat& image)
 cv::Mat OpencvNativeRawF32Ops::complexMultiplication(cv::Mat a, cv::Mat b)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::complexMultiplication);
+	ohdebug(OpencvNativeRawF32Ops::complexMultiplication, a.size(), a.channels(), b.size(), b.channels());
 	std::vector<cv::Mat> pa;
 	std::vector<cv::Mat> pb;
 	cv::split(a, pa);
