@@ -29,6 +29,7 @@ void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferCom
 
 	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
 	cv::merge(planes, 2, image);
+	assert(image.type() == CV_32FC2);
 	matCvCopyInto(image, aBufferComplex);
 # endif  // # if 1
 #else
