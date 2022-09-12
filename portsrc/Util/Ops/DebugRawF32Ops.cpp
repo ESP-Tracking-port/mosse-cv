@@ -19,6 +19,7 @@ DebugRawF32Ops::DebugRawF32Ops() : wrapped{{}, {}}
 void DebugRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
 {
 #if 1
+	ohdebug(DebugRawF32Ops::imageCropInto, "invoking opencv `imageCropInto`");
 	wrapped.opencvNativeRawF32Ops.imageCropInto(aImageReal, aBufferComplex);
 #else
 	wrapped.rawF32Ops.imageCropInto(aImageReal, aBufferComplex);
@@ -100,9 +101,10 @@ void DebugRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCropFftCom
 void DebugRawF32Ops::initImpl()
 {
 #if 1
-	wrapped.opencvNativeRawF32Ops.initImpl();
+	ohdebug(DebugRawF32Ops::initImpl, roi());
+	wrapped.opencvNativeRawF32Ops.init(roi());
 #else
-	wrapped.rawF32Ops.initImpl();
+	wrapped.rawF32Ops.init(roi());
 #endif
 }
 
