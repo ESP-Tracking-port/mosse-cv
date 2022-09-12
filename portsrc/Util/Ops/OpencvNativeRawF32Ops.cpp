@@ -1,3 +1,5 @@
+// TODO CV stores multichannel matrices plane-by-plane
+
 #include "MossePort.hpp"
 #include <assert.h>
 #include <stdlib.h>
