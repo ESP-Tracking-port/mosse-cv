@@ -17,7 +17,10 @@ struct Mat {
 struct Size {
 };
 
-}
+struct Rect2i {
+};
+
+}  // namespace cv
 
 #endif
 

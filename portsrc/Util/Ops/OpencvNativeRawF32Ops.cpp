@@ -14,42 +14,66 @@ OpencvNativeRawF32Ops::OpencvNativeRawF32Ops()
 
 void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
 {
+#if MOSSE_USE_OPENCV
 	auto image = bufferToMat<CV_8SC1>(aImageReal.data(), aImageReal.rows(), aImageReal.cols());
 	image = imcrop(_roi, image);
 	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
 	cv::merge(planes, 2, image);
 	bufferToMat<CV_32FC2>(aBufferComplex, roi().origin(1), roi().origin(0)) = image;
+#else
+	(void)aImageReal;
+	(void)aBufferComplex;
+#endif
 }
 
 void OpencvNativeRawF32Ops::imagePreprocess(void *aCropComplex)
 {
+#if MOSSE_USE_OPENCV
 	auto image = bufferToMat<CV_32FC2>(aCropComplex, roi());
 	preprocess(image);
+#else
+	(void)aCropComplex;
+#endif
 }
 
 void OpencvNativeRawF32Ops::imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomplex, void *aMatrixBcomplex)
 {
+#if MOSSE_USE_OPENCV
 	auto out = bufferToMat<CV_32FC2>(aioCropFft2Complex, roi());
 	auto mata = bufferToMat<CV_32FC2>(aMatrixAcomplex, roi());
 	auto matb = bufferToMat<CV_32FC2>(aMatrixBcomplex, roi());
 
 	out = complexMultiplication(complexDivision(mata, matb), out);
+#else
+	(void)aioCropFft2Complex;
+	(void)aMatrixAcomplex;
+	(void)aMatrixBcomplex;
+#endif
 }
 
 void OpencvNativeRawF32Ops::fft2(void *aBufferComplex)
 {
+#if MOSSE_USE_OPENCV
 	auto mat = bufferToMat<CV_32FC2>(aBufferComplex, roi());
 	mat = fft(mat);
+#else
+	(void)aBufferComplex;
+#endif
 }
 
 void OpencvNativeRawF32Ops::ifft2(void *aBufferComplex)
 {
+#if MOSSE_USE_OPENCV
 	auto mat = bufferToMat<CV_32FC2>(aBufferComplex, roi());
 	mat = fft(mat, true);
+#else
+	(void)aBufferComplex;
+#endif
 }
 
 void OpencvNativeRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol &aPeakPos, float *aSum)
 {
+#if MOSSE_USE_OPENCV
 	auto image = bufferToMat<CV_32FC2>(aBufferComplex, roi());
 	cv::Point ps;
 	cv::minMaxLoc(image, NULL, NULL, NULL, &ps);
@@ -58,16 +82,29 @@ void OpencvNativeRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol 
 	if (nullptr != aSum) {
 		*aSum = cv::sum(image)[0];
 	}
+#else
+	(void)aBufferComplex;
+	(void)aPeakPos;
+	(void)aSum;
+#endif
 }
 
 float OpencvNativeRawF32Ops::calcPsr(const void *aBufferComplex, const Tp::PointRowCol &aPeak, float aSumHint,
 	Tp::PointRowCol aMask)
 {
+#if MOSSE_USE_OPENCV
 	return 0.0f;
+#else
+	(void)aBufferComplex;
+	(void)aPeak;
+	(void)aSumHint;
+	return 0.0f;
+#endif
 }
 
 void OpencvNativeRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
+#if MOSSE_USE_OPENCV
 	// TODO: eta multiplication by gauss matrix is already taken care of
 	auto gaussfft = bufferToMat<CV_32FC2>(gaussFft(), roi());
 	auto imagefft = bufferToMat<CV_32FC2>(aImageCropFftComplex, roi());
@@ -78,10 +115,16 @@ void OpencvNativeRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCro
 	} else {
 		mata = eta() * complexMultiplication(gaussfft, conj(imagefft)) + (1 - eta()) * mata;
 	}
+#else
+	(void)aMatAcomplex;
+	(void)aImageCropFftComplex;
+	(void)aInitial;
+#endif
 }
 
 void OpencvNativeRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
+#if MOSSE_USE_OPENCV
 	auto imagefft = bufferToMat<CV_32FC2>(aImageCropFftComplex, roi());
 	auto matb = bufferToMat<CV_32FC2>(aMatBcomplex, roi());
 
@@ -90,31 +133,51 @@ void OpencvNativeRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCro
 	} else {
 		matb = eta() * complexMultiplication(imagefft, conj(imagefft)) + (1 - eta()) * matb;
 	}
+#else
+	(void)aMatBcomplex;
+	(void)aImageCropFftComplex;
+	(void)aInitial;
+#endif
 }
 
 void OpencvNativeRawF32Ops::initImpl()
 {
+#if MOSSE_USE_OPENCV
 	assert(false);
 	// TODO (XXX): Init ROI
+#else
+#endif
 }
 
 const void *OpencvNativeRawF32Ops::hannMatrix()
 {
+#if MOSSE_USE_OPENCV
 	assert(false);
 	return nullptr;
+#else
+	return nullptr;
+#endif
 }
 
 const void *OpencvNativeRawF32Ops::gaussFft()
 {
+#if MOSSE_USE_OPENCV
 	// TODO: Precompiled gauss (take the chunk from init(...))
 	assert(false);
 	return nullptr;
+#else
+	return nullptr;
+#endif
 }
 
 cv::Rect2i OpencvNativeRawF32Ops::roiCv()
 {
+#if MOSSE_USE_OPENCV
 	return {static_cast<int>(roi().origin(1)), static_cast<int>(roi().origin(0)), static_cast<int>(roi().size(1)),
 		static_cast<int>(roi().origin(0))};
+#else
+	return {};
+#endif
 }
 
 void OpencvNativeRawF32Ops::init_param()
