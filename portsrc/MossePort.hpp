@@ -8,12 +8,30 @@
 #if !defined(MOSSE_UTIL_MOSSEDEBUG_HPP_)
 #define MOSSE_UTIL_MOSSEDEBUG_HPP_
 
+#define MOSSE_PORTABLE 0  // If 0, desktop-only features like console debug output or OpenCV modules will be compiled
+
+#if MOSSE_PORTABLE
+# define OHDEBUG_DISABLE  // "Ohdebug" special macro. Replace ohdebug API w/ stubs
+#else
+# define MOSSE_USE_OPENCV 1
+#endif
+
+#if !MOSSE_PORTABLE
+# include <cassert>
+# include <cmath>
+# include <opencv2/opencv.hpp>
+# include "Types/Tracking.hpp"
+#endif  // MOSSE_PORTABLE
 #include "Types/Tracking.hpp"
 #include <OhDebug.hpp>
 
-#if defined(OHDEBUG)
+// Disable certain output groups
 
-# include "Types/Tracking.hpp"
+ohdebuggroup(RawF32OpsBase::initImpl)
+ohdebuggroup(Ops::init)
+ohdebuggroup(MuxCplxA3::call)
+
+#if !MOSSE_PORTABLE
 
 namespace std {
 
@@ -32,21 +50,6 @@ std::ostream &operator<<(std::basic_ostream<T> &out, const Mosse::Tp::PointRowCo
 
 }  // namespace std
 
-#endif  // OH_DEBUG
-
-// Disable certain output groups
-
-ohdebuggroup(RawF32OpsBase::initImpl)
-ohdebuggroup(Ops::init)
-ohdebuggroup(MuxCplxA3::call)
-
-// Portable assert
-
-#if 1  // Set to 0 to disable non-portable or redundant pieces of code
-# include <cassert>
-# include <cmath>
-# define MOSSE_USE_OPENCV 1  // There is a testing implementation of MOSSE that uses Open CV, particularly, Open CV's DFT (FFT) procedure. Set to 0 to enable portability
-# include <opencv2/opencv.hpp>
 
 namespace Mosse {
 
@@ -67,6 +70,6 @@ inline bool isNan(...)
 
 #else
 # define mosseassertnotnan(...)
-#endif
+#endif  // MOSSE_PORTABLE
 
 #endif // MOSSE_UTIL_MOSSEDEBUG_HPP_
