@@ -4,9 +4,13 @@
 #include <time.h>
 #include <MosseApi.hpp>
 #include "OpencvNativeRawF32Ops.hpp"
+#include "Util/Helper/PrecompiledMatrixHelper.hpp"
 
 namespace Mosse {
 namespace Ut {
+
+static Ut::PrecompiledMatrixHelper<float> sPrecompiledMatrixHelper{Mosse::getGaussKernelFft3dScaled125,
+	Mosse::getHann};
 
 OpencvNativeRawF32Ops::OpencvNativeRawF32Ops()
 {
@@ -143,8 +147,7 @@ void OpencvNativeRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCro
 void OpencvNativeRawF32Ops::initImpl()
 {
 #if MOSSE_USE_OPENCV
-	assert(false);
-	// TODO (XXX): Init ROI
+	_roi = roiCv();
 #else
 #endif
 }
@@ -152,8 +155,7 @@ void OpencvNativeRawF32Ops::initImpl()
 const void *OpencvNativeRawF32Ops::hannMatrix()
 {
 #if MOSSE_USE_OPENCV
-	assert(false);
-	return nullptr;
+	return sPrecompiledMatrixHelper.hann();
 #else
 	return nullptr;
 #endif
@@ -162,9 +164,7 @@ const void *OpencvNativeRawF32Ops::hannMatrix()
 const void *OpencvNativeRawF32Ops::gaussFft()
 {
 #if MOSSE_USE_OPENCV
-	// TODO: Precompiled gauss (take the chunk from init(...))
-	assert(false);
-	return nullptr;
+	return sPrecompiledMatrixHelper.gauss();
 #else
 	return nullptr;
 #endif
