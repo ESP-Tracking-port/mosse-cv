@@ -190,6 +190,17 @@ const void *OpencvNativeRawF32Ops::gaussFft()
 #endif
 }
 
+void OpencvNativeRawF32Ops::matCvCopyInto(const cv::Mat &aMat, void *aOut)
+{
+#if MOSSE_USE_OPENCV
+	const std::size_t size = aMat.elemSize() * aMat.rows * aMat.cols;
+	std::copy_n(static_cast<std::uint8_t *>(aMat.data), size, static_cast<std::uint8_t *>(aOut));
+#else
+	(void)aMat;
+	(void)aOut;
+#endif
+}
+
 cv::Rect2i OpencvNativeRawF32Ops::roiCv()
 {
 #if MOSSE_USE_OPENCV

@@ -62,9 +62,14 @@ private:
 	template <int Cvtype, class T>
 	static cv::Mat bufferToMat(T aBuf, const Tp::Roi &aRoi)
 	{
+#if MOSSE_USE_OPENCV
 		return bufferToMat<Cvtype>(aBuf, static_cast<int>(aRoi.size(1)), static_cast<int>(aRoi.size(0)));
+#else
+		return {};
+#endif
 	}
 
+	static void matCvCopyInto(const cv::Mat &aMat, void *aOut);
 	cv::Rect2i roiCv();
 	void init(cv::Rect roi, const cv::Mat& image);
 	cv::Rect update(const cv::Mat& image);
