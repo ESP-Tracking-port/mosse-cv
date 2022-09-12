@@ -122,7 +122,7 @@ void img2avi(char* address)
 int main()
 {
 	//img2avi((char*)"img");
-	sTracker = &Mosse::getNaive();
+	sTracker = &Mosse::getDebugStub();
 	runPort();
 //	run();
 	debug(MallocCounter::getPeakCount());
