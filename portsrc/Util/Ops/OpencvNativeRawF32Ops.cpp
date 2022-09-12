@@ -25,7 +25,6 @@ void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferCom
 	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
 	cv::merge(planes, 2, image);
 	bufferToMat<CV_32FC2>(aBufferComplex, roi()) = image;
-//	ohdebug(OpencvNativeRawF32Ops::imageCropInto, bufferToMat<CV_32FC2>(aBufferComplex, roi()), planes[0]);
 #else
 	(void)aImageReal;
 	(void)aBufferComplex;
