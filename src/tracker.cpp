@@ -21,6 +21,75 @@ static void cvmatout(const cv::Mat &aMat)
 # define cvmatout(...)
 #endif
 
+void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
+{
+//	MallocCounter mallocCounter{};
+//	(void)mallocCounter;
+	init_param();
+	unsigned rows = roi.height;
+	unsigned cols = roi.width;
+	cv::Point center = cv::Point(roi.x+roi.width/2, roi.y+roi.height/2);
+	Mosse::getClosestWindow(rows, cols);
+	_roi = cv::Rect2i(center.x - cols / 2, center.y - rows / 2, cols, rows);
+	roi = _roi;
+	cv::Mat gray_crop = imcrop(roi, gray);
+	const int sizes[3] = {static_cast<int>(rows), static_cast<int>(cols), 2};
+	void *gauss_fft_raw_3d = const_cast<void *>(static_cast<const void *>(Mosse::getGaussKernelFft3d(rows, cols)));
+	assert(gauss_fft_raw_3d != nullptr);
+	gauss_fft = cv::Mat(2, sizes, CV_32FC2, gauss_fft_raw_3d);
+	init_sz.width = gauss_fft.cols;
+	init_sz.height = gauss_fft.rows;
+	fi = preprocess(gray_crop);
+	fi_fft = fft(fi);
+	Ai = complexMultiplication(gauss_fft, conj(fi_fft));
+	Bi = complexMultiplication(fi_fft, conj(fi_fft));
+	int N = 128;
+
+	for (int i = 0; i < N; i++) {
+		fi = preprocess(rand_warp(gray_crop));
+		fi_fft = fft(fi);
+		Ai += complexMultiplication(gauss_fft, conj(fi_fft));
+		Bi += complexMultiplication(fi_fft, conj(fi_fft));
+	}
+
+	Ai *= _eta;
+	Bi *= _eta;
+}
+
+cv::Rect mosseTracker::update(const cv::Mat& gray)
+{
+//	MallocCounter mallocCounter{};
+//	(void)mallocCounter;
+
+	fi = imcrop(_roi, gray);
+	//cv::resize(_roi, gray);
+	cv::resize(fi, fi, init_sz);
+	fi = preprocess(fi);
+
+	Hi = complexDivision(Ai, Bi);
+	cv::Mat response = fft(complexMultiplication(Hi, fft(fi)), true);
+
+//	cv::normalize(response, response, 0, 1, cv::NORM_MINMAX);
+
+	response *= 255.0;
+
+	cv::Mat resp = real(response);
+	cv::Mat resp_cv8u = cv::Mat_<unsigned char>(resp);
+
+	cv::Point ps;
+	cv::minMaxLoc(resp_cv8u, NULL, NULL, NULL, &ps);
+
+	float dx = ps.x - init_sz.width / 2;
+	float dy = ps.y - init_sz.height / 2;
+
+	_roi = cv::Rect(_roi.x + dx, _roi.y + dy, init_sz.width, init_sz.height);
+	auto psr = calculatePsr(response);  // TODO: BUG! The PSR must be calculated using the new peak, while this one uses the previous one
+
+	train(gray);
+
+	return _roi;
+}
+
 mosseTracker::mosseTracker()
 {
 	
@@ -154,41 +223,6 @@ double mosseTracker::calculatePsr(const cv::Mat &aResponse)
 	return (maxValue - mean[0]) / stddev[0];
 }
 
-void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
-{
-//	MallocCounter mallocCounter{};
-//	(void)mallocCounter;
-	init_param();
-	unsigned rows = roi.height;
-	unsigned cols = roi.width;
-	cv::Point center = cv::Point(roi.x+roi.width/2, roi.y+roi.height/2);
-	Mosse::getClosestWindow(rows, cols);
-	_roi = cv::Rect2i(center.x - cols / 2, center.y - rows / 2, cols, rows);
-	roi = _roi;
-	cv::Mat gray_crop = imcrop(roi, gray);
-	const int sizes[3] = {static_cast<int>(rows), static_cast<int>(cols), 2};
-	void *gauss_fft_raw_3d = const_cast<void *>(static_cast<const void *>(Mosse::getGaussKernelFft3d(rows, cols)));
-	assert(gauss_fft_raw_3d != nullptr);
-	gauss_fft = cv::Mat(2, sizes, CV_32FC2, gauss_fft_raw_3d);
-	init_sz.width = gauss_fft.cols;
-	init_sz.height = gauss_fft.rows;
-	fi = preprocess(gray_crop);
-	fi_fft = fft(fi);
-	Ai = complexMultiplication(gauss_fft, conj(fi_fft));
-	Bi = complexMultiplication(fi_fft, conj(fi_fft));
-	int N = 128;
-
-	for (int i = 0; i < N; i++) {
-		fi = preprocess(rand_warp(gray_crop));
-		fi_fft = fft(fi);
-		Ai += complexMultiplication(gauss_fft, conj(fi_fft));
-		Bi += complexMultiplication(fi_fft, conj(fi_fft));
-	}
-
-	Ai *= _eta;
-	Bi *= _eta;
-}
-
 cv::Mat mosseTracker::convert(const cv::Mat& src)
 {
 	cv::Mat cv8uc1 = cv::Mat::zeros(src.size(), CV_8UC1);
@@ -234,40 +268,6 @@ cv::Mat mosseTracker::complexDivision(cv::Mat a, cv::Mat b)
 	cv::Mat res;
 	cv::merge(pres, res);
 	return res;
-}
-
-cv::Rect mosseTracker::update(const cv::Mat& gray)
-{
-//	MallocCounter mallocCounter{};
-//	(void)mallocCounter;
-
-	fi = imcrop(_roi, gray);
-	//cv::resize(_roi, gray);
-	cv::resize(fi, fi, init_sz);
-	fi = preprocess(fi);
-
-	Hi = complexDivision(Ai, Bi);
-	cv::Mat response = fft(complexMultiplication(Hi, fft(fi)), true);
-
-//	cv::normalize(response, response, 0, 1, cv::NORM_MINMAX);
-
-	response *= 255.0;
-
-	cv::Mat resp = real(response);
-	cv::Mat resp_cv8u = cv::Mat_<unsigned char>(resp);
-
-	cv::Point ps;
-	cv::minMaxLoc(resp_cv8u, NULL, NULL, NULL, &ps);
-
-	float dx = ps.x - init_sz.width / 2;
-	float dy = ps.y - init_sz.height / 2;
-
-	_roi = cv::Rect(_roi.x + dx, _roi.y + dy, init_sz.width, init_sz.height);
-	auto psr = calculatePsr(response);  // TODO: BUG! The PSR must be calculated using the new peak, while this one uses the previous one
-
-	train(gray);
-
-	return _roi;
 }
 
 void mosseTracker::train(const cv::Mat& image)
