@@ -28,6 +28,8 @@ Tracker &getDebugStub()
 	static Mosse::Ut::DynRawF32Mem mem;
 	static Mosse::Ut::Port port{ops, mem};
 	static Mosse::Tracker tracker{port};
+
+	return tracker;
 }
 
 }  // namespace Mosse
