@@ -6,6 +6,11 @@
 #include <MossePort.hpp>
 
 Mosse::Tracker *sTracker;
+constexpr static bool sUsePredefinedRoi = true;
+const std::array<cv::Rect, 2> sPredefinedRoiArr {{
+	{273, 141, 74, 78}
+}};
+const cv::Rect &sPredefinedRoi = sPredefinedRoiArr[0];
 
 static cv::Mat bgr2gray(const cv::Mat& image)
 {
@@ -34,7 +39,11 @@ void runPort()
 		auto gray = bgr2gray(frame);
 		if(init)
 		{
-			roi = box.add(trackingWindow, frame);
+			if (sUsePredefinedRoi) {
+				roi = sPredefinedRoi;
+			} else {
+				roi = box.add(trackingWindow, frame);
+			}
 			ohdebug(runPort, roi);
 			Mosse::Tp::Roi mosseRoi{{roi.y, roi.x}, {roi.size().height, roi.size().width}};
 			ohdebug(runPort, mosseRoi, gray.data != nullptr);
@@ -74,7 +83,12 @@ void run()
 		auto gray = bgr2gray(frame);
 		if(init)
 		{
-			roi = box.add(trackingWindow, frame);
+			if (sUsePredefinedRoi) {
+				roi = sPredefinedRoi;
+			} else {
+				roi = box.add(trackingWindow, frame);
+			}
+			ohdebug(run, roi);
 			track.init(roi, gray);
 			init = false;
 		}
@@ -125,8 +139,8 @@ int main()
 	//img2avi((char*)"img");
 	sTracker = &Mosse::getDebugStub();
 //	sTracker = &Mosse::getNaive();
-	runPort();
-//	run();
+//	runPort();
+	run();
 	debug(MallocCounter::getPeakCount());
 	return 0;
 }
