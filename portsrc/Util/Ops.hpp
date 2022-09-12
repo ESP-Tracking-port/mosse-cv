@@ -38,7 +38,11 @@ public:
 	/// be resized properly before passed into `init`.
 	///
 	void init(Tp::Roi aRoi);
-	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) = 0;  ///< Crop the image into buffer and perform preprocessing
+
+	/// \brief Crop the image into buffer and perform preprocessing. The output buffer is expected to contain both real
+	/// and imaginary channels
+	///
+	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) = 0;
 	virtual void imagePreprocess(void *aCropComplex);  ///< Obsolete
 	virtual void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) = 0;
 	virtual void fft2(void *aBufferComplex) = 0;
