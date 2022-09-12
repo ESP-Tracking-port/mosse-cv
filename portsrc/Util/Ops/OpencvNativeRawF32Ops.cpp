@@ -25,6 +25,8 @@ void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferCom
 	ohdebug(OpencvNativeRawF32Ops::imageCropInto, _roi);
 	auto image = bufferToMat<CV_8UC1>(aImageReal.data(), aImageReal.rows(), aImageReal.cols());
 	image = imcrop(_roi, image);
+	image = preprocess(image);
+
 	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
 	cv::merge(planes, 2, image);
 	matCvCopyInto(image, aBufferComplex);
@@ -37,14 +39,7 @@ void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferCom
 
 void OpencvNativeRawF32Ops::imagePreprocess(void *aCropComplex)
 {
-#if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::imagePreprocess);
-	auto image = bufferToMat<CV_32FC2>(aCropComplex, roi());
-	image = preprocess(image);
-	matCvCopyInto(image, aCropComplex);
-#else
 	(void)aCropComplex;
-#endif
 }
 
 void OpencvNativeRawF32Ops::imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomplex, void *aMatrixBcomplex)
@@ -304,22 +299,15 @@ cv::Mat OpencvNativeRawF32Ops::preprocess(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	ohdebug(OpencvNativeRawF32Ops::preprocess, image.size(), image.rows, image.cols, image.channels());
-	// TODO: the op. requires 1 channel
-	std::vector<cv::Mat> reim;
-	cv::split(image, reim);
 	cv::Mat win = createHanningMats(image.rows, image.cols);
 	float eps = 1e-5;
-	cv::Mat img = reim[0] + cv::Scalar::all(1);
+	cv::Mat img = image + cv::Scalar::all(1);
 	img = cv::Mat_<float>(img);
 	cv::log(img, img);
 	cv::Scalar mean, std;
 	cv::meanStdDev(img, mean, std);
 	img = (img - cv::Scalar::all(mean[0])) / (std[0] + eps);
-	img = img.mul(win);
-	reim[0] = img;
-	cv::merge(reim, reim[0]);
-
-	return reim[0];
+	return img.mul(win);
 #else
 	(void)image;
 	return {};
