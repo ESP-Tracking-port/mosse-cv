@@ -85,12 +85,14 @@ void OpencvNativeRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol 
 #if MOSSE_USE_OPENCV
 	ohdebug(OpencvNativeRawF32Ops::maxReal);
 	auto image = bufferToMat<CV_32FC2>(aBufferComplex, roi());
+	std::vector<cv::Mat> channels;
+	cv::split(image, channels);
 	cv::Point ps;
-	cv::minMaxLoc(image, NULL, NULL, NULL, &ps);
+	cv::minMaxLoc(channels[0], NULL, NULL, NULL, &ps);
 	aPeakPos = {ps.y, ps.x};
 
 	if (nullptr != aSum) {
-		*aSum = cv::sum(image)[0];
+		*aSum = cv::sum(channels[0])[0];
 	}
 #else
 	(void)aBufferComplex;
