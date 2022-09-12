@@ -274,16 +274,23 @@ cv::Mat OpencvNativeRawF32Ops::createHanningMats(int rows, int cols)
 cv::Mat OpencvNativeRawF32Ops::preprocess(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::preprocess);
+	ohdebug(OpencvNativeRawF32Ops::preprocess, image.size(), image.rows, image.cols, image.channels());
+	// TODO: the op. requires 1 channel
+	std::vector<cv::Mat> reim;
+	cv::split(image, reim);
 	cv::Mat win = createHanningMats(image.rows, image.cols);
 	float eps = 1e-5;
-	cv::Mat img = image + cv::Scalar::all(1);
+	cv::Mat img = reim[0] + cv::Scalar::all(1);
 	img = cv::Mat_<float>(img);
 	cv::log(img, img);
 	cv::Scalar mean, std;
 	cv::meanStdDev(img, mean, std);
 	img = (img - cv::Scalar::all(mean[0])) / (std[0] + eps);
-	return img.mul(win);
+	img = img.mul(win);
+	reim[0] = img;
+	cv::merge(reim, reim[0]);
+
+	return reim[0];
 #else
 	(void)image;
 	return {};
