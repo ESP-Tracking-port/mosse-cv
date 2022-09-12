@@ -9,7 +9,7 @@
 namespace Mosse {
 namespace Ut {
 
-static Ut::PrecompiledMatrixHelper<float> sPrecompiledMatrixHelper{Mosse::getGaussKernelFft3dScaled125,
+static Ut::PrecompiledMatrixHelper<float> sPrecompiledMatrixHelper{Mosse::getGaussKernelFft3d,
 	Mosse::getHann};
 
 OpencvNativeRawF32Ops::OpencvNativeRawF32Ops() : Ops()
@@ -126,16 +126,15 @@ float OpencvNativeRawF32Ops::calcPsr(const void *aBufferComplex, const Tp::Point
 void OpencvNativeRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
 #if MOSSE_USE_OPENCV
-	// TODO: eta multiplication by gauss matrix is already taken care of
 	auto gaussfft = bufferToMat<CV_32FC2>(gaussFft(), roi());
 	auto imagefft = bufferToMat<CV_32FC2>(aImageCropFftComplex, roi());
 	auto mata = bufferToMat<CV_32FC2>(aMatAcomplex, roi());
 //	ohdebug(OpencvNativeRawF32Ops::mataUpdate, mata, eta());
 
 	if (aInitial) {
-		mata = complexMultiplication(gaussfft, conj(imagefft));
+		mata = eta() * complexMultiplication(gaussfft, conj(imagefft));
 	} else {
-		mata = complexMultiplication(gaussfft, conj(imagefft)) + (1 - eta()) * mata;
+		mata = eta() * complexMultiplication(gaussfft, conj(imagefft)) + (1 - eta()) * mata;
 	}
 
 	matCvCopyInto(mata, aMatAcomplex);
