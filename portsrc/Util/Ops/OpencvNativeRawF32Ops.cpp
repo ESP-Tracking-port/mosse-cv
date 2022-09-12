@@ -20,11 +20,12 @@ void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferCom
 {
 #if MOSSE_USE_OPENCV
 	ohdebug(OpencvNativeRawF32Ops::imageCropInto, _roi);
-	auto image = bufferToMat<CV_8SC1>(aImageReal.data(), aImageReal.rows(), aImageReal.cols());
+	auto image = bufferToMat<CV_8UC1>(aImageReal.data(), aImageReal.rows(), aImageReal.cols());
 	image = imcrop(_roi, image);
 	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
 	cv::merge(planes, 2, image);
 	bufferToMat<CV_32FC2>(aBufferComplex, roi()) = image;
+//	ohdebug(OpencvNativeRawF32Ops::imageCropInto, bufferToMat<CV_32FC2>(aBufferComplex, roi()), planes[0]);
 #else
 	(void)aImageReal;
 	(void)aBufferComplex;
