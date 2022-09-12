@@ -24,7 +24,7 @@ void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferCom
 	image = imcrop(_roi, image);
 	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
 	cv::merge(planes, 2, image);
-	bufferToMat<CV_32FC2>(aBufferComplex, roi()) = image;
+	matCvCopyInto(image, aBufferComplex);
 #else
 	(void)aImageReal;
 	(void)aBufferComplex;
@@ -36,7 +36,8 @@ void OpencvNativeRawF32Ops::imagePreprocess(void *aCropComplex)
 #if MOSSE_USE_OPENCV
 	ohdebug(OpencvNativeRawF32Ops::imagePreprocess);
 	auto image = bufferToMat<CV_32FC2>(aCropComplex, roi());
-	preprocess(image);
+	image = preprocess(image);
+	matCvCopyInto(image, aCropComplex);
 #else
 	(void)aCropComplex;
 #endif
@@ -51,6 +52,7 @@ void OpencvNativeRawF32Ops::imageConvFftDomain(void *aioCropFft2Complex, void *a
 	ohdebug(OpencvNativeRawF32Ops::imageConvFftDomain);
 
 	out = complexMultiplication(complexDivision(mata, matb), out);
+	matCvCopyInto(out, aioCropFft2Complex);
 #else
 	(void)aioCropFft2Complex;
 	(void)aMatrixAcomplex;
@@ -64,6 +66,7 @@ void OpencvNativeRawF32Ops::fft2(void *aBufferComplex)
 	ohdebug(OpencvNativeRawF32Ops::fft2);
 	auto mat = bufferToMat<CV_32FC2>(aBufferComplex, roi());
 	mat = fft(mat);
+	matCvCopyInto(mat, aBufferComplex);
 #else
 	(void)aBufferComplex;
 #endif
@@ -75,6 +78,7 @@ void OpencvNativeRawF32Ops::ifft2(void *aBufferComplex)
 	ohdebug(OpencvNativeRawF32Ops::ifft2);
 	auto mat = bufferToMat<CV_32FC2>(aBufferComplex, roi());
 	mat = fft(mat, true);
+	matCvCopyInto(mat, aBufferComplex);
 #else
 	(void)aBufferComplex;
 #endif
@@ -131,6 +135,8 @@ void OpencvNativeRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCro
 	} else {
 		mata = complexMultiplication(gaussfft, conj(imagefft)) + (1 - eta()) * mata;
 	}
+
+	matCvCopyInto(mata, aMatAcomplex);
 #else
 	(void)aMatAcomplex;
 	(void)aImageCropFftComplex;
@@ -150,6 +156,8 @@ void OpencvNativeRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCro
 	} else {
 		matb = eta() * complexMultiplication(imagefft, conj(imagefft)) + (1 - eta()) * matb;
 	}
+
+	matCvCopyInto(matb, aMatBcomplex);
 #else
 	(void)aMatBcomplex;
 	(void)aImageCropFftComplex;
