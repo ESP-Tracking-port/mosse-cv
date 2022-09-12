@@ -48,7 +48,7 @@ void OpencvNativeRawF32Ops::imageConvFftDomain(void *aioCropFft2Complex, void *a
 	auto out = bufferToMat<CV_32FC2>(aioCropFft2Complex, roi());
 	auto mata = bufferToMat<CV_32FC2>(aMatrixAcomplex, roi());
 	auto matb = bufferToMat<CV_32FC2>(aMatrixBcomplex, roi());
-	ohdebug(OpencvNativeRawF32Ops::imageConvFftDomain, out, mata, matb);
+	ohdebug(OpencvNativeRawF32Ops::imageConvFftDomain);
 
 	out = complexMultiplication(complexDivision(mata, matb), out);
 #else
@@ -120,16 +120,16 @@ float OpencvNativeRawF32Ops::calcPsr(const void *aBufferComplex, const Tp::Point
 void OpencvNativeRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::mataUpdate);
 	// TODO: eta multiplication by gauss matrix is already taken care of
 	auto gaussfft = bufferToMat<CV_32FC2>(gaussFft(), roi());
 	auto imagefft = bufferToMat<CV_32FC2>(aImageCropFftComplex, roi());
 	auto mata = bufferToMat<CV_32FC2>(aMatAcomplex, roi());
+//	ohdebug(OpencvNativeRawF32Ops::mataUpdate, mata, eta());
 
 	if (aInitial) {
-		mata = eta() * complexMultiplication(gaussfft, conj(imagefft));
+		mata = complexMultiplication(gaussfft, conj(imagefft));
 	} else {
-		mata = eta() * complexMultiplication(gaussfft, conj(imagefft)) + (1 - eta()) * mata;
+		mata = complexMultiplication(gaussfft, conj(imagefft)) + (1 - eta()) * mata;
 	}
 #else
 	(void)aMatAcomplex;
@@ -163,6 +163,7 @@ void OpencvNativeRawF32Ops::initImpl()
 	sPrecompiledMatrixHelper.update(roi());
 	ohdebug(OpencvNativeRawF32Ops::initImpl);
 	ohdebug(OpencvNativeRawF32Ops::initImpl, _roi, roiCv(), roi());
+	setEta(0.125f);
 	_roi = roiCv();
 #else
 #endif
