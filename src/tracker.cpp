@@ -52,8 +52,8 @@ void mosseTracker::init(cv::Rect roi, const cv::Mat& gray)
 //		Bi += complexMultiplication(fi_fft, conj(fi_fft));
 //	}
 
-	Ai *= _eta;
-	Bi *= _eta;
+//	Ai *= _eta;
+//	Bi *= _eta;
 }
 
 cv::Rect mosseTracker::update(const cv::Mat& gray)
