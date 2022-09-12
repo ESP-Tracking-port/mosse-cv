@@ -63,7 +63,7 @@ private:
 	static cv::Mat bufferToMat(T aBuf, const Tp::Roi &aRoi)
 	{
 #if MOSSE_USE_OPENCV
-		return bufferToMat<Cvtype>(aBuf, static_cast<int>(aRoi.size(1)), static_cast<int>(aRoi.size(0)));
+		return bufferToMat<Cvtype>(aBuf, static_cast<int>(aRoi.size(0)), static_cast<int>(aRoi.size(1)));
 #else
 		return {};
 #endif
