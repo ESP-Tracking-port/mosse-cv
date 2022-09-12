@@ -35,7 +35,6 @@ struct MulCplxA3 {
 		float oImf = aRe1f * aIm2f + aIm1f * aRe2f;
 		aoRe = toRepr<O>(oRef);
 		aoIm = toRepr<O>(oImf);
-		ohdebug(MuxCplxA3::call, R1, R2, O, aRe1f, aIm1f, aRe2f, aIm2f, oRef, oImf);
 	}
 };
 
