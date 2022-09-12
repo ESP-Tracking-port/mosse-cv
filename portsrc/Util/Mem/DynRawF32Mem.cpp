@@ -41,9 +41,10 @@ void *DynRawF32Mem::buffer()
 void DynRawF32Mem::init(Tp::Roi aRoi)
 {
 	if (roiSizePrev != aRoi.size) {
-		mata.reserve(sizeof(float) * 2 * aRoi.area());
-		matb.reserve(sizeof(float) * 2 * aRoi.area());
-		buf.reserve(sizeof(float) * 2 * aRoi.area());
+		mata.resize(sizeof(float) * 2 * aRoi.area(), 0.0f);
+		matb.resize(sizeof(float) * 2 * aRoi.area(), 0.0f);
+		buf.resize(sizeof(float) * 2 * aRoi.area(), 0.0f);
+
 		roiSizePrev = aRoi.size;
 	}
 }
