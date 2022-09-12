@@ -29,6 +29,7 @@ namespace Ut {
 
 class OpencvNativeRawF32Ops : public Ops {
 public:
+	using Ops::init;
 	// Ops API
 	OpencvNativeRawF32Ops();
 	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override;

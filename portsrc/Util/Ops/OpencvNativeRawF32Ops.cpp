@@ -12,13 +12,14 @@ namespace Ut {
 static Ut::PrecompiledMatrixHelper<float> sPrecompiledMatrixHelper{Mosse::getGaussKernelFft3dScaled125,
 	Mosse::getHann};
 
-OpencvNativeRawF32Ops::OpencvNativeRawF32Ops()
+OpencvNativeRawF32Ops::OpencvNativeRawF32Ops() : Ops()
 {
 }
 
 void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
 {
 #if MOSSE_USE_OPENCV
+	ohdebug(OpencvNativeRawF32Ops::imageCropInto, _roi);
 	auto image = bufferToMat<CV_8SC1>(aImageReal.data(), aImageReal.rows(), aImageReal.cols());
 	image = imcrop(_roi, image);
 	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
@@ -147,6 +148,7 @@ void OpencvNativeRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCro
 void OpencvNativeRawF32Ops::initImpl()
 {
 #if MOSSE_USE_OPENCV
+	ohdebug(OpencvNativeRawF32Ops::initImpl, _roi, roiCv(), roi());
 	_roi = roiCv();
 #else
 #endif
@@ -174,7 +176,7 @@ cv::Rect2i OpencvNativeRawF32Ops::roiCv()
 {
 #if MOSSE_USE_OPENCV
 	return {static_cast<int>(roi().origin(1)), static_cast<int>(roi().origin(0)), static_cast<int>(roi().size(1)),
-		static_cast<int>(roi().origin(0))};
+		static_cast<int>(roi().size(0))};
 #else
 	return {};
 #endif
