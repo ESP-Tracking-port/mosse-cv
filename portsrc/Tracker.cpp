@@ -26,7 +26,7 @@ void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 	tracking.roi = aRoi;
 	port.ops.roiResize(tracking.roi);
 	port.mem.init(tracking.roi);
-	port.ops.init(tracking.roi);
+	ohdebugstr(Tracker::init, port.ops.init(tracking.roi));
 	port.ops.imageCropInto(aImage, port.mem.buffer());
 	port.ops.imagePreprocess(port.mem.buffer());
 	ohdebug(Tracker::init, "fft2");
