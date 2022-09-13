@@ -143,6 +143,30 @@ public:
 		return psr;
 	}
 
+	/// \brief Depending on implementation, gauss matrix may or may not be pre-multiplied
+	///
+	template <Tp::Repr::Flags F>
+	inline void gaussUnscale(ReTp<F> &aGauss, En<!(F & Tp::Repr::ReprRawScaled)> = nullptr)
+	{
+	}
+
+	template <Tp::Repr::Flags F>
+	inline void gaussUnscale(ReTp<F> &gauss, En<F & (Tp::Repr::ReprRawScaled)> = nullptr)
+	{
+		Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, F, F>(1.0f / eta(), gauss, gauss);
+	}
+
+	template <Tp::Repr::Flags F>
+	inline void gaussScale(ReTp<F> &aGauss, En<!(F & Tp::Repr::ReprRawScaled)> = nullptr)
+	{
+		Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, F, F>(eta(), aGauss, aGauss);
+	}
+
+	template <Tp::Repr::Flags F>
+	inline void gaussScale(ReTp<F> &, En<F & Tp::Repr::ReprRawScaled> = nullptr)
+	{
+	}
+
 	/// \brief
 	///
 	/// \pre It is expected that Gaussian matrix is already multiplied by eta
@@ -156,33 +180,28 @@ public:
 		auto mapGauss = Ut::makeEigenMap<ReprGauss>(gaussFft(), roi());
 		auto mapGaussImag = Ut::makeEigenMap<ReprGauss>(gaussFft(), roi());
 
-		if (aInitial) {  // B = eta * complexMult(gaussfft, conj(imagefft))
-			for (unsigned row = 0; row < roi().rows(); ++row) {
-				for (unsigned col = 0; col < roi().cols(); ++col) {
-					mapA(row, col) = Ut::toRepr<ReprAb>(0);
-					mapAimag(row, col) = Ut::toRepr<ReprAb>(0);
-					mosseassertnotnan(CommonOps::mataUpdate, mapFft(row, col), row, col);
-					mosseassertnotnan(CommonOps::mataUpdate, mapFftImag(row, col), row, col);
-					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
-						mapFft(row, col), mapFftImag(row, col), mapA(row, col), mapAimag(row, col));
-					mosseassertnotnan(CommonOps::mataUpdate, mapA(row, col), row, col);
-					mosseassertnotnan(CommonOps::mataUpdate, mapAimag(row, col), row, col);
+		for (unsigned row = 0; row < roi().rows(); ++row) {
+			for (unsigned col = 0; col < roi().cols(); ++col) {
+				auto gauss = mapGauss(row, col);
+				auto aPrev = mapA(row, col);
+				auto aImPrev = mapA(row, col);
+				auto frameFftImag = Ut::minus<ReprBuffer>(mapFftImag(row, col));  // Complex conjugate. See the mosse paper.
+
+				if (aInitial) {
+					// If a pre-scaled Gauss matrix is used, undo scaling
+					gaussUnscale<ReprGauss>(gauss);  // Standard MOOSE paper stipulates use of both (1) pre-training and (2) multiplication of the initial A matrix by $\eta$. We use neither, because test implementation works without it even better than with.
+				} else {
+					gaussScale<ReprGauss>(gauss);  // Multiplication by $\eta$. See the mosse paper
 				}
-			}
-		} else {  // Weighted sum.  B = eta * complexMult(gaussfft, conj(imagefft)) + (1 - eta) * B
-			for (unsigned row = 0; row < roi().rows(); ++row) {
-				for (unsigned col = 0; col < roi().cols(); ++col) {
-					auto conj = Ut::minus<ReprBuffer>(mapFftImag(row, col));  // Complex conjugate
-					auto aPrev = mapA(row, col);
-					auto aPrevImag = mapAimag(row, col);
-					Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(mapGauss(row, col), mapGaussImag(row, col),
-						mapFft(row, col), conj, mapA(row, col), mapAimag(row, col));  // eta * complexMult(gaussfft, conj(imagefft)), the precompiled FFT-transformed gaussian kernel is already multiplied by eta
+
+				Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(gauss, mapGaussImag(row, col), mapFft(row, col),
+					frameFftImag, mapA(row, col), mapAimag(row, col));
+
+				if (!aInitial) {
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrev, aPrev);
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrevImag, aPrevImag);
+					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aImPrev, aImPrev);
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapA(row, col), aPrev, mapA(row, col));
-					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapAimag(row, col), aPrevImag, mapAimag(row, col));
-					mosseassertnotnan(CommonOps::mataUpdate, mapA(row, col), row, col);
-					mosseassertnotnan(CommonOps::mataUpdate, mapAimag(row, col), row, col);
+					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapAimag(row, col), aImPrev, mapAimag(row, col));
 				}
 			}
 		}
