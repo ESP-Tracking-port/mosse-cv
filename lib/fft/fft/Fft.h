@@ -14,7 +14,7 @@ class Fft
 {
 public:
 
-	void Init(int pLogN);
+	void Init(int rows, int cols);
 	void TransformDirect(std::vector<float> &pRe, std::vector<float> &pIm);
 	void TransformComplement(std::vector<float> &pRe, std::vector<float> &pIm);
 

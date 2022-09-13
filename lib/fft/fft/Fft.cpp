@@ -1,5 +1,6 @@
 #include <vector>
 #include "Fft.h"
+#include <cmath>
 
 #include "Fft_arrays.h"
 
@@ -12,9 +13,9 @@ inline void mulComplex(float &re1, float &im1, float re2, float im2)
 }
 
 
-void Fft::Init(int pLogN)
+void Fft::Init(int rows, int cols)
 {
-	m_logN = pLogN;
+	m_logN = static_cast<int>(ceilf(log2(static_cast<float>(rows * cols))));
 	m_nMax = 1 << m_logN;
 
 	// Rotation multiplier array allocation
