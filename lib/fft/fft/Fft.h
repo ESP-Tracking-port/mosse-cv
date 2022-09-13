@@ -16,8 +16,8 @@ class Fft
 public:
 
 	void init(std::size_t rows, std::size_t cols, std::size_t step);
-	void transformDirect(std::vector<float> &pRe, std::vector<float> &pIm);
-	void transformComplement(std::vector<float> &pRe, std::vector<float> &pIm);
+	void transformDirect(float *pRe, float *pIm);
+	void transformComplement(float *pRe, float *pIm);
 
 private:
 

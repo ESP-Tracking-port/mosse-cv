@@ -23,7 +23,7 @@ void Fft::init(std::size_t rows, std::size_t cols, std::size_t st)
 	m_wStore_im.resize(m_nMax / 2);
 }
 
-void Fft::transformDirect(std::vector<float> &pRe, std::vector<float> &pIm)
+void Fft::transformDirect(float *pRe, float *pIm)
 {
 	float tmp_re;
 	float tmp_im;
@@ -105,7 +105,7 @@ void Fft::transformDirect(std::vector<float> &pRe, std::vector<float> &pIm)
 	}
 }
 
-void Fft::transformComplement(std::vector<float> &pRe, std::vector<float> &pIm)
+void Fft::transformComplement(float *pRe, float *pIm)
 {
 	float tmp_re;
 	float tmp_im;
