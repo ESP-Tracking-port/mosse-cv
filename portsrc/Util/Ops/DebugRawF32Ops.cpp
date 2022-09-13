@@ -110,7 +110,7 @@ void DebugRawF32Ops::initImpl()
 
 const void *DebugRawF32Ops::hannMatrix()
 {
-#if 1
+#if 0
 	return wrapped.opencvNativeRawF32Ops.hannMatrix();
 #else
 	return wrapped.rawF32Ops.hannMatrix();
@@ -119,7 +119,7 @@ const void *DebugRawF32Ops::hannMatrix()
 
 const void *DebugRawF32Ops::gaussFft()
 {
-#if 1
+#if 0
 	return wrapped.opencvNativeRawF32Ops.gaussFft();
 #else
 	return wrapped.rawF32Ops.gaussFft();
