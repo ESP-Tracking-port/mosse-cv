@@ -61,6 +61,14 @@ constexpr unsigned strideInner(En<!(F & Tp::Repr::MaskCplx)> = nullptr)
 	return 1;
 }
 
+/// \brief Pointer increment between two elements in one column
+///
+template <Tp::Repr::Flags F>
+constexpr unsigned strideOuter(const Tp::Roi &roi)
+{
+	return strideInner<F>() * roi.rows();
+}
+
 template <Tp::Repr::Flags F>
 constexpr unsigned offsetFirstReal(const Tp::Roi &)
 {
