@@ -42,12 +42,12 @@ void Fft::transformDirect(float *pRe, float *pIm)
 		n2 >>= (32 - m_logN);
 		if (n1 < n2)
 		{
-			tmp_re = pRe[n1];
-			tmp_im = pIm[n1];
-			pRe[n1] = pRe[n2];
-			pIm[n1] = pIm[n2];
-			pRe[n2] = tmp_re;
-			pIm[n2] = tmp_im;
+			tmp_re = pRe[step * n1];
+			tmp_im = pIm[step * n1];
+			pRe[step * n1] = pRe[step * n2];
+			pIm[step * n1] = pIm[step * n2];
+			pRe[step * n2] = tmp_re;
+			pIm[step * n2] = tmp_im;
 		}
 	}
 
@@ -93,13 +93,13 @@ void Fft::transformDirect(float *pRe, float *pIm)
 
 				tmp_re = w_re;
 				tmp_im = w_im;
-				mulComplex(tmp_re, tmp_im, pRe[mpNd2], pIm[mpNd2]);
-				pRe[mpNd2] = pRe[m];
-				pIm[mpNd2] = pIm[m];
-				pRe[mpNd2] -= tmp_re;
-				pIm[mpNd2] -= tmp_im;
-				pRe[m] += tmp_re;
-				pIm[m] += tmp_im;
+				mulComplex(tmp_re, tmp_im, pRe[step * mpNd2], pIm[step * mpNd2]);
+				pRe[step * mpNd2] = pRe[step * m];
+				pIm[step * mpNd2] = pIm[step * m];
+				pRe[step * mpNd2] -= tmp_re;
+				pIm[step * mpNd2] -= tmp_im;
+				pRe[step * m] += tmp_re;
+				pIm[step * m] += tmp_im;
 			}
 		}
 	}
@@ -124,12 +124,12 @@ void Fft::transformComplement(float *pRe, float *pIm)
 		n2 >>= (32 - m_logN);
 		if (n1 < n2)
 		{
-			tmp_re = pRe[n1];
-			tmp_im = pIm[n1];
-			pRe[n1] = pRe[n2];
-			pIm[n1] = pIm[n2];
-			pRe[n2] = tmp_re;
-			pIm[n2] = tmp_im;
+			tmp_re = pRe[step * n1];
+			tmp_im = pIm[step * n1];
+			pRe[step * n1] = pRe[step * n2];
+			pIm[step * n1] = pIm[step * n2];
+			pRe[step * n2] = tmp_re;
+			pIm[step * n2] = tmp_im;
 		}
 	}
 
@@ -175,13 +175,13 @@ void Fft::transformComplement(float *pRe, float *pIm)
 
 				tmp_re = w_re;
 				tmp_im = w_im;
-				mulComplex(tmp_re, tmp_im, pRe[mpNd2], pIm[mpNd2]);
-				pRe[mpNd2] = pRe[m];
-				pIm[mpNd2] = pIm[m];
-				pRe[mpNd2] -= tmp_re;
-				pIm[mpNd2] -= tmp_im;
-				pRe[m] += tmp_re;
-				pIm[m] += tmp_im;
+				mulComplex(tmp_re, tmp_im, pRe[step * mpNd2], pIm[step * mpNd2]);
+				pRe[step * mpNd2] = pRe[step * m];
+				pIm[step * mpNd2] = pIm[step * m];
+				pRe[step * mpNd2] -= tmp_re;
+				pIm[step * mpNd2] -= tmp_im;
+				pRe[step * m] += tmp_re;
+				pIm[step * m] += tmp_im;
 			}
 		}
 	}
@@ -189,7 +189,7 @@ void Fft::transformComplement(float *pRe, float *pIm)
 	// Because it is a complement transform
 	for (n1 = 0; n1 < m_nMax; n1++)
 	{
-		pRe[n1] /= m_nMax;
-		pIm[n1] /= m_nMax;
+		pRe[step * n1] /= m_nMax;
+		pIm[step * n1] /= m_nMax;
 	}
 }
