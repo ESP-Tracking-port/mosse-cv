@@ -31,7 +31,6 @@ public:
 	void fft2(void *aBufferComplex) override;
 	void ifft2(void *aBufferComplex) override;
 	RawF32Ops();
-protected:
 	void initImpl() override;
 	const void *hannMatrix() override;  ///< Precompiled hann matrix
 	const void *gaussFft() override;  ///< Precompiled scaled fourier-transformed Gaussian matrix
