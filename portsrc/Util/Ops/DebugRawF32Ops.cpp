@@ -18,7 +18,7 @@ DebugRawF32Ops::DebugRawF32Ops() : wrapped{{}, {}}
 
 void DebugRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
 {
-#if 1
+#if 0
 	ohdebug(DebugRawF32Ops::imageCropInto, "invoking opencv `imageCropInto`");
 	wrapped.opencvNativeRawF32Ops.imageCropInto(aImageReal, aBufferComplex);
 #else
