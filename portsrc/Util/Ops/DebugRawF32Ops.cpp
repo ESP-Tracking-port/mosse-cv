@@ -28,7 +28,7 @@ void DebugRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
 
 void DebugRawF32Ops::imagePreprocess(void *aCropComplex)
 {
-#if 1
+#if 0
 	wrapped.opencvNativeRawF32Ops.imagePreprocess(aCropComplex);
 #else
 	wrapped.rawF32Ops.imagePreprocess(aCropComplex);
