@@ -12,10 +12,10 @@ inline void mulComplex(float &re1, float &im1, float re2, float im2)
 }
 
 
-void Fft::init(std::size_t rows, std::size_t cols, std::size_t st)
+void Fft::init(std::size_t sz, std::size_t st)
 {
 	step = st;
-	m_logN = static_cast<int>(ceilf(log2(static_cast<float>(rows * cols))));
+	m_logN = static_cast<int>(ceilf(log2(static_cast<float>(sz))));
 	m_nMax = 1 << m_logN;
 
 	// Rotation multiplier array allocation

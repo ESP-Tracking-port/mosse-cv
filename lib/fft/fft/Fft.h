@@ -15,7 +15,7 @@ class Fft
 {
 public:
 
-	void init(std::size_t rows, std::size_t cols, std::size_t step);
+	void init(std::size_t size, std::size_t step);
 	void transformDirect(float *pRe, float *pIm);
 	void transformComplement(float *pRe, float *pIm);
 
