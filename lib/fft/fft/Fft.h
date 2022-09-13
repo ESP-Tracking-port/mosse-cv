@@ -9,17 +9,19 @@
 #ifndef FFT_H
 #define FFT_H
 
+#include <vector>
 
 class Fft
 {
 public:
 
-	void Init(int rows, int cols);
-	void TransformDirect(std::vector<float> &pRe, std::vector<float> &pIm);
-	void TransformComplement(std::vector<float> &pRe, std::vector<float> &pIm);
+	void init(std::size_t rows, std::size_t cols, std::size_t step);
+	void transformDirect(std::vector<float> &pRe, std::vector<float> &pIm);
+	void transformComplement(std::vector<float> &pRe, std::vector<float> &pIm);
 
 private:
 
+	std::size_t step;
 	int m_logN;
 	unsigned int m_nMax;
 	std::vector<float> m_wStore_re;

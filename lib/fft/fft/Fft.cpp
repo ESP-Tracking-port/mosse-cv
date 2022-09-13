@@ -1,7 +1,6 @@
 #include <vector>
 #include "Fft.h"
 #include <cmath>
-
 #include "Fft_arrays.h"
 
 
@@ -13,8 +12,9 @@ inline void mulComplex(float &re1, float &im1, float re2, float im2)
 }
 
 
-void Fft::Init(int rows, int cols)
+void Fft::init(std::size_t rows, std::size_t cols, std::size_t st)
 {
+	step = st;
 	m_logN = static_cast<int>(ceilf(log2(static_cast<float>(rows * cols))));
 	m_nMax = 1 << m_logN;
 
@@ -23,7 +23,7 @@ void Fft::Init(int rows, int cols)
 	m_wStore_im.resize(m_nMax / 2);
 }
 
-void Fft::TransformDirect(std::vector<float> &pRe, std::vector<float> &pIm)
+void Fft::transformDirect(std::vector<float> &pRe, std::vector<float> &pIm)
 {
 	float tmp_re;
 	float tmp_im;
@@ -105,7 +105,7 @@ void Fft::TransformDirect(std::vector<float> &pRe, std::vector<float> &pIm)
 	}
 }
 
-void Fft::TransformComplement(std::vector<float> &pRe, std::vector<float> &pIm)
+void Fft::transformComplement(std::vector<float> &pRe, std::vector<float> &pIm)
 {
 	float tmp_re;
 	float tmp_im;
