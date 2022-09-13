@@ -100,12 +100,9 @@ void DebugRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCropFftCom
 
 void DebugRawF32Ops::initImpl()
 {
-#if 1
 	ohdebug(DebugRawF32Ops::initImpl, roi());
 	wrapped.opencvNativeRawF32Ops.init(roi());
-#else
 	wrapped.rawF32Ops.init(roi());
-#endif
 }
 
 const void *DebugRawF32Ops::hannMatrix()
