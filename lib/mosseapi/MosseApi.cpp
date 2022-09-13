@@ -29,6 +29,12 @@ static constexpr auto kHannMap = makeArray(
 	kHann32x64Raw
 );
 
+static constexpr auto kGaussKernelFftImReal = makeArray(
+	kGaussKernelFft64x64ImRealRaw,
+	kGaussKernelFft64x32ImRealRaw,
+	kGaussKernelFft32x64ImRealRaw
+);
+
 static constexpr auto kGaussKernelFftScaled125 = makeArray(
 	kGaussKernelFft64x64Scaled125Raw,
 	kGaussKernelFft64x32Scaled125Raw,
@@ -111,17 +117,6 @@ const float *getHann(unsigned aRows, unsigned aCols)
 	return kHannMap[id];
 }
 
-std::pair<const float *, const float *> getGaussKernelFft(unsigned aRows, unsigned aCols)
-{
-	int id = checkWindowExists(aRows, aCols);
-
-	if (id < 0) {
-		return {nullptr, nullptr};
-	}
-
-	return kGaussKernelFftMapImReal[id];
-}
-
 const float *getGaussKernelFft3d(unsigned aRows, unsigned aCols)
 {
 	int id = checkWindowExists(aRows, aCols);
@@ -136,6 +131,17 @@ const float *getGaussKernelFft3d(unsigned aRows, unsigned aCols)
 const float *getLogTable8bit()  ///< Returns a float log table for integers from 1 to 256
 {
 	return kLogMatrix8bit;
+}
+
+const float *getGaussKernelFftImReal(unsigned aRows, unsigned aCols)
+{
+	int id = checkWindowExists(aRows, aCols);
+
+	if (id < 0) {
+		return nullptr;
+	}
+
+	return kGaussKernelFftImReal[id];
 }
 
 const float *getGaussKernelFft3dScaled125(unsigned aRows, unsigned aCols)
