@@ -8,6 +8,7 @@
 #if !defined(MOSSE_MOSSE_HPP_)
 #define MOSSE_MOSSE_HPP_
 
+#include <Fft.h>
 #include "Types/Tracking.hpp"
 #include "Types/Port.hpp"
 #include "Util/Ops/RawF32Ops.hpp"
