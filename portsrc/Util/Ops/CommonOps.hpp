@@ -214,39 +214,32 @@ public:
 		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aImageCropFftComplex, roi());
 		auto mapFftImag = Ut::makeEigenMap<ReprBuffer>(aImageCropFftComplex, roi());
 
-		if (aInitial) {
-			for (unsigned row = 0; row < roi().rows(); ++row) {
-				for (unsigned col = 0; col < roi().cols(); ++col) {
-					auto fftTemp = mapFft(row, col);
-					auto fftImagTemp = mapFftImag(row, col);
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(), fftTemp,
-						fftTemp);
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(), fftImagTemp,
-						fftImagTemp);
-					auto conj = Ut::minus<ReprBuffer>(fftImagTemp);
-					Ut::mulCplxA3<ReprBuffer, ReprBuffer, ReprAb>(fftTemp, fftImagTemp, fftTemp, conj, mapB(row, col),
+		for (unsigned row = 0; row < roi().rows(); ++row) {
+			for (unsigned col = 0; col < roi().cols(); ++col) {
+				auto frameFftImConj = Ut::minus<ReprBuffer>(mapFftImag(row, col));
+				auto bPrev = mapB(row, col);
+				auto bImPrev = mapB(row, col);
+
+				// B = complexMultiplication(fft(imageCrop), complexConjugate(fft(imageCrop)))
+				Ut::mulCplxA3<ReprBuffer, ReprBuffer, ReprAb>(mapFft(row, col), mapFftImag(row, col), mapFft(row, col),
+					frameFftImConj, mapB(row, col), mapBimag(row, col));
+
+				if (!aInitial) {
+					// B' = eta * complexMultiplication(fft(imageCrop), complexConjugate(fft(imageCrop)))
+					Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprAb, ReprAb>(eta(), mapB(row, col),
+						mapB(row, col));
+					Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprAb, ReprAb>(eta(), mapBimag(row, col),
 						mapBimag(row, col));
-				}
-			}
-		} else {
-			for (unsigned row = 0; row < roi().rows(); ++row) {
-				for (unsigned col = 0; col < roi().cols(); ++col) {
-					auto bPrev = mapB(row, col);
-					auto bPrevImag = mapBimag(row, col);
-					auto fftTemp = mapFft(row, col);
-					auto fftImagTemp = mapFftImag(row, col);
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(), fftTemp,
-						fftTemp);
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprBuffer, ReprBuffer>(eta(), fftImagTemp,
-						fftImagTemp);
-					auto conj = Ut::minus<ReprBuffer>(fftImagTemp);
-					Ut::mulCplxA3<ReprBuffer, ReprBuffer, ReprAb>(fftTemp, fftImagTemp, fftTemp, conj, mapB(row, col),
-						mapBimag(row, col));
+					// B(t-1) * (1 - eta), both real and complex plane
+					Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprAb, ReprAb>(invEta(), bPrev, bPrev);
+					Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprAb, ReprAb>(invEta(), bImPrev, bImPrev);
+					// B(t) := B' + B(t-1) * (1 - eta), both real and complex plane
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapB(row, col), bPrev, mapB(row, col));
-					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapBimag(row, col), bPrevImag, mapBimag(row, col));
+					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapBimag(row, col), bImPrev, mapBimag(row, col));
 				}
 			}
 		}
+
 	}
 private:
 
