@@ -46,7 +46,7 @@ void DebugRawF32Ops::imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixA
 
 void DebugRawF32Ops::fft2(void *aBufferComplex)
 {
-#if 1
+#if 0
 	wrapped.opencvNativeRawF32Ops.fft2(aBufferComplex);
 #else
 	wrapped.rawF32Ops.fft2(aBufferComplex);
@@ -55,7 +55,7 @@ void DebugRawF32Ops::fft2(void *aBufferComplex)
 
 void DebugRawF32Ops::ifft2(void *aBufferComplex)
 {
-#if 1
+#if 0
 	wrapped.opencvNativeRawF32Ops.ifft2(aBufferComplex);
 #else
 	wrapped.rawF32Ops.ifft2(aBufferComplex);
