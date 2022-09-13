@@ -5,6 +5,7 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
+#include <Fft.h>
 #include "OpencvNativeRawF32Ops.hpp"
 #include "RawF32Ops.hpp"
 #include "DebugRawF32Ops.hpp"

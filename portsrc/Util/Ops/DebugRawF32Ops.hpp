@@ -5,6 +5,9 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
+#if !defined(MOSSE_UTIL_OPS_DEBUGRAWF32OPS_HPP_)
+#define MOSSE_UTIL_OPS_DEBUGRAWF32OPS_HPP_
+
 #include "Util/Ops.hpp"
 
 namespace Mosse {
@@ -45,3 +48,5 @@ private:
 
 }  // namespace Ut
 }  // namespace Mosse
+
+#endif // MOSSE_UTIL_OPS_DEBUGRAWF32OPS_HPP_
