@@ -52,7 +52,7 @@ private:
 	static cv::Mat bufferToMat(T aBuf, unsigned aRows, unsigned aCols)
 	{
 #if MOSSE_USE_OPENCV
-		int sizes[2] = {static_cast<int>(aCols), static_cast<int>(aRows)};
+		int sizes[2] = {static_cast<int>(aRows), static_cast<int>(aCols)};
 		return cv::Mat{2, sizes, Cvtype, const_cast<void *>(static_cast<const void *>(aBuf))};
 #else
 		return {};
