@@ -27,12 +27,12 @@ template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
 struct MulCplxA3 {
 	static inline void call(ReTp<R1> aRe1, ReTp<R1> aIm1, ReTp<R2> aRe2, ReTp<R2> aIm2, ReTp<O> &aoRe, ReTp<O> &aoIm)
 	{
-		auto aRe1f = fromRepr<float, R1>(aRe1);
-		auto aIm1f = fromRepr<float, R1>(aIm1);
-		auto aRe2f = fromRepr<float, R2>(aRe2);
-		auto aIm2f = fromRepr<float, R2>(aIm2);
-		float oRef = aRe1f * aRe2f - aIm1f * aIm2f;
-		float oImf = aRe1f * aIm2f + aIm1f * aRe2f;
+		auto a = fromRepr<float, R1>(aRe1);
+		auto b = fromRepr<float, R1>(aIm1);
+		auto c = fromRepr<float, R2>(aRe2);
+		auto d = fromRepr<float, R2>(aIm2);
+		float oRef = a * c - b * d;
+		float oImf = a * d + b * c;
 		aoRe = toRepr<O>(oRef);
 		aoIm = toRepr<O>(oImf);
 	}
@@ -65,10 +65,6 @@ struct DivCplxA3 {
 		float oImf = (b * c - a * d) / (c * c + d * d);
 		aoRe = toRepr<O>(oRef);
 		aoIm = toRepr<O>(oImf);
-		ohdebugsectif(std::isnan(oRef) || std::isnan(oImf), {
-			ohdebug(DivCplxA3::call, R1, R2, O, oRef, oImf);
-			assert(false);
-		});
 	}
 };
 
