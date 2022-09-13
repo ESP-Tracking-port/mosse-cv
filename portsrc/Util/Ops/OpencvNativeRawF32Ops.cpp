@@ -22,9 +22,11 @@ void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferCom
 {
 #if MOSSE_USE_OPENCV
 # if 1
-	ohdebug(OpencvNativeRawF32Ops::imageCropInto, _roi);
+	ohdebug(OpencvNativeRawF32Ops::imageCropInto, aImageReal.rows(), aImageReal.cols());
 	auto image = bufferToMat<CV_8UC1>(aImageReal.data(), aImageReal.rows(), aImageReal.cols());
+	ohdebug(OpencvNativeRawF32Ops::imageCropInto, image.size());
 	image = imcrop(_roi, image);
+	ohdebug(OpencvNativeRawF32Ops::imageCropInto, _roi, roi(), image.size());
 	image = preprocess(image);
 
 	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
@@ -130,7 +132,7 @@ void OpencvNativeRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCro
 //	ohdebug(OpencvNativeRawF32Ops::mataUpdate, mata, eta());
 
 	if (aInitial) {
-		mata = eta() * complexMultiplication(gaussfft, conj(imagefft));
+		mata = complexMultiplication(gaussfft, conj(imagefft));
 	} else {
 		mata = eta() * complexMultiplication(gaussfft, conj(imagefft)) + (1 - eta()) * mata;
 	}
@@ -151,7 +153,7 @@ void OpencvNativeRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCro
 	auto matb = bufferToMat<CV_32FC2>(aMatBcomplex, roi());
 
 	if (aInitial) {
-		matb = eta() * complexMultiplication(imagefft, conj(imagefft));
+		matb = complexMultiplication(imagefft, conj(imagefft));
 	} else {
 		matb = eta() * complexMultiplication(imagefft, conj(imagefft)) + (1 - eta()) * matb;
 	}
@@ -228,10 +230,8 @@ void OpencvNativeRawF32Ops::init_param()
 cv::Mat OpencvNativeRawF32Ops::imcrop(cv::Rect roi, const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::imcrop);
-	cv::Rect img = cv::Rect(0,0,image.cols,image.rows);
-	cv::Rect res = roi & img;
-	return image(res).clone();
+	ohdebug(OpencvNativeRawF32Ops::imcrop, roi, image.size());
+	return image(roi);
 #else
 	(void)roi;
 	(void)image;
@@ -300,7 +300,9 @@ cv::Mat OpencvNativeRawF32Ops::preprocess(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	ohdebug(OpencvNativeRawF32Ops::preprocess, image.size(), image.rows, image.cols, image.channels());
+//	cv::Mat win = bufferToMat<CV_32FC1>(hannMatrix(), roi());
 	cv::Mat win = createHanningMats(image.rows, image.cols);
+	ohdebug(OpencvNativeRawF32Ops::preprocess(), image.size(), win.size());
 	float eps = 1e-5;
 	cv::Mat img = image + cv::Scalar::all(1);
 	img = cv::Mat_<float>(img);
