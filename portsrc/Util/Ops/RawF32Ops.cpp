@@ -64,7 +64,7 @@ void RawF32Ops::fft2Common(void *aBufferComplex, bool aFwd)
 		ohdebug(RawF32Ops::fft2common, aFwd, "before", reim);
 	});
 
-	cv::dft(reim, reim, aFwd ? cv::DFT_SCALE : cv::DFT_INVERSE);
+	cv::dft(reim, reim, !aFwd ? (cv::DFT_SCALE | cv::DFT_INVERSE) : 0);
 
 	ohdebugsecteveryn(-1, {
 		ohdebug(RawF32Ops::fft2common, aFwd, "after", reim);
