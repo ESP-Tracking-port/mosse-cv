@@ -90,10 +90,10 @@ void OpencvNativeRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol 
 {
 #if MOSSE_USE_OPENCV
 	cv::Mat response = bufferToMat<CV_32FC2>(aBufferComplex, roi());
+	response = real(response);
 	response *= 255.0;
 
-	cv::Mat resp = real(response);
-	cv::Mat resp_cv8u = cv::Mat_<unsigned char>(resp);
+	cv::Mat resp_cv8u = cv::Mat_<unsigned char>(response);
 	cv::Point ps;
 	cv::minMaxLoc(resp_cv8u, NULL, NULL, NULL, &ps);
 	aPeakPos = {ps.y, ps.x};
