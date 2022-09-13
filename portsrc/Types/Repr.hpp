@@ -33,12 +33,13 @@ struct Repr {
 
 		// Repr
 		BaseRepr = BaseStorage + BitsStorage,
-		BitsRepr = 3,
+		BitsRepr = 4,
 		MaskRepr = Ut::mask(BaseRepr, BitsRepr),
 
 		ReprRaw = Ut::bitb(BaseRepr, 0),  ///< item = item
 		ReprLog2 = Ut::bitb(BaseRepr, 1),  ///< item = static_cast<std::int16_t>(log2(value));
 		ReprFixedPoint = Ut::bitb(BaseRepr, 2),  ///< item = static_cast<Integer>(fp * kPrecision);
+		ReprRawScaled = Ut::bitb(BaseRepr, 3),  ///< item = itemPrime * scaleFactor; Scaling factor is contextual
 
 		// Cplx. If not specified, an array (or an element) is interpreted as real
 		BaseCplx = BaseRepr + BitsRepr,
