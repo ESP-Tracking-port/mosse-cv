@@ -297,8 +297,8 @@ cv::Mat OpencvNativeRawF32Ops::preprocess(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
 	ohdebug(OpencvNativeRawF32Ops::preprocess, image.size(), image.rows, image.cols, image.channels());
-//	cv::Mat win = bufferToMat<CV_32FC1>(hannMatrix(), roi());
-	cv::Mat win = createHanningMats(image.rows, image.cols);
+	cv::Mat win = bufferToMat<CV_32FC1>(hannMatrix(), roi());
+//	cv::Mat win = createHanningMats(image.rows, image.cols);
 	ohdebug(OpencvNativeRawF32Ops::preprocess(), image.size(), win.size());
 	float eps = 1e-5;
 	cv::Mat img = image + cv::Scalar::all(1);
