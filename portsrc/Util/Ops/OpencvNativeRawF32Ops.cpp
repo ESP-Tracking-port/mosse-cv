@@ -89,17 +89,14 @@ void OpencvNativeRawF32Ops::ifft2(void *aBufferComplex)
 void OpencvNativeRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol &aPeakPos, float *aSum)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::maxReal);
-	auto image = bufferToMat<CV_32FC2>(aBufferComplex, roi());
-	std::vector<cv::Mat> channels;
-	cv::split(image, channels);
-	cv::Point ps;
-	cv::minMaxLoc(channels[0], NULL, NULL, NULL, &ps);
-	aPeakPos = {ps.y, ps.x};
+	cv::Mat response = bufferToMat<CV_32FC2>(aBufferComplex, roi());
+	response *= 255.0;
 
-	if (nullptr != aSum) {
-		*aSum = cv::sum(channels[0])[0];
-	}
+	cv::Mat resp = real(response);
+	cv::Mat resp_cv8u = cv::Mat_<unsigned char>(resp);
+	cv::Point ps;
+	cv::minMaxLoc(resp_cv8u, NULL, NULL, NULL, &ps);
+	aPeakPos = {ps.y, ps.x};
 
 	ohdebug(OpencvNativeRawF32Ops::maxReal, aPeakPos, (aSum ? *aSum : 0.0f));
 #else
