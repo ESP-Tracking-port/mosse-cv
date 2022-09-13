@@ -5,11 +5,11 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
+#include <Fft.h>
 #include "Mosse.hpp"
 #include "MosseApi.hpp"
 #include "Util/Arithm/MemLayout.hpp"
 #include "MossePort.hpp"
-#include <Fft.h>
 #include "RawF32Ops.hpp"
 
 static constexpr auto kEta = 0.125f;
