@@ -11,6 +11,8 @@
 #include "Util/Helper/PrecompiledMatrixHelper.hpp"
 #include "Util/Ops/CommonOps.hpp"
 
+class Fft;
+
 namespace Mosse {
 namespace Ut {
 
@@ -41,6 +43,7 @@ private:
 	void fft2Common(void *aBufferComplex, bool aFwd);
 private:
 	PrecompiledMatrixHelper<const float> pmHelper;
+	Fft fft;
 };
 
 }  // namespace Ut

@@ -7,11 +7,10 @@
 
 #include "Mosse.hpp"
 #include "MosseApi.hpp"
-#include "RawF32Ops.hpp"
 #include "Util/Arithm/MemLayout.hpp"
 #include "MossePort.hpp"
-#if MOSSE_USE_OPENCV
-#endif  // MOSSE_USE_OPENCV
+#include <Fft.h>
+#include "RawF32Ops.hpp"
 
 static constexpr auto kEta = 0.125f;
 static constexpr auto kGetGauss = Mosse::getGaussKernelFft3dScaled125;
@@ -22,19 +21,43 @@ namespace Ut {
 
 static_assert(kRawF32ReprBuffer & Tp::Repr::CplxRe1Im1, "");  // fft depends on that condition
 
-RawF32Ops::RawF32Ops() : pmHelper{kGetGauss, kGetHann}
+RawF32Ops::RawF32Ops() : pmHelper{kGetGauss, kGetHann}, fft{}
 {
 	setEta(kEta);
 }
 
 void RawF32Ops::fft2(void *aBufferComplex)
 {
-	fft2Common(aBufferComplex, true);
+	// Fft row-wise
+	fft.init(roi().cols(), Ut::strideInner<kRawF32ReprBuffer>());
+	float *re = static_cast<float *>(aBufferComplex) + Ut::offsetFirstReal<kRawF32ReprBuffer>(roi());
+	float *im = static_cast<float *>(aBufferComplex) + Ut::offsetFirstImag<kRawF32ReprBuffer>(roi());
+	fft.transformDirect(re, im);
+
+	// Fft col-wise
+	fft.init(roi().rows(), Ut::strideOuter<kRawF32ReprBuffer>(roi()));
+	re = static_cast<float *>(aBufferComplex) + Ut::offsetFirstReal<kRawF32ReprBuffer>(roi());
+	im = static_cast<float *>(aBufferComplex) + Ut::offsetFirstImag<kRawF32ReprBuffer>(roi());
+	fft.transformDirect(re, im);
+
+	// TODO XXX : scale
 }
 
 void RawF32Ops::ifft2(void *aBufferComplex)
 {
-	fft2Common(aBufferComplex, false);
+	// Fft row-wise
+	fft.init(roi().cols(), Ut::strideInner<kRawF32ReprBuffer>());
+	float *re = static_cast<float *>(aBufferComplex) + Ut::offsetFirstReal<kRawF32ReprBuffer>(roi());
+	float *im = static_cast<float *>(aBufferComplex) + Ut::offsetFirstImag<kRawF32ReprBuffer>(roi());
+	fft.transformComplement(re, im);
+
+	// Fft col-wise
+	fft.init(roi().rows(), Ut::strideOuter<kRawF32ReprBuffer>(roi()));
+	re = static_cast<float *>(aBufferComplex) + Ut::offsetFirstReal<kRawF32ReprBuffer>(roi());
+	im = static_cast<float *>(aBufferComplex) + Ut::offsetFirstImag<kRawF32ReprBuffer>(roi());
+	fft.transformComplement(re, im);
+
+	// TODO XXX : scale
 }
 
 void RawF32Ops::initImpl()
