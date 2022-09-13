@@ -11,7 +11,7 @@ const std::array<cv::Rect, 2> sPredefinedRoiArr {{
 	{273, 141, 74, 78},
 	{182, 144, 81, 84}
 }};
-const cv::Rect &sPredefinedRoi = sPredefinedRoiArr[1];
+const cv::Rect &sPredefinedRoi = sPredefinedRoiArr[0];
 
 static cv::Mat bgr2gray(const cv::Mat& image)
 {
@@ -38,6 +38,7 @@ void runPort()
 	while(cap.read(frame))
 	{
 		auto gray = bgr2gray(frame);
+		ohdebug(runport, gray.size());
 		if(init)
 		{
 			if (sUsePredefinedRoi) {
@@ -140,8 +141,8 @@ int main()
 	//img2avi((char*)"img");
 	sTracker = &Mosse::getDebugStub();
 //	sTracker = &Mosse::getNaive();
-//	runPort();
-	run();
+	runPort();
+//	run();
 	debug(MallocCounter::getPeakCount());
 	return 0;
 }
