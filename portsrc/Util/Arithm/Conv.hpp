@@ -54,7 +54,7 @@ namespace Impl {
 template <class T>
 struct ToRepr {
 	template <Tp::Repr::Flags F>
-	static inline ReTp<F> call(T a, En<F & Tp::Repr::ReprRaw> = nullptr)
+	static inline ReTp<F> call(T a, En<F & (Tp::Repr::ReprRaw | Tp::Repr::ReprRawScaled)> = nullptr)
 	{
 		return static_cast<ReTp<F>>(a);
 	}
