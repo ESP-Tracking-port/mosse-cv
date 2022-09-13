@@ -92,12 +92,12 @@ cv::Rect mosseTracker::update(const cv::Mat& gray)
 
 mosseTracker::mosseTracker()
 {
-	
+
 }
 
 mosseTracker::~mosseTracker()
 {
-	
+
 }
 
 void mosseTracker::init_param()
