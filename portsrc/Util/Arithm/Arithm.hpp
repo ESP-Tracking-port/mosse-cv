@@ -171,7 +171,7 @@ namespace Impl {
 
 template <Tp::Repr::Flags F1, Tp::Repr::Flags F2>
 struct Gt {
-	static inline bool call(const ReTp<F1> &aLhs, const ReTp<F2> &aRhs)
+	static inline bool call(ReTp<F1> aLhs, ReTp<F2> aRhs)
 	{
 		return fromRepr<float, F1>(aLhs) > fromRepr<float, F2>(aRhs);
 	}
@@ -179,7 +179,7 @@ struct Gt {
 
 template <Tp::Repr::Flags F>
 struct Gt<F, F> {
-	static inline bool call(const ReTp<F> &aLhs, const ReTp<F> &aRhs, En<F & Tp::Repr::ReprRaw> = nullptr)
+	static inline bool call(ReTp<F> aLhs, ReTp<F> aRhs, En<F & Tp::Repr::ReprRaw> = nullptr)
 	{
 		return aLhs > aRhs;
 	}
@@ -188,7 +188,7 @@ struct Gt<F, F> {
 }  // namespace Impl
 
 template <Tp::Repr::Flags F1, Tp::Repr::Flags F2 = F1>
-inline bool gt(const ReTp<F1> &aLhs, const ReTp<F2>(aRhs))
+inline bool gt(ReTp<F1> aLhs, ReTp<F2>(aRhs))
 {
 	return Impl::Gt<F1 & Tp::Repr::MaskTraitScalar, F2 & Tp::Repr::MaskTraitScalar>::call(aLhs, aRhs);
 }
