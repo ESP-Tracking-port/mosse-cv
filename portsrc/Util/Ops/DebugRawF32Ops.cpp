@@ -38,7 +38,7 @@ void DebugRawF32Ops::imagePreprocess(void *aCropComplex)
 
 void DebugRawF32Ops::imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex)
 {
-#if 1
+#if 0
 	wrapped.opencvNativeRawF32Ops.imageConvFftDomain(aioCropFft2Complex, aMatrixAcomlex, aMatrixBcomplex);
 #else
 	wrapped.rawF32Ops.imageConvFftDomain(aioCropFft2Complex, aMatrixAcomlex, aMatrixBcomplex);
