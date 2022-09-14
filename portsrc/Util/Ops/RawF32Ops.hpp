@@ -23,7 +23,7 @@ constexpr auto kRawF32ReprAbDivIntermediary = Tp::Repr::StorageF32 | Tp::Repr::R
 constexpr auto kRawF32ReprGauss = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw | Tp::Repr::CplxRe1Im1;
 
 using RawF32OpsBase = CommonOps< kRawF32ReprBuffer, kRawF32ReprHannMatrix, kRawF32ReprAb, kRawF32ReprAbDivIntermediary,
-	kRawF32ReprGauss>;
+	kRawF32ReprGauss, true>;
 
 /// \brief A naive implementation designed to test the implementation, and to serve as a starting point for
 /// implementing other memory-optimized variants of replaceable Ops instances.
