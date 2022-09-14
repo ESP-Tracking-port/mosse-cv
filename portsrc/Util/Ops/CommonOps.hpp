@@ -194,8 +194,10 @@ public:
 				if (aInitial) {
 					// If a pre-scaled Gauss matrix is used, undo scaling
 					gaussUnscale(gauss);  // Standard MOOSE paper stipulates use of both (1) pre-training and (2) multiplication of the initial A matrix by $\eta$. We use neither, because a test implementation works without it even better than with.
+					gaussUnscale(gaussIm);
 				} else {
 					gaussScale(gauss);  // Multiplication by $\eta$. See the mosse paper
+					gaussScale(gaussIm);
 				}
 
 				Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(gauss, mapGaussImag(row, col), mapFft(row, col),
