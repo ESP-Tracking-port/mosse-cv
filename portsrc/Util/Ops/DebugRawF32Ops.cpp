@@ -83,7 +83,7 @@ float DebugRawF32Ops::calcPsr(const void *aBufferComplex, const Tp::PointRowCol 
 
 void DebugRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
-#if 1
+#if 0
 	wrapped.opencvNativeRawF32Ops.mataUpdate(aMatAcomplex, aImageCropFftComplex, aInitial);
 #else
 	wrapped.rawF32Ops.mataUpdate(aMatAcomplex, aImageCropFftComplex, aInitial);
