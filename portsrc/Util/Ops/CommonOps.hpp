@@ -219,7 +219,7 @@ public:
 		auto mapB = Ut::makeEigenMap<ReprAb>(aMatBcomplex, roi());
 		auto mapBimag = Ut::makeEigenMapImag<ReprAb>(aMatBcomplex, roi());
 		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aImageCropFftComplex, roi());
-		auto mapFftImag = Ut::makeEigenMap<ReprBuffer>(aImageCropFftComplex, roi());
+		auto mapFftImag = Ut::makeEigenMapImag<ReprBuffer>(aImageCropFftComplex, roi());
 
 		for (unsigned row = 0; row < roi().rows(); ++row) {
 			for (unsigned col = 0; col < roi().cols(); ++col) {
