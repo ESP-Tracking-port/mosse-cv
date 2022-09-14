@@ -186,6 +186,7 @@ public:
 		for (unsigned row = 0; row < roi().rows(); ++row) {
 			for (unsigned col = 0; col < roi().cols(); ++col) {
 				auto gauss = mapGauss(row, col);
+				auto gaussIm = mapGaussImag(row, col);
 				auto aPrev = mapA(row, col);
 				auto aImPrev = mapA(row, col);
 				auto frameFftImag = Ut::minus<ReprBuffer>(mapFftImag(row, col));  // Complex conjugate. See the mosse paper.
@@ -200,8 +201,8 @@ public:
 					gaussScale(gaussIm);
 				}
 
-				Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(gauss, mapGaussImag(row, col), mapFft(row, col),
-					frameFftImag, mapA(row, col), mapAimag(row, col));
+				Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(gauss, gaussIm, mapFft(row, col), frameFftImag,
+					mapA(row, col), mapAimag(row, col));
 
 				if (!aInitial) {
 					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrev, aPrev);
