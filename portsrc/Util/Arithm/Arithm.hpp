@@ -31,10 +31,10 @@ struct MulCplxA3 {
 		auto b = fromRepr<float, R1>(aIm1);
 		auto c = fromRepr<float, R2>(aRe2);
 		auto d = fromRepr<float, R2>(aIm2);
-		float oRef = a * c - b * d;
-		float oImf = a * d + b * c;
-		aoRe = toRepr<O>(oRef);
-		aoIm = toRepr<O>(oImf);
+		auto ac = a * c;
+		auto bd = b * d;
+		aoRe = toRepr<O>(ac - bd);
+		aoIm = toRepr<O>((a + b) * (c + d) - ac - bd);
 	}
 };
 
