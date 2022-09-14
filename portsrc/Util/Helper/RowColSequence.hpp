@@ -39,7 +39,12 @@ public:
 	Iterator begin();
 	static Iterator end();
 private:
+	/// \brief Initalizes `prev` with an initial value
+	///
 	virtual void pointInit(Tp::PointRowCol &prev) = 0;
+
+	/// \brief Initializes `prev` with the next value. Returns false, if the sequence has reached its end.
+	///
 	virtual bool pointAdvance(std::size_t index, Tp::PointRowCol &prev) = 0;
 };
 
