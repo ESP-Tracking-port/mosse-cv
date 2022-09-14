@@ -96,7 +96,7 @@ public:
 	{
 		ohdebugonce(CommonOps::imageConvFftDomain, 10);
 		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aioCropFft2Complex, roi());
-		auto mapFftImag = Ut::makeEigenMap<ReprBuffer>(aioCropFft2Complex, roi());
+		auto mapFftImag = Ut::makeEigenMapImag<ReprBuffer>(aioCropFft2Complex, roi());
 		auto mapA = Ut::makeEigenMap<ReprAb>(aMatrixAcomplex, roi());
 		auto mapAimag = Ut::makeEigenMapImag<ReprAb>(aMatrixAcomplex, roi());
 		auto mapB = Ut::makeEigenMap<ReprAb>(aMatrixBcomplex, roi());
