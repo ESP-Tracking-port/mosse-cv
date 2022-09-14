@@ -97,13 +97,13 @@ void RawF32Ops::fft2Common(void *aBufferComplex, bool aFwd)
 	const int sizes[2] = {roi().size(0), roi().size(1)};
 	auto reim = cv::Mat(2, sizes, CV_32FC2, aBufferComplex);
 
-	ohdebugsecteveryn(-1, {
+	ohdebugsecteveryn(RawF32Ops::fft2Common, -1, {
 		ohdebug(RawF32Ops::fft2common, aFwd, "before", reim);
 	});
 
 	cv::dft(reim, reim, !aFwd ? (cv::DFT_SCALE | cv::DFT_INVERSE) : 0);
 
-	ohdebugsecteveryn(-1, {
+	ohdebugsecteveryn(RawF32Ops::fft2Common, -1, {
 		ohdebug(RawF32Ops::fft2common, aFwd, "after", reim);
 	});
 }
