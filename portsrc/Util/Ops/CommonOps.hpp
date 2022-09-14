@@ -154,12 +154,14 @@ public:
 	template <bool S = ScaledGauss>
 	inline typename std::enable_if<S>::type gaussUnscale(ReTp<ReprGauss> &gauss)
 	{
+		ohdebugonce(CommonOps::gaussUnscale, 0);
 		Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprGauss, ReprGauss>(1.0f / eta(), gauss, gauss);
 	}
 
 	template <bool S = ScaledGauss>
 	inline typename std::enable_if<!S>::type gaussScale(ReTp<ReprGauss> &aGauss)
 	{
+		ohdebugonce(CommonOps::gaussScale, 0);
 		Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprGauss, ReprGauss>(eta(), aGauss, aGauss);
 	}
 
@@ -187,10 +189,11 @@ public:
 				auto aPrev = mapA(row, col);
 				auto aImPrev = mapA(row, col);
 				auto frameFftImag = Ut::minus<ReprBuffer>(mapFftImag(row, col));  // Complex conjugate. See the mosse paper.
+				ohdebugonce(CommonOps::mataUpdate, 1, "conjugate", mapFftImag(row, col), "inverted", frameFftImag);
 
 				if (aInitial) {
 					// If a pre-scaled Gauss matrix is used, undo scaling
-					gaussUnscale(gauss);  // Standard MOOSE paper stipulates use of both (1) pre-training and (2) multiplication of the initial A matrix by $\eta$. We use neither, because test implementation works without it even better than with.
+					gaussUnscale(gauss);  // Standard MOOSE paper stipulates use of both (1) pre-training and (2) multiplication of the initial A matrix by $\eta$. We use neither, because a test implementation works without it even better than with.
 				} else {
 					gaussScale(gauss);  // Multiplication by $\eta$. See the mosse paper
 				}
