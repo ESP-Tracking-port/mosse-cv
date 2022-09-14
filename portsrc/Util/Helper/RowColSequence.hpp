@@ -38,6 +38,7 @@ public:
 public:
 	Iterator begin();
 	static Iterator end();
+	virtual ~RowColSequence() = default;
 private:
 	/// \brief Initalizes `prev` with an initial value
 	///
