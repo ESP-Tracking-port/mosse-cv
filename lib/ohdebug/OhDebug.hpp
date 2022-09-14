@@ -15,6 +15,7 @@
 #  define OHDEBUG_ENABLE_ALL_BY_DEFAULT 1
 # endif  // OHDEBUG_ENABLE_ALL_BY_DEFAULT
 
+// TODO: Can be replaced w/ a constexpr call
 #define OHDEBUG_CHECK_ENABLED_(ctx) (OhDebug::Enabled<OHDEBUG_COMPILE_TIME_CRC32_STR(#ctx)>::value)
 
 # include <iostream>
@@ -178,7 +179,6 @@ void ohDebugPrintNl()
 # define ohdebugstringify__(a) #a
 # define ohdebugflimpl__(line) __FILE__ ":" #line
 # define ohdebugfl__(line) ohdebugflimpl__(line)
-# define ohdebugvoid(a) (a, "")
 
 # define ohdebug0__(context, a, ...) \
 	OhDebug::ohDebugPrintGroup<OHDEBUG_COMPILE_TIME_CRC32_STR(#context)>(ohdebugfl__(__LINE__)); \
@@ -304,6 +304,8 @@ void ohDebugPrintNl()
 		} \
 	} while (0)
 
+#define ohdebugeveryn(ctx, bump, ...) ohdebugsecteveryn(ctx, bump, ohdebug(ctx, ## __VA_ARGS__); )
+
 # define ohdebugsectonce(ctx, hit, ...) \
 	do { \
 		if (OHDEBUG_CHECK_ENABLED_(ctx)) { \
@@ -315,12 +317,16 @@ void ohDebugPrintNl()
 		} \
 	} while (0)
 
+#define ohdebugonce(ctx, hit, ...) ohdebugsectonce(ctx, hit, ohdebug(ctx, ## __VA_ARGS__); )
+
 # define ohdebugsectif(ctx, cond, ...) \
 	do { \
 		if (OHDEBUG_CHECK_ENABLED_(ctx) && cond) { \
 			__VA_ARGS__ ; \
 		} \
 	} while(0)
+
+#define ohdebugif(ctx, cond, ...) ohdebugsectif(ctx, cond, ohdebug(ctx, ## __VA_ARGS__); )
 
 # define ohdebugsect(ctx, ...) \
 	do { \
