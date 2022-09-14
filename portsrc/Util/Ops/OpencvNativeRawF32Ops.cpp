@@ -129,9 +129,9 @@ void OpencvNativeRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCro
 //	ohdebug(OpencvNativeRawF32Ops::mataUpdate, mata, eta());
 
 	if (aInitial) {
-		mata = complexMultiplication(gaussfft, conj(imagefft));
+		mata = eta() * complexMultiplication(gaussfft, conj(imagefft));
 	} else {
-		mata = eta() * complexMultiplication(gaussfft, conj(imagefft)) + (1 - eta()) * mata;
+		mata = eta() * complexMultiplication(gaussfft, conj(imagefft)) + invEta() * mata;
 	}
 
 	matCvCopyInto(mata, aMatAcomplex);
@@ -150,9 +150,9 @@ void OpencvNativeRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCro
 	auto matb = bufferToMat<CV_32FC2>(aMatBcomplex, roi());
 
 	if (aInitial) {
-		matb = complexMultiplication(imagefft, conj(imagefft));
+		matb = eta() * complexMultiplication(imagefft, conj(imagefft));
 	} else {
-		matb = eta() * complexMultiplication(imagefft, conj(imagefft)) + (1 - eta()) * matb;
+		matb = eta() * complexMultiplication(imagefft, conj(imagefft)) + invEta() * matb;
 	}
 
 	matCvCopyInto(matb, aMatBcomplex);
