@@ -15,6 +15,8 @@
 #  define OHDEBUG_ENABLE_ALL_BY_DEFAULT 1
 # endif  // OHDEBUG_ENABLE_ALL_BY_DEFAULT
 
+#define OHDEBUG_CHECK_ENABLED_(ctx) (OhDebug::Enabled<OHDEBUG_COMPILE_TIME_CRC32_STR(#ctx)>::value)
+
 # include <iostream>
 # include <tuple>
 # include <type_traits>
@@ -28,8 +30,8 @@ namespace OhDebug {
 // https://stackoverflow.com/users/1559666/tower120
 
 static constexpr unsigned int crc_table[256] = {
-    0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f,
-    0xe963a535, 0x9e6495a3,    0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
+	0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f,
+	0xe963a535, 0x9e6495a3,    0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
 	0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2,
 	0xf3b97148, 0x84be41de,	0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7,
 	0x136c9856, 0x646ba8c0, 0xfd62f97a, 0x8a65c9ec,	0x14015c4f, 0x63066cd9,
@@ -78,7 +80,7 @@ template<int size, int idx = 0, class dummy = void>
 struct MM{
   static constexpr unsigned int crc32(const char * str, unsigned int prev_crc = 0xFFFFFFFF)
   {
-      return MM<size, idx+1>::crc32(str, (prev_crc >> 8) ^ crc_table[(prev_crc ^ str[idx]) & 0xFF] );
+	  return MM<size, idx+1>::crc32(str, (prev_crc >> 8) ^ crc_table[(prev_crc ^ str[idx]) & 0xFF] );
   }
 };
 
@@ -87,7 +89,7 @@ template<int size, class dummy>
 struct MM<size, size, dummy>{
   static constexpr unsigned int crc32(const char * str, unsigned int prev_crc = 0xFFFFFFFF)
   {
-      return prev_crc^ 0xFFFFFFFF;
+	  return prev_crc^ 0xFFFFFFFF;
   }
 };
 
@@ -290,9 +292,9 @@ void ohDebugPrintNl()
 
 # define ohdebugstr(context, a, ...) do {(void)a; } while (0); ohdebug(context, #a, ## __VA_ARGS__)
 
-# define ohdebugsecteveryn(bump, ...) \
+# define ohdebugsecteveryn(ctx, bump, ...) \
 	do { \
-		if (bump > 0) { \
+		if (OHDEBUG_CHECK_ENABLED_(ctx) && bump > 0) { \
 			static unsigned n = 0; \
 			if (n % bump == 0) { \
 				n = 0; \
@@ -302,30 +304,34 @@ void ohDebugPrintNl()
 		} \
 	} while (0)
 
-# define ohdebugonce(hit, ...) \
+# define ohdebugsectonce(ctx, hit, ...) \
 	do { \
-		static int n = 0; \
-		if (n == hit && hit >= 0) { \
-			__VA_ARGS__ ; \
-		}; \
-		++n; \
+		if (OHDEBUG_CHECK_ENABLED_(ctx)) { \
+			static int n = 0; \
+			if (n == hit && hit >= 0) { \
+				__VA_ARGS__ ; \
+			}; \
+			++n; \
+		} \
 	} while (0)
 
-# define ohdebugsectif(cond, ...) \
+# define ohdebugsectif(ctx, cond, ...) \
 	do { \
-		if ( cond ) { \
+		if (OHDEBUG_CHECK_ENABLED_(ctx) && cond) { \
 			__VA_ARGS__ ; \
 		} \
 	} while(0)
 
-# define ohdebugsect(...) \
+# define ohdebugsect(ctx, ...) \
 	do { \
-		__VA_ARGS__ ; \
+		if (OHDEBUG_CHECK_ENABLED_(ctx)) { \
+			__VA_ARGS__ ; \
+		} \
 	} while (0)
 
 # define ohdebugassert(ctx, cond, ...) \
 	do { \
-		if (!(cond)) { \
+		if (OHDEBUG_CHECK_ENABLED_(ctx) && !(cond)) { \
 			ohdebug(ctx, "assertion triggered", #cond, ## __VA_ARGS__ ) ; \
 			assert(false); \
 		} \
