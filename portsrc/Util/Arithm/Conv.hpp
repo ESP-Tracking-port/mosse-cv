@@ -27,7 +27,7 @@ template <>
 struct FromRepr<float> {
 
 	template <Tp::Repr::Flags F, class T>
-	static inline float call(const T &repr)
+	static inline float call(T repr)
 	{
 		return static_cast<float>(repr);
 	}
@@ -44,7 +44,7 @@ struct FromRepr<float> {
 /// \brief Convert from compact representation to the regular one (decode). E.g. fixed point to regular `float` type
 ///
 template <class T, Tp::Repr::Flags From>
-inline T fromRepr(const ReTp<From> &num)
+inline T fromRepr(ReTp<From> num)
 {
 	return Impl::FromRepr<T>::template call<From & Tp::Repr::MaskTraitScalar>(num);
 }
