@@ -66,7 +66,7 @@ constexpr unsigned strideInner(En<!(F & Tp::Repr::MaskCplx)> = nullptr)
 template <Tp::Repr::Flags F>
 constexpr unsigned strideOuter(const Tp::Roi &roi)
 {
-	return strideInner<F>() * roi.rows();
+	return strideInner<F>() * roi.cols();
 }
 
 template <Tp::Repr::Flags F>
