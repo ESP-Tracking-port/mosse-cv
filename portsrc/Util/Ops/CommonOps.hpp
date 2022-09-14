@@ -181,7 +181,7 @@ public:
 		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aImageCropFftComplex, roi());
 		auto mapFftImag = Ut::makeEigenMapImag<ReprBuffer>(aImageCropFftComplex, roi());
 		auto mapGauss = Ut::makeEigenMap<ReprGauss>(gaussFft(), roi());
-		auto mapGaussImag = Ut::makeEigenMap<ReprGauss>(gaussFft(), roi());
+		auto mapGaussImag = Ut::makeEigenMapImag<ReprGauss>(gaussFft(), roi());
 
 		for (unsigned row = 0; row < roi().rows(); ++row) {
 			for (unsigned col = 0; col < roi().cols(); ++col) {
