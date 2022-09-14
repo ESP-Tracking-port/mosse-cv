@@ -105,8 +105,8 @@ public:
 		ReTp<ReprAbHookIntermDiv> hRe;  // H = divCplx(A, B)
 		ReTp<ReprAbHookIntermDiv> hIm;
 
-		for (unsigned row = 0; row < roi().size.rows(); ++row) {
-			for (unsigned col = 0; col < roi().size.cols(); ++col) {
+		for (unsigned row = 0; row < roi().rows(); ++row) {
+			for (unsigned col = 0; col < roi().cols(); ++col) {
 				Ut::divCplxA3<ReprAb, ReprAb, ReprAbHookIntermDiv>(mapA(row, col), mapAimag(row, col), mapB(row, col),
 					mapBimag(row, col), hRe, hIm);
 				Ut::mulCplxA3<ReprBuffer, ReprAbHookIntermDiv, ReprBuffer>(mapFft(row, col), mapFftImag(row, col), hRe,
