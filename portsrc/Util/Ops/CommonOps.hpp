@@ -189,7 +189,7 @@ public:
 				auto gauss = mapGauss(row, col);
 				auto gaussIm = mapGaussImag(row, col);
 				auto aPrev = mapA(row, col);
-				auto aImPrev = mapA(row, col);
+				auto aImPrev = mapAimag(row, col);
 				auto frameFftImag = Ut::minus<ReprBuffer>(mapFftImag(row, col));  // Complex conjugate. See the mosse paper.
 				ohdebugonce(CommonOps::mataUpdate, 1, "conjugate", mapFftImag(row, col), "inverted", frameFftImag);
 
