@@ -67,7 +67,8 @@ template <
 	Tp::Repr::Flags ReprHann,
 	Tp::Repr::Flags ReprAb,
 	Tp::Repr::Flags ReprAbHookIntermDiv,
-	Tp::Repr::Flags ReprGauss>
+	Tp::Repr::Flags ReprGauss,
+	bool ScaledGauss = false>
 class CommonOps : public Ops {
 public:
 	static_assert(ReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
@@ -145,25 +146,25 @@ public:
 
 	/// \brief Depending on implementation, gauss matrix may or may not be pre-multiplied
 	///
-	template <Tp::Repr::Flags F>
-	inline void gaussUnscale(ReTp<F> &aGauss, En<!(F & Tp::Repr::ReprRawScaled)> = nullptr)
+	template <bool S = ScaledGauss>
+	inline typename std::enable_if<!S>::type gaussUnscale(ReTp<ReprGauss> &)
 	{
 	}
 
-	template <Tp::Repr::Flags F>
-	inline void gaussUnscale(ReTp<F> &gauss, En<F & (Tp::Repr::ReprRawScaled)> = nullptr)
+	template <bool S = ScaledGauss>
+	inline typename std::enable_if<S>::type gaussUnscale(ReTp<ReprGauss> &gauss)
 	{
-		Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, F, F>(1.0f / eta(), gauss, gauss);
+		Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprGauss, ReprGauss>(1.0f / eta(), gauss, gauss);
 	}
 
-	template <Tp::Repr::Flags F>
-	inline void gaussScale(ReTp<F> &aGauss, En<!(F & Tp::Repr::ReprRawScaled)> = nullptr)
+	template <bool S = ScaledGauss>
+	inline typename std::enable_if<!S>::type gaussScale(ReTp<ReprGauss> &aGauss)
 	{
-		Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, F, F>(eta(), aGauss, aGauss);
+		Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprGauss, ReprGauss>(eta(), aGauss, aGauss);
 	}
 
-	template <Tp::Repr::Flags F>
-	inline void gaussScale(ReTp<F> &, En<F & Tp::Repr::ReprRawScaled> = nullptr)
+	template <bool S = ScaledGauss>
+	inline typename std::enable_if<S>::type gaussScale(ReTp<ReprGauss> &)
 	{
 	}
 
@@ -189,9 +190,9 @@ public:
 
 				if (aInitial) {
 					// If a pre-scaled Gauss matrix is used, undo scaling
-					gaussUnscale<ReprGauss>(gauss);  // Standard MOOSE paper stipulates use of both (1) pre-training and (2) multiplication of the initial A matrix by $\eta$. We use neither, because test implementation works without it even better than with.
+					gaussUnscale<>(gauss);  // Standard MOOSE paper stipulates use of both (1) pre-training and (2) multiplication of the initial A matrix by $\eta$. We use neither, because test implementation works without it even better than with.
 				} else {
-					gaussScale<ReprGauss>(gauss);  // Multiplication by $\eta$. See the mosse paper
+					gaussScale<>(gauss);  // Multiplication by $\eta$. See the mosse paper
 				}
 
 				Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(gauss, mapGaussImag(row, col), mapFft(row, col),
