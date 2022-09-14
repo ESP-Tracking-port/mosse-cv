@@ -92,7 +92,7 @@ void DebugRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCropFftCom
 
 void DebugRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
-#if 1
+#if 0
 	wrapped.opencvNativeRawF32Ops.matbUpdate(aMatBcomplex, aImageCropFftComplex, aInitial);
 #else
 	wrapped.rawF32Ops.matbUpdate(aMatBcomplex, aImageCropFftComplex, aInitial);
