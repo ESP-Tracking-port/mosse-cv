@@ -47,8 +47,6 @@ void RawF32Ops::fft2(void *aBufferComplex)
 			im += Ut::strideInner<kRawF32ReprBuffer>()) {
 		fft.transformDirect(re, im);
 	}
-
-	// TODO XXX : scale
 }
 
 void RawF32Ops::ifft2(void *aBufferComplex)
