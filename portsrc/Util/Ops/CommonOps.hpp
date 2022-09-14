@@ -94,6 +94,7 @@ public:
 
 	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomplex, void *aMatrixBcomplex) override
 	{
+		ohdebugonce(CommonOps::imageConvFftDomain, 10);
 		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aioCropFft2Complex, roi());
 		auto mapFftImag = Ut::makeEigenMap<ReprBuffer>(aioCropFft2Complex, roi());
 		auto mapA = Ut::makeEigenMap<ReprAb>(aMatrixAcomplex, roi());
