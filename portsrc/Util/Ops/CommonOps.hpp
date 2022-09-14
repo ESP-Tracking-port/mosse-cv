@@ -92,12 +92,12 @@ public:
 		imagePreprocess<ReprBuffer, ReprHann>(aCropBufferComplex);
 	}
 
-	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) override
+	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomplex, void *aMatrixBcomplex) override
 	{
 		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aioCropFft2Complex, roi());
 		auto mapFftImag = Ut::makeEigenMap<ReprBuffer>(aioCropFft2Complex, roi());
-		auto mapA = Ut::makeEigenMap<ReprAb>(aMatrixAcomlex, roi());
-		auto mapAimag = Ut::makeEigenMapImag<ReprAb>(aMatrixAcomlex, roi());
+		auto mapA = Ut::makeEigenMap<ReprAb>(aMatrixAcomplex, roi());
+		auto mapAimag = Ut::makeEigenMapImag<ReprAb>(aMatrixAcomplex, roi());
 		auto mapB = Ut::makeEigenMap<ReprAb>(aMatrixBcomplex, roi());
 		auto mapBimag = Ut::makeEigenMapImag<ReprAb>(aMatrixBcomplex, roi());
 		// Intermediate buffers
