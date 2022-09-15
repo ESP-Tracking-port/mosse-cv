@@ -22,9 +22,12 @@ Tracker::Tracker(Ut::Port aPort) : tracking{{}, 0.0f}, port{aPort}
 
 void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 {
+	ohdebugonce(Tracker::init, 0, aImage.rows(), aImage.cols(), aRoi);
 	// A set of precompiled gaussian matrices is used, so the window's size will be changed to the closest one
 	tracking.roi = aRoi;
 	port.ops.roiResize(tracking.roi);
+	tracking.roi.fitShift({aImage.rows(), aImage.cols()});
+	ohdebugonce(Tracker::init, 0, "ROI after crop", tracking.roi);
 	port.mem.init(tracking.roi);
 	ohdebugstr(Tracker::init, port.ops.init(tracking.roi));
 	port.ops.imageCropInto(aImage, port.mem.buffer());
