@@ -9,7 +9,7 @@
 #define MOSSE_UTIL_MOSSEDEBUG_HPP_
 
 #define MOSSE_PORTABLE 0  // If 0, desktop-only features like console debug output or OpenCV modules will be compiled
-#define OHDEBUG_DISABLE
+#undef OHDEBUG_DISABLE
 
 #if MOSSE_PORTABLE
 # define OHDEBUG_DISABLE  // "Ohdebug" special macro. Replace ohdebug API w/ stubs
@@ -57,7 +57,7 @@ inline bool isNan(float a)
 
 inline bool isNan(...)
 {
-	ohdebug(Mosse::isNan, "stub, fallback");
+	ohdebugonce(Mosse::isNan, 0, "stub, fallback");
 	return false;
 }
 
