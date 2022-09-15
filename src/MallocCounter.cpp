@@ -62,7 +62,6 @@ void MallocCounter::freeHook(void *aPtr, const void *)
 
 		if (sMallocMap.end() != sMallocMap.find(aPtr)) {
 			sMallocCounter -= sMallocMap[aPtr];
-			debugstr("freed");
 		}
 
 		__free_hook = freeHook;
@@ -73,15 +72,18 @@ void *MallocCounter::reallocHook(void *aPtr, size_t aSize, const void *)
 {
 	void *ptrNew = nullptr;
 	__realloc_hook = sDefaultReallocHook;
+	unsigned long long memPrev = 0;
 
 	if (sMallocMap.end() != sMallocMap.find(aPtr)) {
-		ptrNew = realloc(aPtr, aSize);
+		memPrev = sMallocMap[ptrNew];
+	}
 
-		if (nullptr != ptrNew) {
-			sMallocCounter -= sMallocMap[aPtr];
-			sMallocCounter += aSize;
-			debugstr("reallocated");
-		}
+	ptrNew = realloc(aPtr, aSize);
+
+	if (ptrNew != nullptr) {
+		sMallocCounter -= memPrev;
+		sMallocCounter += aSize;
+		sMallocMap[ptrNew] = aSize;
 	}
 
 	__realloc_hook = reallocHook;
