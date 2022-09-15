@@ -41,11 +41,14 @@ void *DynRawF32Mem::buffer()
 void DynRawF32Mem::init(Tp::Roi aRoi)
 {
 	if (roiSizePrev != aRoi.size) {
-		mata.resize(sizeof(float) * 2 * aRoi.area(), 0.0f);
-		matb.resize(sizeof(float) * 2 * aRoi.area(), 0.0f);
-		buf.resize(sizeof(float) * 2 * aRoi.area(), 0.0f);
-
+		constexpr auto kComplexScalarSize = sizeof(float) * 2;
+		const auto kBufSize = kComplexScalarSize * aRoi.area();
+		ohdebug(DynRawF32Mem::init, "allocating storage", kBufSize * 3);
+		mata.resize(kBufSize, 0.0f);
+		matb.resize(kBufSize, 0.0f);
+		buf.resize(kBufSize, 0.0f);
 		roiSizePrev = aRoi.size;
+		ohdebug(DynRawF32Mem::init, mata.capacity() * sizeof(float));
 	}
 }
 
