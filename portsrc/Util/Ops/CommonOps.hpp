@@ -82,25 +82,13 @@ public:
 	///
 	/// \pre Hann matrix uses raw float representation
 	///
-	void imageCropInto(Tp::Image aImage, void *aBufferCplx)
+	void imageCropInto(Tp::Image aImage, void *aBufferCplx) override
 	{
 		auto map = makeEigenMap<ReprBuffer>(aBufferCplx, roi());
 		auto mapImag = makeEigenMapImag<ReprBuffer>(aBufferCplx, roi());
 		auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
 		const float *logTable = Mosse::getLogTable8bit();
-		float sum = 0.0f;
-
-		// Calculating mean value
-
-		for (unsigned row = 0; row < roi().rows(); ++row) {
-			for (unsigned col = 0; col < roi().cols(); ++col) {
-				sum += logTable[blockImage(row, col)];
-				mosseassertnotnan(CommonOps::imageCropInto, blockImage(row, col), blockImage(row, col), roi());
-				mosseassertnotnan(CommonOps::imageCropInto, logTable[blockImage(row, col)], row, col,
-					blockImage(row, col));
-			}
-		}
-
+		float sum = imageLog2Sum(aImage);
 		const float mean = sum / static_cast<float>(map.size());
 		float devsum = 0.0f;
 
