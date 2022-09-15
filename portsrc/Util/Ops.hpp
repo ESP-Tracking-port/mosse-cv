@@ -96,6 +96,7 @@ protected:
 	virtual const void *hannMatrix() = 0;  ///< Precompiled or generated (for test implementations) hann matrix
 	virtual const void *gaussFft() = 0;  ///< Fouried-transformed precompiled or generated Gaussian matrix
 	float imageLog2Sum(Tp::Image aImage);  ///< Crops the image and calculates sum of its log2-transformed
+	float imageAbsDevLog2Sum(Tp::Image aImage, float aMean);  ///< Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
 private:
 	Coeffs coeffs;
 	Tp::Roi mRoi;

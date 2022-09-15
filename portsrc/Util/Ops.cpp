@@ -53,6 +53,21 @@ float Ops::imageLog2Sum(Tp::Image aImage)
 	return sum;
 }
 
+float Ops::imageAbsDevLog2Sum(Tp::Image aImage, float mean)
+{
+	float devsum = 0.0f;
+	auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
+	const float *logTable = Mosse::getLogTable8bit();
+
+	for (unsigned row = 0; row < roi().rows(); ++row) {
+		for (unsigned col = 0; col < roi().cols(); ++col) {
+			devsum += fabs(mean - logTable[blockImage(row, col)]);
+		}
+	}
+
+	return devsum;
+}
+
 void Ops::roiResize(Mosse::Tp::Roi &aRoi)
 {
 	unsigned rows = aRoi.size(0);
