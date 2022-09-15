@@ -147,6 +147,7 @@ public:
 	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
 		Tp::PointRowCol aMask) override
 	{
+		ohdebugonce(psr, 0, "CommonOps::calcPsr");
 		// Mean value excluding the masked (usually, 11x11 field) around the peak
 		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
 		float mean = 0.0f;
