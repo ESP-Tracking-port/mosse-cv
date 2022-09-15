@@ -88,20 +88,9 @@ public:
 		auto mapImag = makeEigenMapImag<ReprBuffer>(aBufferCplx, roi());
 		auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
 		const float *logTable = Mosse::getLogTable8bit();
-		float sum = imageLog2Sum(aImage);
+		float sum = imageLog2Sum(aImage);  // Calculating sum
 		const float mean = sum / static_cast<float>(map.size());
-		float devsum = 0.0f;
-
-		// Second turn: calculating standard deviation
-
-		for (unsigned row = 0; row < roi().rows(); ++row) {
-			for (unsigned col = 0; col < roi().cols(); ++col) {
-				devsum += fabs(mean - logTable[blockImage(row, col)]);
-			}
-		}
-
-		// Final turn: initializing the array
-
+		float devsum = imageAbsDevLog2Sum(aImage, mean);
 		const float stddev = devsum / sqrt(static_cast<float>(map.size()));
 		auto mapHann = makeEigenMap<ReprHann>(hannMatrix(), roi());
 
