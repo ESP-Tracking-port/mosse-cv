@@ -131,8 +131,8 @@ public:
 		ReTp<ReprAbHookIntermDiv> hRe;  // H = divCplx(A, B)
 		ReTp<ReprAbHookIntermDiv> hIm;
 
-		for (unsigned row = 0; row < roi().rows(); ++row) {
-			for (unsigned col = 0; col < roi().cols(); ++col) {
+		for (auto row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
+			for (auto col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
 				Ut::divCplxA3<ReprAb, ReprAb, ReprAbHookIntermDiv>(mapA(row, col), mapAimag(row, col), mapB(row, col),
 					mapBimag(row, col), hRe, hIm);
 				Ut::mulCplxA3<ReprBuffer, ReprAbHookIntermDiv, ReprBuffer>(mapFft(row, col), mapFftImag(row, col), hRe,
@@ -197,8 +197,8 @@ public:
 		auto mapGauss = Ut::makeEigenMap<ReprGauss>(gaussFft(), roi());
 		auto mapGaussImag = Ut::makeEigenMapImag<ReprGauss>(gaussFft(), roi());
 
-		for (unsigned row = 0; row < roi().rows(); ++row) {
-			for (unsigned col = 0; col < roi().cols(); ++col) {
+		for (auto row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
+			for (auto col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
 				auto gauss = mapGauss(row, col);
 				auto gaussIm = mapGaussImag(row, col);
 				auto aPrev = mapA(row, col);
@@ -229,8 +229,8 @@ public:
 		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aImageCropFftComplex, roi());
 		auto mapFftImag = Ut::makeEigenMapImag<ReprBuffer>(aImageCropFftComplex, roi());
 
-		for (unsigned row = 0; row < roi().rows(); ++row) {
-			for (unsigned col = 0; col < roi().cols(); ++col) {
+		for (auto row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
+			for (auto col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
 				auto frameFftImConj = Ut::minus<ReprBuffer>(mapFftImag(row, col));
 				auto bPrev = mapB(row, col);
 				auto bImPrev = mapB(row, col);
@@ -255,23 +255,8 @@ public:
 			}
 		}
 	}
+
 private:
-	template <Tp::Repr::Flags F, class B>
-	auto makeEigenRoiFragmentBlock(B aBufferCplx) -> decltype(makeEigenMap<F>(aBufferCplx,
-		roi()).block(roiFragment().origin(0), roiFragment().origin(1), roiFragment().size(0), roiFragment().size(1)))
-	{
-		return makeEigenMap<F>(aBufferCplx, roi()).block(roiFragment().origin(0), roiFragment().origin(1),
-			roiFragment().size(0), roiFragment().size(1));
-	}
-
-	template <Tp::Repr::Flags F, class B>
-	auto makeEigenRoiFragmentBlockImag(B aBufferCplx) -> decltype(makeEigenMapImag<F>(aBufferCplx,
-		roi()).block(roiFragment().origin(0), roiFragment().origin(1), roiFragment().size(0), roiFragment().size(1)))
-	{
-		return makeEigenMapImag<F>(aBufferCplx, roi()).block(roiFragment().origin(0), roiFragment().origin(1),
-			roiFragment().size(0), roiFragment().size(1));
-	}
-
 	void imageCropPreprocessImpl(Tp::Image aImage, void *aBufferCplx, float mean, float stddev)
 	{
 		auto map = makeEigenMap<ReprBuffer>(aBufferCplx, roi());
@@ -279,9 +264,10 @@ private:
 		auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
 		const float *logTable = Mosse::getLogTable8bit();
 		auto mapHann = makeEigenMap<ReprHann>(hannMatrix(), roi());
+		ohdebug(imageCropPreprocessImpl, roiFragment());
 
-		for (unsigned row = 0; row < roi().rows(); ++row) {
-			for (unsigned col = 0; col < roi().cols(); ++col) {
+		for (auto row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
+			for (auto col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
 				constexpr float kEps = 1e-5;  // Small fraction to prevent zero division
 				mapImag(row, col) = toRepr<ReprBuffer>(0.0f);
 				float pixel = (logTable[blockImage(row, col)] - mean) / (stddev + kEps)
