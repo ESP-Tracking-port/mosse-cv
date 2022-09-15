@@ -74,7 +74,7 @@ void DebugRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol &aPeakP
 
 float DebugRawF32Ops::calcPsr(const void *aBufferComplex, const Tp::PointRowCol &aPeak, float sumHint, Tp::PointRowCol aMask)
 {
-#if 1
+#if 0
 	wrapped.opencvNativeRawF32Ops.calcPsr(aBufferComplex, aPeak, sumHint, aMask);
 #else
 	wrapped.rawF32Ops.calcPsr(aBufferComplex, aPeak, sumHint, aMask);
