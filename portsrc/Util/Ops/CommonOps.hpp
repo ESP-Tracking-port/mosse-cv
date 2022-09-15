@@ -92,8 +92,8 @@ public:
 
 		// Calculating mean value
 
-		for (unsigned row = 0; row < map.rows(); ++row) {
-			for (unsigned col = 0; col < map.cols(); ++col) {
+		for (unsigned row = 0; row < roi().rows(); ++row) {
+			for (unsigned col = 0; col < roi().cols(); ++col) {
 				sum += logTable[blockImage(row, col)];
 				mosseassertnotnan(CommonOps::imageCropInto, blockImage(row, col), blockImage(row, col), roi());
 				mosseassertnotnan(CommonOps::imageCropInto, logTable[blockImage(row, col)], row, col,
@@ -106,8 +106,8 @@ public:
 
 		// Second turn: calculating standard deviation
 
-		for (unsigned row = 0; row < map.rows(); ++row) {
-			for (unsigned col = 0; col < map.cols(); ++col) {
+		for (unsigned row = 0; row < roi().rows(); ++row) {
+			for (unsigned col = 0; col < roi().cols(); ++col) {
 				devsum += fabs(mean - logTable[blockImage(row, col)]);
 			}
 		}
@@ -117,8 +117,8 @@ public:
 		const float stddev = devsum / sqrt(static_cast<float>(map.size()));
 		auto mapHann = makeEigenMap<ReprHann>(hannMatrix(), roi());
 
-		for (unsigned row = 0; row < map.rows(); ++row) {
-			for (unsigned col = 0; col < map.cols(); ++col) {
+		for (unsigned row = 0; row < roi().rows(); ++row) {
+			for (unsigned col = 0; col < roi().cols(); ++col) {
 				constexpr float kEps = 1e-5;  // Small fraction to prevent zero division
 				mapImag(row, col) = toRepr<ReprBuffer>(0.0f);
 				float pixel = (logTable[blockImage(row, col)] - mean) / (stddev + kEps)
