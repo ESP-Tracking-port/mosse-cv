@@ -17,10 +17,11 @@
 #endif
 
 #if !MOSSE_PORTABLE
+# include "Types/Tracking.hpp"
 # include <cassert>
 # include <cmath>
 # include <opencv2/opencv.hpp>
-# include "Types/Tracking.hpp"
+# include <MallocCounter.hpp>
 #endif  // MOSSE_PORTABLE
 #include "Types/Tracking.hpp"
 #include <OhDebug.hpp>
