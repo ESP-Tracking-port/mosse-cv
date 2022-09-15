@@ -76,6 +76,7 @@ void RawF32Ops::ifft2(void *aBufferComplex)
 
 void RawF32Ops::initImpl()
 {
+	CommonOps::initImpl();
 	pmHelper.update(roi());
 }
 
