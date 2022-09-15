@@ -74,6 +74,9 @@ public:
 	static_assert(ReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
 	static_assert(Tp::Repr::isValid<ReprBuffer>(), "");
 	static_assert(Tp::Repr::isValid<ReprHann>(), "");
+	static_assert(Tp::Repr::isValid<ReprAb>(), "");
+	static_assert(Tp::Repr::isValid<ReprAbHookIntermDiv>(), "");
+	static_assert(Tp::Repr::isValid<ReprGauss>(), "");
 
 	/// \brief Initializes the buffer by splitting the image into its real and imaginary (zeroed) part Unlike the workflow
 	/// implied by the API, performs both buffer initialization and image preprocessing,
