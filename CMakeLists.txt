@@ -1,3 +1,4 @@
+option(MOSSE_PORTABLE "Only include libraries that can be ported on an embedded platform" OFF)
 cmake_minimum_required(VERSION 2.8)
 project(mosse)
 find_package(OpenCV REQUIRED)
@@ -8,7 +9,6 @@ FILE(GLOB_RECURSE sourcefiles "src/*.cpp")
 add_executable( mosse ${sourcefiles} )
 target_link_libraries( mosse ${OpenCV_LIBS} mosselibs embmosse)
 target_compile_options(mosse PRIVATE -g)
-
 file(GLOB SRCTEST "test/*.cpp")
 add_executable(mossetest ${SRCTEST})
 target_link_libraries(mossetest PRIVATE embmosse)
