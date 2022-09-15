@@ -75,21 +75,85 @@ public:
 	static_assert(Tp::Repr::isValid<ReprBuffer>(), "");
 	static_assert(Tp::Repr::isValid<ReprHann>(), "");
 
-	/// \brief Initializes the buffer by splitting the image into its real and imaginary (zeroed) part
+	/// \brief Initializes the buffer by splitting the image into its real and imaginary (zeroed) part Unlike the workflow
+	/// implied by the API, performs both buffer initialization and image preprocessing,
 	///
-	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override
+	/// because there are certain points which can be optimized by sparing conversions.
+	///
+	/// \pre Hann matrix uses raw float representation
+	///
+	void imageCropInto(Tp::Image aImage, void *aBufferCplx)
 	{
-		bufferComplexInit<ReprBuffer>(aImageReal, aBufferComplex);
+		auto map = makeEigenMap<ReprBuffer>(aBufferCplx, roi());
+		auto mapImag = makeEigenMapImag<ReprBuffer>(aBufferCplx, roi());
+		auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
+		const float *logTable = Mosse::getLogTable8bit();
+		float sum = 0.0f;
+
+		// Calculating mean value
+
+		for (unsigned row = 0; row < map.rows(); ++row) {
+			for (unsigned col = 0; col < map.cols(); ++col) {
+				sum += logTable[blockImage(row, col)];
+				mosseassertnotnan(CommonOps::imageCropInto, blockImage(row, col), blockImage(row, col), roi());
+				mosseassertnotnan(CommonOps::imageCropInto, logTable[blockImage(row, col)], row, col,
+					blockImage(row, col));
+			}
+		}
+
+		const float mean = sum / static_cast<float>(map.size());
+		float devsum = 0.0f;
+
+		// Second turn: calculating standard deviation
+
+		for (unsigned row = 0; row < map.rows(); ++row) {
+			for (unsigned col = 0; col < map.cols(); ++col) {
+				devsum += fabs(mean - logTable[blockImage(row, col)]);
+			}
+		}
+
+		// Final turn: initializing the array
+
+		const float stddev = devsum / sqrt(static_cast<float>(map.size()));
+		auto mapHann = makeEigenMap<ReprHann>(hannMatrix(), roi());
+
+		for (unsigned row = 0; row < map.rows(); ++row) {
+			for (unsigned col = 0; col < map.cols(); ++col) {
+				constexpr float kEps = 1e-5;  // Small fraction to prevent zero division
+				mapImag(row, col) = toRepr<ReprBuffer>(0.0f);
+				float pixel = (logTable[blockImage(row, col)] - mean) / (stddev + kEps)
+					* fromRepr<float, ReprHann>(mapHann(row, col));  // Log table is an optimization shortcut. The log(0) issue is already taken care of during the table compilation stage.
+				map(row, col) = toRepr<ReprBuffer>(pixel);
+				mosseassertnotnan(CommonOps::imageCropInto, map(row, col), row, col);
+				mosseassertnotnan(CommonOps::imageCropInto, mapImag(row, col), row, col);
+			}
+		}
 	}
 
-	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum) override
+	/// \brief Finds the max element
+	///
+	/// \pre (1) It must be raw representation,
+	/// \pre (2) The array elements are expected to be unaligned
+	/// \pre (3) Row-major array is expected (elements are addressed as array[row][col])
+	///
+	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum)
 	{
-		maxReal<ReprBuffer>(aComplexBuffer, aPos, sum);
+		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
+
+		if (nullptr == sum) {
+			MaxVisitor<ReprBuffer> visitor;
+			map.visit(visitor);
+			aPos = visitor.pos;
+		} else {
+			CompositeVisitor<ReprBuffer, MaxVisitor<ReprBuffer>, FloatSumVisitor<ReprBuffer>> visitor;
+			map.visit(visitor);
+			*sum = visitor.template get<1>().sum;
+			aPos = visitor.template get<0>().pos;
+		}
 	}
 
-	void imagePreprocess(void *aCropBufferComplex) override
+	void imagePreprocess(void *) override
 	{
-		imagePreprocess<ReprBuffer, ReprHann>(aCropBufferComplex);
 	}
 
 	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomplex, void *aMatrixBcomplex) override
@@ -228,92 +292,9 @@ public:
 				}
 			}
 		}
-
 	}
 private:
 
-	/// \brief Unlike the workflow implied by the API, performs both buffer initialization and image preprocessing,
-	/// because there are certain points which can be optimized by sparing conversions.
-	///
-	/// \pre Hann matrix uses raw float representation
-	///
-	template <Tp::Repr::Flags F>
-	void bufferComplexInit(Tp::Image aImage, void *aBufferCplx)
-	{
-		auto map = makeEigenMap<F>(aBufferCplx, roi());
-		auto mapImag = makeEigenMapImag<F>(aBufferCplx, roi());
-		auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
-		const float *logTable = Mosse::getLogTable8bit();
-		float sum = 0.0f;
-
-		// Calculating mean value
-
-		for (unsigned row = 0; row < map.rows(); ++row) {
-			for (unsigned col = 0; col < map.cols(); ++col) {
-				sum += logTable[blockImage(row, col)];
-				mosseassertnotnan(CommonOps::bufferComplexInit, blockImage(row, col), blockImage(row, col), roi());
-				mosseassertnotnan(CommonOps::bufferComplexinit, logTable[blockImage(row, col)], row, col,
-					blockImage(row, col));
-			}
-		}
-
-		const float mean = sum / static_cast<float>(map.size());
-		float devsum = 0.0f;
-
-		// Second turn: calculating standard deviation
-
-		for (unsigned row = 0; row < map.rows(); ++row) {
-			for (unsigned col = 0; col < map.cols(); ++col) {
-				devsum += fabs(mean - logTable[blockImage(row, col)]);
-			}
-		}
-
-		// Final turn: initializing the array
-
-		const float stddev = devsum / sqrt(static_cast<float>(map.size()));
-		auto mapHann = makeEigenMap<ReprHann>(hannMatrix(), roi());
-
-		for (unsigned row = 0; row < map.rows(); ++row) {
-			for (unsigned col = 0; col < map.cols(); ++col) {
-				constexpr float kEps = 1e-5;  // Small fraction to prevent zero division
-				mapImag(row, col) = toRepr<F>(0.0f);
-				float pixel = (logTable[blockImage(row, col)] - mean) / (stddev + kEps)
-					* fromRepr<float, ReprHann>(mapHann(row, col));  // Log table is an optimization shortcut. The log(0) issue is already taken care of during the table compilation stage.
-				map(row, col) = toRepr<F>(pixel);
-				mosseassertnotnan(CommonOps::bufferComplexInit, map(row, col), row, col);
-				mosseassertnotnan(CommonOps::bufferComplexInit, mapImag(row, col), row, col);
-			}
-		}
-
-	}
-
-	/// \brief Finds the max element
-	///
-	/// \pre (1) It must be raw representation,
-	/// \pre (2) The array elements are expected to be unaligned
-	/// \pre (3) Row-major array is expected (elements are addressed as array[row][col])
-	///
-	template <Tp::Repr::Flags F>
-	inline void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum)
-	{
-		auto map = Ut::makeEigenMap<F>(aComplexBuffer, roi());
-
-		if (nullptr == sum) {
-			MaxVisitor<F> visitor;
-			map.visit(visitor);
-			aPos = visitor.pos;
-		} else {
-			CompositeVisitor<F, MaxVisitor<F>, FloatSumVisitor<F>> visitor;
-			map.visit(visitor);
-			*sum = visitor.template get<1>().sum;
-			aPos = visitor.template get<0>().pos;
-		}
-	}
-
-	template <Tp::Repr::Flags B, Tp::Repr::Flags H>
-	inline void imagePreprocess(void *)
-	{
-	}
 };
 
 }  // namespace Ut
