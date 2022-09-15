@@ -122,6 +122,7 @@ public:
 		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
 		float mean = 0.0f;
 		Tp::Roi roiMask{roi().origin + aPeak - (aMask / 2), aMask};
+		roiMask.fitShift(roi().size);
 		const float sizeMasked = static_cast<float>(roi().area() - roiMask.area());
 
 		{
