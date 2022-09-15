@@ -6,7 +6,6 @@
 //
 
 #include "MallocCounter.hpp"
-#include "tracker.h"
 #include <map>
 
 static unsigned long long sPeakMallocCounter = 0;
