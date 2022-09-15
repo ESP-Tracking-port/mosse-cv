@@ -95,7 +95,7 @@ inline void *at(unsigned offset, void *mem)
 }
 
 template <Tp::Repr::Flags F>
-inline const void *  at(unsigned offset, const void *mem)
+inline const void *at(unsigned offset, const void *mem)
 {
 	using ValueType = typename Tp::Repr::Type<F>;
 	return static_cast<const void *>(static_cast<const ValueType *>(mem) + offset);
