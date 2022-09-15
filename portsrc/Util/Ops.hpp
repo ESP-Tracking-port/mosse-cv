@@ -75,6 +75,12 @@ public:
 	///
 	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial) = 0;
 	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial) = 0;
+
+	inline void setRoiFragment(const Tp::Roi &aRoiFrag)  ///< The Ops instance is aware of the ROI. However, it operates on its part called "ROI fragment" (ROI is a part of an image, ROI fragment is a part of a ROI). This decomposition enables parallelization.
+	{
+		roiFrag = aRoiFrag;
+		ohdebug(Ops::setRoiFragment, "roi fragment", roiFragment());
+	}
 protected:
 	inline float eta() const
 	{
@@ -94,11 +100,6 @@ protected:
 	inline const Tp::Roi &roiFragment()
 	{
 		return roiFrag;
-	}
-
-	inline void setRoiFragment(const Tp::Roi &aRoiFrag)  ///< The Ops instance is aware of the ROI. However, it operates on its part called "ROI fragment" (ROI is a part of an image, ROI fragment is a part of a ROI). This decomposition enables parallelization.
-	{
-		roiFrag = aRoiFrag;
 	}
 
 	const Tp::Roi &roi() const;
