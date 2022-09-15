@@ -46,6 +46,7 @@ struct Roi {
 	void readjust(const PointRowCol &aSize);
 	void setCenter(const PointRowCol &aCenter);  ///< Update the ROI's center preserving its size
 	void fitShift(const PointRowCol &aOuterBoundSize);  ///< Fit ROI in the bounding box preserving its size
+	void fitCrop(const PointRowCol &aOuterBoundSize);  ///< Fit ROI in the bounding box preserving its position
 
 	friend bool operator==(const Roi &, const Roi&);
 	friend bool operator!=(const Roi &, const Roi&);

@@ -42,7 +42,15 @@ void Roi::fitShift(const PointRowCol &aOuterBoundSize)
 {
 	for (auto c : {0, 1}) {
 		assert(size(c) < aOuterBoundSize(c));  ///< The ROI must fit
-		Ut::clamp(origin(c), 0, aOuterBoundSize(c) - size(c));
+		Ut::clamp(origin(c), 0, aOuterBoundSize(c) - size(c) - 1);
+	}
+}
+
+void Roi::fitCrop(const PointRowCol &aOuterBoundSize)
+{
+	for (auto c : {0, 1}) {
+		assert(origin(c) < aOuterBoundSize(c) - 2 && origin(c) >= 0);
+		Ut::clamp(size(c), aOuterBoundSize(c) - origin(c));
 	}
 }
 
