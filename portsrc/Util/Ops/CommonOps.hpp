@@ -256,6 +256,22 @@ public:
 		}
 	}
 private:
+	template <Tp::Repr::Flags F, class B>
+	auto makeEigenRoiFragmentBlock(B aBufferCplx) -> decltype(makeEigenMap<F>(aBufferCplx,
+		roi()).block(roiFragment().origin(0), roiFragment().origin(1), roiFragment().size(0), roiFragment().size(1)))
+	{
+		return makeEigenMap<F>(aBufferCplx, roi()).block(roiFragment().origin(0), roiFragment().origin(1),
+			roiFragment().size(0), roiFragment().size(1));
+	}
+
+	template <Tp::Repr::Flags F, class B>
+	auto makeEigenRoiFragmentBlockImag(B aBufferCplx) -> decltype(makeEigenMapImag<F>(aBufferCplx,
+		roi()).block(roiFragment().origin(0), roiFragment().origin(1), roiFragment().size(0), roiFragment().size(1)))
+	{
+		return makeEigenMapImag<F>(aBufferCplx, roi()).block(roiFragment().origin(0), roiFragment().origin(1),
+			roiFragment().size(0), roiFragment().size(1));
+	}
+
 	void imageCropPreprocessImpl(Tp::Image aImage, void *aBufferCplx, float mean, float stddev)
 	{
 		auto map = makeEigenMap<ReprBuffer>(aBufferCplx, roi());
