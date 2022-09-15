@@ -15,6 +15,13 @@ static auto sDefaultFreeHook = __free_hook;
 static auto sDefaultReallocHook = __realloc_hook;
 std::map<void *, unsigned long long> sMallocMap;
 
+static void peakUpdate()
+{
+	if (sPeakMallocCounter < sMallocCounter) {
+		sPeakMallocCounter = sMallocCounter;
+	}
+}
+
 void *MallocCounter::mallocHook(size_t aSize, const void *)
 {
 	__malloc_hook = sDefaultMallocHook;
@@ -25,10 +32,7 @@ void *MallocCounter::mallocHook(size_t aSize, const void *)
 		sMallocCounter += aSize;
 	}
 
-	if (sPeakMallocCounter < sMallocCounter) {
-		sPeakMallocCounter = sMallocCounter;
-	}
-
+	peakUpdate();
 	__malloc_hook = mallocHook;
 
 	return mem;
@@ -55,16 +59,14 @@ unsigned long long MallocCounter::getPeakCount()
 
 void MallocCounter::freeHook(void *aPtr, const void *)
 {
-	if (aPtr != nullptr) {
-		__free_hook = sDefaultFreeHook;
-		free(aPtr);
+	__free_hook = sDefaultFreeHook;
+	free(aPtr);
 
-		if (sMallocMap.end() != sMallocMap.find(aPtr)) {
-			sMallocCounter -= sMallocMap[aPtr];
-		}
-
-		__free_hook = freeHook;
+	if (sMallocMap.end() != sMallocMap.find(aPtr)) {
+		sMallocCounter -= sMallocMap[aPtr];
 	}
+
+	__free_hook = freeHook;
 }
 
 void *MallocCounter::reallocHook(void *aPtr, size_t aSize, const void *)
@@ -85,6 +87,7 @@ void *MallocCounter::reallocHook(void *aPtr, size_t aSize, const void *)
 		sMallocMap[ptrNew] = aSize;
 	}
 
+	peakUpdate();
 	__realloc_hook = reallocHook;
 
 	return ptrNew;
