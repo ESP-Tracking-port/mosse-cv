@@ -91,6 +91,16 @@ protected:
 		coeffs = {eta, 1.0f - eta};
 	}
 
+	inline const Tp::Roi &roiFragment()
+	{
+		return roiFrag;
+	}
+
+	inline void setRoiFragment(const Tp::Roi &aRoiFrag)  ///< The Ops instance is aware of the ROI. However, it operates on its part called "ROI fragment" (ROI is a part of an image, ROI fragment is a part of a ROI). This decomposition enables parallelization.
+	{
+		roiFrag = aRoiFrag;
+	}
+
 	const Tp::Roi &roi() const;
 	virtual void initImpl();
 	virtual const void *hannMatrix() = 0;  ///< Precompiled or generated (for test implementations) hann matrix
@@ -100,6 +110,7 @@ protected:
 private:
 	Coeffs coeffs;
 	Tp::Roi mRoi;
+	Tp::Roi roiFrag;
 };
 
 }  // namespace Ut

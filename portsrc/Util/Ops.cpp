@@ -33,6 +33,7 @@ const Tp::Roi &Ops::roi() const
 void Ops::initImpl()
 {
 	ohdebug(Ops::initImpl);
+	setRoiFragment({{0, 0}, roi().size});
 }
 
 float Ops::imageLog2Sum(Tp::Image aImage)
