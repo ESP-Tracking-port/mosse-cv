@@ -35,6 +35,24 @@ void Ops::initImpl()
 	ohdebug(Ops::initImpl);
 }
 
+float Ops::imageLog2Sum(Tp::Image aImage)
+{
+	const float *logTable = Mosse::getLogTable8bit();
+	auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
+	float sum = 0.0f;
+
+	for (unsigned row = 0; row < roi().rows(); ++row) {
+		for (unsigned col = 0; col < roi().cols(); ++col) {
+			sum += logTable[blockImage(row, col)];
+			mosseassertnotnan(CommonOps::imageLogSum, blockImage(row, col), blockImage(row, col), roi());
+			mosseassertnotnan(CommonOps::imageLogSum, logTable[blockImage(row, col)], row, col,
+				blockImage(row, col));
+		}
+	}
+
+	return sum;
+}
+
 void Ops::roiResize(Mosse::Tp::Roi &aRoi)
 {
 	unsigned rows = aRoi.size(0);

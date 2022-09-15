@@ -8,6 +8,8 @@
 #if !defined(MOSSE_UTIL_OPS_HPP_)
 #define MOSSE_UTIL_OPS_HPP_
 
+#include <utility>
+
 namespace Mosse {
 namespace Tp {
 
@@ -93,6 +95,7 @@ protected:
 	virtual void initImpl();
 	virtual const void *hannMatrix() = 0;  ///< Precompiled or generated (for test implementations) hann matrix
 	virtual const void *gaussFft() = 0;  ///< Fouried-transformed precompiled or generated Gaussian matrix
+	float imageLog2Sum(Tp::Image aImage);  ///< Crops the image and calculates sum of its log2-transformed
 private:
 	Coeffs coeffs;
 	Tp::Roi mRoi;
