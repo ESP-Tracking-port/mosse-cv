@@ -8,7 +8,6 @@
 #if !defined(MOSSE_UTIL_MOSSEDEBUG_HPP_)
 #define MOSSE_UTIL_MOSSEDEBUG_HPP_
 
-#define MOSSE_PORTABLE 0  // If 0, desktop-only features like console debug output or OpenCV modules will be compiled
 #undef OHDEBUG_DISABLE
 
 #if MOSSE_PORTABLE
@@ -67,6 +66,9 @@ inline bool isNan(...)
 
 #else
 # define mosseassertnotnan(...)
+
+struct MallocCounter {};
+
 #endif  // MOSSE_PORTABLE
 
 #endif // MOSSE_UTIL_MOSSEDEBUG_HPP_
