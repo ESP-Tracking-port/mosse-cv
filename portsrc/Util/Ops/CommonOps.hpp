@@ -87,11 +87,11 @@ public:
 	///
 	void imageCropInto(Tp::Image aImage, void *aBufferCplx) override
 	{
-		float sum = imageLog2Sum(aImage);  // Calculating sum
+		float sum = imageLog2Sum(aImage).f32;  // Calculating sum
 		const float mean = sum / static_cast<float>(roi().area());
-		float devsum = imageAbsDevLog2Sum(aImage, mean);
+		float devsum = imageAbsDevLog2Sum(aImage, {mean}).f32;
 		const float stddev = devsum / sqrt(static_cast<float>(roi().area()));
-		imageCropPreprocessImpl(aImage, aBufferCplx, mean, stddev);
+		imageCropPreprocessImpl(aImage, aBufferCplx, {mean}, {stddev});
 	}
 
 	/// \brief Finds the max element
@@ -260,7 +260,7 @@ public:
 	}
 
 private:
-	void imageCropPreprocessImpl(Tp::Image aImage, void *aBufferCplx, float mean, float stddev)
+	void imageCropPreprocessImpl(Tp::Image aImage, void *aBufferCplx, Tp::NumVariant mean, Tp::NumVariant stddev)
 	{
 		auto map = makeEigenMap<ReprBuffer>(aBufferCplx, roi());
 		auto mapImag = makeEigenMapImag<ReprBuffer>(aBufferCplx, roi());
@@ -273,7 +273,7 @@ private:
 			for (auto col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
 				constexpr float kEps = 1e-5;  // Small fraction to prevent zero division
 				mapImag(row, col) = toRepr<ReprBuffer>(0.0f);
-				float pixel = (logTable[blockImage(row, col)] - mean) / (stddev + kEps)
+				float pixel = (logTable[blockImage(row, col)] - mean.f32) / (stddev.f32 + kEps)
 					* fromRepr<float, ReprHann>(mapHann(row, col));  // Log table is an optimization shortcut. The log(0) issue is already taken care of during the table compilation stage.
 				map(row, col) = toRepr<ReprBuffer>(pixel);
 				mosseassertnotnan(CommonOps::imageCropInto, map(row, col), row, col);
