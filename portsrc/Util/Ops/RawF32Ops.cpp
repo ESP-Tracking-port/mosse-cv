@@ -29,49 +29,23 @@ RawF32Ops::RawF32Ops() : pmHelper{kGetGauss, kGetHann}, fft{}
 void RawF32Ops::fft2(void *aBufferComplex)
 {
 	// Fft row-wise
-	fft.init(roi().cols(), Ut::strideInner<kRawF32ReprBuffer>());
+	fft.init2(roi().rows(), roi().cols(), Ut::strideInner<kRawF32ReprBuffer>());
 	float *re = static_cast<float *>(aBufferComplex) + Ut::offsetFirstReal<kRawF32ReprBuffer>(roi());
 	float *im = static_cast<float *>(aBufferComplex) + Ut::offsetFirstImag<kRawF32ReprBuffer>(roi());
+	fft.transformDirect2(re, im);
 
-	for (auto row = roi().rows(); row > 0; --row, re += Ut::strideOuter<kRawF32ReprBuffer>(roi()),
-			im += Ut::strideOuter<kRawF32ReprBuffer>(roi())) {
-		fft.transformDirect(re, im);
-	}
-
-	// Fft col-wise
-	fft.init(roi().rows(), Ut::strideOuter<kRawF32ReprBuffer>(roi()));
-	re = static_cast<float *>(aBufferComplex) + Ut::offsetFirstReal<kRawF32ReprBuffer>(roi());
-	im = static_cast<float *>(aBufferComplex) + Ut::offsetFirstImag<kRawF32ReprBuffer>(roi());
-
-	for (auto col = roi().cols(); col > 0; --col, re += Ut::strideInner<kRawF32ReprBuffer>(),
-			im += Ut::strideInner<kRawF32ReprBuffer>()) {
-		fft.transformDirect(re, im);
-	}
+	return;
 }
 
 void RawF32Ops::ifft2(void *aBufferComplex)
 {
-	// Fft row-wise
-	fft.init(roi().cols(), Ut::strideInner<kRawF32ReprBuffer>());
+	fft.init2(roi().rows(), roi().cols(), Ut::strideInner<kRawF32ReprBuffer>());
 	float *re = static_cast<float *>(aBufferComplex) + Ut::offsetFirstReal<kRawF32ReprBuffer>(roi());
 	float *im = static_cast<float *>(aBufferComplex) + Ut::offsetFirstImag<kRawF32ReprBuffer>(roi());
+	fft.transformComplement2(re, im);
 
-	for (auto row = roi().rows(); row > 0; --row, re += Ut::strideOuter<kRawF32ReprBuffer>(roi()),
-			im += Ut::strideOuter<kRawF32ReprBuffer>(roi())) {
-		fft.transformComplement(re, im);
-	}
+	return;
 
-	// Fft col-wise
-	fft.init(roi().rows(), Ut::strideOuter<kRawF32ReprBuffer>(roi()));
-	re = static_cast<float *>(aBufferComplex) + Ut::offsetFirstReal<kRawF32ReprBuffer>(roi());
-	im = static_cast<float *>(aBufferComplex) + Ut::offsetFirstImag<kRawF32ReprBuffer>(roi());
-
-	for (auto col = roi().cols(); col > 0; --col, re += Ut::strideInner<kRawF32ReprBuffer>(),
-			im += Ut::strideInner<kRawF32ReprBuffer>()) {
-		fft.transformComplement(re, im);
-	}
-
-	// TODO XXX : scale
 }
 
 void RawF32Ops::initImpl()
