@@ -22,6 +22,15 @@ void Ops::init(Tp::Roi aRoi)
 	initImpl();
 }
 
+void Ops::imageCropInto(Tp::Image aImage, void *aBufferCplx)
+{
+	float sum = imageLog2Sum(aImage);  // Calculating sum
+	const float mean = sum / static_cast<float>(roi().area());
+	float devsum = imageAbsDevLog2Sum(aImage, mean);
+	const float stddev = devsum / sqrt(static_cast<float>(roi().area()));
+	imageCropPreprocessImpl(aImage, aBufferCplx, {sum}, {stddev});
+}
+
 void Ops::imagePreprocess(void *)
 {
 }
@@ -71,6 +80,10 @@ float Ops::imageAbsDevLog2Sum(Tp::Image aImage, float mean)
 	}
 
 	return devsum;
+}
+
+void Ops::imageCropPreprocessImpl(Tp::Image, void *, Ops::NumVariant, Ops::NumVariant)
+{
 }
 
 void Ops::roiResize(Mosse::Tp::Roi &aRoi)

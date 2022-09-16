@@ -25,6 +25,10 @@ namespace Ut {
 /// matrix operations are delegated to descendants of `Ops`
 ///
 class Ops {
+protected:
+	union NumVariant {
+		float f32;
+	};
 private:
 	struct Coeffs {
 		float eta;
@@ -44,7 +48,7 @@ public:
 	/// \brief Crop the image into buffer and perform preprocessing. The output buffer is expected to contain both real
 	/// and imaginary channels
 	///
-	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) = 0;
+	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex);
 	virtual void imagePreprocess(void *aCropComplex);  ///< Obsolete
 	virtual void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) = 0;
 	virtual void fft2(void *aBufferComplex) = 0;
@@ -106,8 +110,10 @@ protected:
 	virtual void initImpl();
 	virtual const void *hannMatrix() = 0;  ///< Precompiled or generated (for test implementations) hann matrix
 	virtual const void *gaussFft() = 0;  ///< Fouried-transformed precompiled or generated Gaussian matrix
-	float imageLog2Sum(Tp::Image aImage);  ///< Crops the image and calculates sum of its log2-transformed
-	float imageAbsDevLog2Sum(Tp::Image aImage, float aMean);  ///< Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
+	virtual float imageLog2Sum(Tp::Image aImage);  ///< Crops the image and calculates sum of its log2-transformed
+	virtual float imageAbsDevLog2Sum(Tp::Image aImage, float aMean);  ///< Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
+	virtual void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, NumVariant aLog2Sum,
+		NumVariant aAbsDevLog2Sum);
 private:
 	Coeffs coeffs;
 	Tp::Roi mRoi;
