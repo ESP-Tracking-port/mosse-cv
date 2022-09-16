@@ -4,7 +4,6 @@
 #include "Fft_arrays.h"
 #include <OhDebug.hpp>
 
-
 inline void mulComplex(float &re1, float &im1, float re2, float im2)
 {
 	float tmp = re1;
