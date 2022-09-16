@@ -265,7 +265,7 @@ private:
 	{
 		auto map = makeEigenMap<ReprBuffer>(aBufferCplx, roi());
 		auto mapImag = makeEigenMapImag<ReprBuffer>(aBufferCplx, roi());
-		auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
+		auto blockImage = Ut::makeEigenBlock(aImage, roi());
 		const float *logTable = Mosse::getLogTable8bit();
 		auto mapHann = makeEigenMap<ReprHann>(hannMatrix(), roi());
 		ohdebug(imageCropPreprocessImpl, roiFragment());
