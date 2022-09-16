@@ -280,6 +280,9 @@ public:
 			}
 		}
 	}
+protected:
+	virtual const void *hannMatrix() = 0;  ///< Precompiled or generated (for test implementations) hann matrix
+	virtual const void *gaussFft() = 0;  ///< Fouried-transformed precompiled or generated Gaussian matrix
 };
 
 }  // namespace Ut
