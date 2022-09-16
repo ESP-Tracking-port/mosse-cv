@@ -7,6 +7,7 @@
 
 #include "Types/Tracking.hpp"
 #include "Util/Arithm/Conv.hpp"
+#include "Util/Helper/EigenMem.hpp"
 #include "MossePort.hpp"
 #include "Ops.hpp"
 #include "MosseApi.hpp"
@@ -39,11 +40,12 @@ void Ops::initImpl()
 float Ops::imageLog2Sum(Tp::Image aImage)
 {
 	const float *logTable = Mosse::getLogTable8bit();
-	auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
+	auto blockImage = Ut::makeEigenBlock(aImage, roi());
+	auto blockFragment = Ut::makeEigenBlock(blockImage, roiFragment());
 	float sum = 0.0f;
 
-	for (unsigned row = 0; row < roi().rows(); ++row) {
-		for (unsigned col = 0; col < roi().cols(); ++col) {
+	for (unsigned row = 0; row < blockFragment.rows(); ++row) {
+		for (unsigned col = 0; col < blockFragment.cols(); ++col) {
 			sum += logTable[blockImage(row, col)];
 			mosseassertnotnan(CommonOps::imageLogSum, blockImage(row, col), blockImage(row, col), roi());
 			mosseassertnotnan(CommonOps::imageLogSum, logTable[blockImage(row, col)], row, col,
@@ -57,11 +59,13 @@ float Ops::imageLog2Sum(Tp::Image aImage)
 float Ops::imageAbsDevLog2Sum(Tp::Image aImage, float mean)
 {
 	float devsum = 0.0f;
-	auto blockImage = aImage.block(roi().origin(0), roi().origin(1), roi().size(0), roi().size(1));
+	auto blockImage = Ut::makeEigenBlock(aImage, roi());
+	auto blockFragment = Ut::makeEigenBlock(blockImage, roiFragment());
 	const float *logTable = Mosse::getLogTable8bit();
+	ohdebugonce(Ops::imageAbsDevLog2Sum, 0, roi(), roiFragment(), blockImage.size());
 
-	for (unsigned row = 0; row < roi().rows(); ++row) {
-		for (unsigned col = 0; col < roi().cols(); ++col) {
+	for (unsigned row = 0; row < blockFragment.rows(); ++row) {
+		for (unsigned col = 0; col < blockFragment.cols(); ++col) {
 			devsum += fabs(mean - logTable[blockImage(row, col)]);
 		}
 	}
