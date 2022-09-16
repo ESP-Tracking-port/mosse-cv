@@ -62,6 +62,12 @@ inline typename Tp::ConstEigenMapType<F>::Type makeEigenMapImag(const void *buff
 		Ut::strideInner<F>()}};
 }
 
+template <class T>
+inline auto makeEigenBlock(T &aMatrix, const Tp::Roi &aRoi) -> decltype(aMatrix.block(0, 0, 0, 0))
+{
+	return aMatrix.block(aRoi.origin(0), aRoi.origin(1), aRoi.size(0), aRoi.size(1));
+}
+
 }  // namespace Ut
 }  // namespace Mosse
 
