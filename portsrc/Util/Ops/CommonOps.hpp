@@ -260,7 +260,7 @@ public:
 	}
 
 private:
-	void imageCropPreprocessImpl(Tp::Image aImage, void *aBufferCplx, Tp::NumVariant mean, Tp::NumVariant stddev)
+	void imageCropPreprocessImpl(Tp::Image aImage, void *aBufferCplx, Tp::NumVariant mean, Tp::NumVariant stddev) override
 	{
 		auto map = makeEigenMap<ReprBuffer>(aBufferCplx, roi());
 		auto mapImag = makeEigenMapImag<ReprBuffer>(aBufferCplx, roi());
