@@ -82,6 +82,10 @@ public:
 		roiFrag = aRoiFrag;
 		ohdebug(Ops::setRoiFragment, "roi fragment", roiFragment());
 	}
+	virtual Tp::NumVariant imageLog2Sum(Tp::Image aImage);  ///< Crops the image and calculates sum of its log2-transformed
+	virtual Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean);  ///< Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
+	virtual void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
+		Tp::NumVariant aAbsDevLog2Sum);
 protected:
 	inline float eta() const
 	{
@@ -107,10 +111,6 @@ protected:
 	virtual void initImpl();
 	virtual const void *hannMatrix() = 0;  ///< Precompiled or generated (for test implementations) hann matrix
 	virtual const void *gaussFft() = 0;  ///< Fouried-transformed precompiled or generated Gaussian matrix
-	virtual Tp::NumVariant imageLog2Sum(Tp::Image aImage);  ///< Crops the image and calculates sum of its log2-transformed
-	virtual Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean);  ///< Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
-	virtual void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
-		Tp::NumVariant aAbsDevLog2Sum);
 private:
 	Coeffs coeffs;
 	Tp::Roi mRoi;
