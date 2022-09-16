@@ -25,11 +25,11 @@ void Ops::init(Tp::Roi aRoi)
 
 void Ops::imageCropInto(Tp::Image aImage, void *aBufferCplx)
 {
-	auto sum = imageLog2Sum(aImage);  // Calculating sum
-	const float mean = sum.f32 / static_cast<float>(roi().area());
+	float sum = imageLog2Sum(aImage).f32;  // Calculating sum
+	const float mean = sum / static_cast<float>(roi().area());
 	float devsum = imageAbsDevLog2Sum(aImage, {mean}).f32;
 	const float stddev = devsum / sqrt(static_cast<float>(roi().area()));
-	imageCropPreprocessImpl(aImage, aBufferCplx, {sum}, {stddev});
+	imageCropPreprocessImpl(aImage, aBufferCplx, {mean}, {stddev});
 }
 
 void Ops::imagePreprocess(void *)
