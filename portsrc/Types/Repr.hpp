@@ -100,6 +100,10 @@ class Geometry {
 	Repr::Flags hannMatrix;
 };
 
+union NumVariant {
+	float f32;
+};
+
 }  // namespace Tp
 }  // namespace Mosse
 
