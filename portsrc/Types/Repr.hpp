@@ -100,6 +100,8 @@ class Geometry {
 	Repr::Flags hannMatrix;
 };
 
+/// \brief Wrapper enabling implementation swapping. Reduces the amount of boilerplate and template black magic
+///
 union NumVariant {
 	float f32;
 };
