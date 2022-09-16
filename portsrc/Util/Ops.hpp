@@ -16,6 +16,7 @@ namespace Tp {
 class Image;
 class Roi;
 class PointRowCol;
+union NumVariant;
 
 }  // namespace Tp
 
@@ -25,10 +26,6 @@ namespace Ut {
 /// matrix operations are delegated to descendants of `Ops`
 ///
 class Ops {
-protected:
-	union NumVariant {
-		float f32;
-	};
 private:
 	struct Coeffs {
 		float eta;
@@ -112,8 +109,8 @@ protected:
 	virtual const void *gaussFft() = 0;  ///< Fouried-transformed precompiled or generated Gaussian matrix
 	virtual float imageLog2Sum(Tp::Image aImage);  ///< Crops the image and calculates sum of its log2-transformed
 	virtual float imageAbsDevLog2Sum(Tp::Image aImage, float aMean);  ///< Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
-	virtual void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, NumVariant aLog2Sum,
-		NumVariant aAbsDevLog2Sum);
+	virtual void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
+		Tp::NumVariant aAbsDevLog2Sum);
 private:
 	Coeffs coeffs;
 	Tp::Roi mRoi;

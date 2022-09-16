@@ -6,6 +6,7 @@
 //
 
 #include "Types/Tracking.hpp"
+#include "Types/Repr.hpp"
 #include "Util/Arithm/Conv.hpp"
 #include "Util/Helper/EigenMem.hpp"
 #include "MossePort.hpp"
@@ -82,7 +83,7 @@ float Ops::imageAbsDevLog2Sum(Tp::Image aImage, float mean)
 	return devsum;
 }
 
-void Ops::imageCropPreprocessImpl(Tp::Image, void *, Ops::NumVariant, Ops::NumVariant)
+void Ops::imageCropPreprocessImpl(Tp::Image, void *, Tp::NumVariant, Tp::NumVariant)
 {
 }
 
