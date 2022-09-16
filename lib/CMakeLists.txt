@@ -1,6 +1,6 @@
-add_subdirectory(fft)
 add_subdirectory(mosseapi)
 add_subdirectory(ohdebug)
+add_subdirectory(fft)
 add_subdirectory(doctest)
 add_library(mosselibs INTERFACE)
 add_library(eigen INTERFACE)
