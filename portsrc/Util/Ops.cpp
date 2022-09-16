@@ -25,9 +25,9 @@ void Ops::init(Tp::Roi aRoi)
 
 void Ops::imageCropInto(Tp::Image aImage, void *aBufferCplx)
 {
-	float sum = imageLog2Sum(aImage);  // Calculating sum
-	const float mean = sum / static_cast<float>(roi().area());
-	float devsum = imageAbsDevLog2Sum(aImage, mean);
+	auto sum = imageLog2Sum(aImage);  // Calculating sum
+	const float mean = sum.f32 / static_cast<float>(roi().area());
+	float devsum = imageAbsDevLog2Sum(aImage, {mean}).f32;
 	const float stddev = devsum / sqrt(static_cast<float>(roi().area()));
 	imageCropPreprocessImpl(aImage, aBufferCplx, {sum}, {stddev});
 }
@@ -47,7 +47,7 @@ void Ops::initImpl()
 	setRoiFragment({{0, 0}, roi().size});
 }
 
-float Ops::imageLog2Sum(Tp::Image aImage)
+Tp::NumVariant Ops::imageLog2Sum(Tp::Image aImage)
 {
 	const float *logTable = Mosse::getLogTable8bit();
 	auto blockImage = Ut::makeEigenBlock(aImage, roi());
@@ -63,10 +63,10 @@ float Ops::imageLog2Sum(Tp::Image aImage)
 		}
 	}
 
-	return sum;
+	return {sum};
 }
 
-float Ops::imageAbsDevLog2Sum(Tp::Image aImage, float mean)
+Tp::NumVariant Ops::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant mean)
 {
 	float devsum = 0.0f;
 	auto blockImage = Ut::makeEigenBlock(aImage, roi());
@@ -76,11 +76,11 @@ float Ops::imageAbsDevLog2Sum(Tp::Image aImage, float mean)
 
 	for (unsigned row = 0; row < blockFragment.rows(); ++row) {
 		for (unsigned col = 0; col < blockFragment.cols(); ++col) {
-			devsum += fabs(mean - logTable[blockImage(row, col)]);
+			devsum += fabs(mean.f32 - logTable[blockImage(row, col)]);
 		}
 	}
 
-	return devsum;
+	return {devsum};
 }
 
 void Ops::imageCropPreprocessImpl(Tp::Image, void *, Tp::NumVariant, Tp::NumVariant)
