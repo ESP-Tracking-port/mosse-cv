@@ -111,23 +111,5 @@ void DebugRawF32Ops::initImpl()
 #endif
 }
 
-const void *DebugRawF32Ops::hannMatrix()
-{
-#if 0
-	return wrapped.opencvNativeRawF32Ops.hannMatrix();
-#else
-	return wrapped.rawF32Ops.hannMatrix();
-#endif
-}
-
-const void *DebugRawF32Ops::gaussFft()
-{
-#if 0
-	return wrapped.opencvNativeRawF32Ops.gaussFft();
-#else
-	return wrapped.rawF32Ops.gaussFft();
-#endif
-}
-
 }  // namespace Ut
 }  // namespace Mosse

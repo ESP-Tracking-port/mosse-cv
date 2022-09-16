@@ -40,8 +40,6 @@ public:
 	void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial) override;
 	void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial) override;
 	void initImpl() override;
-	const void *hannMatrix() override;  ///< Precompiled hann matrix
-	const void *gaussFft() override;  ///< Fouried-transformed precompiled Gaussian matrix
 private:
 	Wrapped wrapped;
 };
