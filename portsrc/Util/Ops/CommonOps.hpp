@@ -85,14 +85,6 @@ public:
 	///
 	/// \pre Hann matrix uses raw float representation
 	///
-	void imageCropInto(Tp::Image aImage, void *aBufferCplx) override
-	{
-		float sum = imageLog2Sum(aImage).f32;  // Calculating sum
-		const float mean = sum / static_cast<float>(roi().area());
-		float devsum = imageAbsDevLog2Sum(aImage, {mean}).f32;
-		const float stddev = devsum / sqrt(static_cast<float>(roi().area()));
-		imageCropPreprocessImpl(aImage, aBufferCplx, {mean}, {stddev});
-	}
 
 	/// \brief Finds the max element
 	///
