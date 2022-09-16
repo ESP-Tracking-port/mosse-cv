@@ -13,6 +13,7 @@
 namespace Mosse {
 
 class Tracker;
+using ThreadSpawnCb = void(*)(void (*aTask)(void *), void *aArg);
 
 /// \brief No effective representations are used. Buffers store raw floats. Primarily, it is used for testing purposes.
 ///
