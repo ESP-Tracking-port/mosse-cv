@@ -91,7 +91,6 @@ public:
 		const float mean = sum / static_cast<float>(roi().area());
 		float devsum = imageAbsDevLog2Sum(aImage, mean);
 		const float stddev = devsum / sqrt(static_cast<float>(roi().area()));
-
 		imageCropPreprocessImpl(aImage, aBufferCplx, mean, stddev);
 	}
 
