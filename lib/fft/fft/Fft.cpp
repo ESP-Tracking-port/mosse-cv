@@ -2,6 +2,7 @@
 #include "Fft.h"
 #include <cmath>
 #include "Fft_arrays.h"
+#include <OhDebug.hpp>
 
 
 inline void mulComplex(float &re1, float &im1, float re2, float im2)
@@ -21,6 +22,63 @@ void Fft::init(std::size_t sz, std::size_t st)
 	// Rotation multiplier array allocation
 	m_wStore_re.resize(m_nMax / 2);
 	m_wStore_im.resize(m_nMax / 2);
+}
+
+void Fft::init2(std::size_t aRows, std::size_t aCols, std::size_t aStep)
+{
+	step = aStep;
+	rows = aRows;
+	cols = aCols;
+	innerStride = aStep;
+	outerStride = step * cols;
+}
+
+/// \pre cols and rows must be initialized w/ values more than 0
+///
+void Fft::transformDirect2(float *pRe, float *pIm)
+{
+	ohdebugonce(Fft::transformDirect2, 0, rows, cols, step, outerStride);
+	// Fft row-wise
+	init(cols, innerStride);
+	float *re = pRe;
+	float *im = pIm;
+
+	for (auto row = rows; row > 0; --row, re += outerStride, im += outerStride) {
+		transformDirect(re, im);
+	}
+
+	// Fft col-wise
+	init(rows, outerStride);
+	re = pRe;
+	im = pIm;
+
+	for (auto col = cols; col > 0; --col, re += innerStride, im += innerStride) {
+		transformDirect(re, im);
+	}
+}
+
+/// \pre cols and rows must be initialized w/ values more than 0
+///
+void Fft::transformComplement2(float *pRe, float *pIm)
+{
+	ohdebugonce(Fft::transformDirect2, 0, rows, cols, step, outerStride);
+	// IFFT row-wise
+	float *re = pRe;
+	float *im = pIm;
+	init(cols, innerStride);
+
+	for (std::size_t row = rows; row > 0; --row, re += outerStride, im += outerStride) {
+		transformComplement(re, im);
+	}
+
+	// IFFT col-wise
+	re = pRe;
+	im = pIm;
+	init(rows, outerStride);
+
+	for (auto col = cols; col > 0; --col, re += innerStride, im += innerStride) {
+		transformComplement(re, im);
+	}
 }
 
 void Fft::transformDirect(float *pRe, float *pIm)
