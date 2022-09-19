@@ -12,6 +12,7 @@
 #include "ParallelOps.hpp"
 #include "Util/Ops/ThreadedOps.hpp"
 #include <cassert>
+#include <numeric>
 
 namespace Mosse {
 namespace Ut {
@@ -94,9 +95,27 @@ void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComple
 	setExec(&Ops::matbUpdate, aMatBcomplex, aImageCropFftComplex, aInitial);
 }
 
+// TODO Generalize the approach beyond floats (probably, won't be needed)
+//
+/// \warning While the architectural approach implies use of arbitrary types, this implementation expects FLOATS in
+/// Tp::NumVariant
+///
+Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
+{
+	setExec(&Ops::imageLog2Sum, aImage);
+	Tp::NumVariant ret{0.0f};
+	ret = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), ret,
+		[](const Tp::NumVariant &aInit, const ThreadedOps &aRhs)
+		{
+			const Tp::NumVariant &result = *reinterpret_cast<const Tp::NumVariant *>(aRhs.result());
+			return Tp::NumVariant{aInit.f32 + result.f32};
+		});
+
+	return ret;
+}
+
 void ParallelOps::Threading::waitDone()
 {
-
 	for (auto op : threadedOpWrappers) {
 		while (!op.isDone()) {
 		}

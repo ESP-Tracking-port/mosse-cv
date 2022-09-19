@@ -40,6 +40,7 @@ protected:
 	void ifft2(void *aBufferComplex) override;
 	void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial) override;
 	void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial) override;
+	Tp::NumVariant imageLog2Sum(Tp::Image aImage) override;
 private:
 	template <class C, class ...Ts>
 	inline void setExec(C &&c, Ts &&...aArgs)
