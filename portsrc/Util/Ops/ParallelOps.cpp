@@ -5,6 +5,8 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
+#include "Port/MossePort.hpp"
+#include "Types/Tracking.hpp"
 #include "ParallelOps.hpp"
 #include <cassert>
 
@@ -22,7 +24,7 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops> > aOps) : ops{a
 void ParallelOps::initImpl()
 {
 	Ops::initImpl();  // TODO (XXX): Any unintended effects?
-	const auto fragRows = roi().size(0) / threads;  // TODO handle uneven split
+	const auto fragRows = roi().size(0) / ops.size();  // TODO handle uneven split
 	assert(fragRows > 0);
 	auto frag = roiFragment();
 
@@ -32,7 +34,7 @@ void ParallelOps::initImpl()
 
 	// Set each `Ops` instance its ROI fragment so it can be processed in parallel fashion
 	{
-		const auto fragShift = {fragRows, 0};
+		Tp::PointRowCol fragShift = {fragRows, 0};
 
 		for (auto op : ops) {
 			op.get().setRoiFragment(frag);

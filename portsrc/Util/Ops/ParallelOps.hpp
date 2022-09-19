@@ -21,11 +21,6 @@ public:
 protected:
 	void initImpl() override;
 private:
-	inline std::size_t nthreads() const
-	{
-		return ops.size();
-	}
-private:
 	std::vector<std::reference_wrapper<Ops>> ops;
 };
 
