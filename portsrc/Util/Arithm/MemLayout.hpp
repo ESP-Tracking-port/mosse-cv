@@ -87,6 +87,14 @@ inline unsigned offsetFirstImag(const Tp::Roi &roi, En<F & Tp::Repr::CplxRenImn>
 	return roi.rows() * roi.cols();
 }
 
+/// \brief Maps coordinates of a point onto array
+///
+template <Tp::Repr::Flags F>
+inline unsigned pointOffset(const Tp::PointRowCol &point, const Tp::Roi &roi)
+{
+	return strideOuter<F>(roi) * point(0) + point(1);
+}
+
 template <Tp::Repr::Flags F>
 inline void *at(unsigned offset, void *mem)
 {
@@ -99,6 +107,18 @@ inline const void *at(unsigned offset, const void *mem)
 {
 	using ValueType = typename Tp::Repr::Type<F>;
 	return static_cast<const void *>(static_cast<const ValueType *>(mem) + offset);
+}
+
+template <Tp::Repr::Flags F, class B>
+inline auto at(const Tp::PointRowCol &point, const Tp::Roi &roi, B mem) -> B
+{
+	return at<F>(pointOffset<F>(point, roi), mem);
+}
+
+template <Tp::Repr::Flags F, class ...Ts>
+inline Tp::NumVariant atAsVariant(Ts &&...aArgs)
+{
+	return {*static_cast<const ReTp<F> *>(at<F>(std::forward<Ts>(aArgs)...))};
 }
 
 }  // namespace Ut
