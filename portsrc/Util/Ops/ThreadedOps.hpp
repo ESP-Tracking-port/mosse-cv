@@ -11,6 +11,7 @@
 #include "Util/Helper/En.h"
 #include "Util/Helper/Apply.hpp"
 #include <tuple>
+#include <cassert>
 
 namespace Mosse {
 namespace Tp {
@@ -64,6 +65,11 @@ public:
 		return reinterpret_cast<const void *>(storage.result);
 	}
 
+	inline bool isDone() const
+	{
+		return nullptr == executorCb;
+	}
+
 	ThreadedOps(Ops &);
 
 	/// \tparam C method pointer
@@ -81,7 +87,9 @@ private:
 	template <class C, class R, class ...Args>
 	inline void exec()
 	{
+		assert(isDone());
 		execImpl<C, R, Args...>(nullptr);
+		executorCb = nullptr;
 	}
 
 	template <class C, class R, class ...Args>
@@ -113,7 +121,7 @@ private:
 private:
 	Storage storage;
 	Ops &ops;
-	ExecutorType executorCb;
+	ExecutorType executorCb;  ///< Pointer to executor method. Also serves as a spinlock.
 };
 
 }  // namespace Ut
