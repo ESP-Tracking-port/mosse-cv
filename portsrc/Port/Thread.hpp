@@ -8,13 +8,15 @@
 #if !defined(MOSSE_PORTSRC_PORT_THREAD_HPP_)
 #define MOSSE_PORTSRC_PORT_THREAD_HPP_
 
+#include <memory>
+
 namespace Mosse {
 namespace Port {
 
 class Task;
 
 struct Thread {
-	virtual void init(Task &) = 0;
+	std::unique_ptr<Thread> makeFromTask(Task &) = 0;
 
 	/// \brief Starts the thread running the task it's been provided with
 	///
