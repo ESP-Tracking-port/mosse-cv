@@ -9,7 +9,7 @@
 #include "Mosse.hpp"
 #include "MosseApi.hpp"
 #include "Util/Arithm/MemLayout.hpp"
-#include "MossePort.hpp"
+#include "Port/MossePort.hpp"
 #include "RawF32Ops.hpp"
 
 static constexpr auto kEta = 0.125f;
