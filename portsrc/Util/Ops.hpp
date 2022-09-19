@@ -83,8 +83,21 @@ public:
 		roiFrag = aRoiFrag;
 		ohdebug(Ops::setRoiFragment, "roi fragment", roiFragment());
 	}
-	virtual Tp::NumVariant imageLog2Sum(Tp::Image aImage);  ///< Crops the image and calculates sum of its log2-transformed log2-transformed image pixel values
-	virtual Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean);  ///< Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
+
+	/// \brief Calculates sum of the image's log2-transformed log2-transformed image pixel values.
+	/// \returns Float
+	///
+	virtual Tp::NumVariant imageLog2Sum(Tp::Image aImage);
+
+	/// \brief Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
+	/// \returns float
+	///
+	virtual Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean);
+
+	/// \brief Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
+	/// \arg aLog2Sum - expects to be storing float
+	/// \arg aAbsDevLog2Sum - expects to be storing float
+	///
 	virtual void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
 		Tp::NumVariant aAbsDevLog2Sum);
 protected:
