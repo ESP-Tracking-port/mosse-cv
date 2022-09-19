@@ -94,19 +94,21 @@ public:
 	///
 	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum)
 	{
-		// TODO enable parallel processing
 		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
+		auto mapBlock = Ut::makeEigenBlock(map, roiFragment());
 
 		if (nullptr == sum) {
 			MaxVisitor<ReprBuffer> visitor;
-			map.visit(visitor);
+			mapBlock.visit(visitor);
 			aPos = visitor.pos;
 		} else {
 			CompositeVisitor<ReprBuffer, MaxVisitor<ReprBuffer>, FloatSumVisitor<ReprBuffer>> visitor;
-			map.visit(visitor);
+			mapBlock.visit(visitor);
 			*sum = visitor.template get<1>().sum;
 			aPos = visitor.template get<0>().pos;
 		}
+
+		aPos += roiFragment().origin;
 	}
 
 	void imagePreprocess(void *) override
