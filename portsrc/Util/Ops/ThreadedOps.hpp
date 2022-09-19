@@ -62,6 +62,13 @@ private:
 		decltype(&MethodPtrStub::c1) c1;
 	};
 
+	/// \brief Direct "pointer-to-member-pointer" cast is prohibited
+	///
+	template <class M>
+	struct MethodWrapper {
+		M method;
+	};
+
 	struct Storage {
 		std::uint8_t args[sizeof(ArgsSzofMarker)];
 		std::uint8_t result[sizeof(Result)];
@@ -101,7 +108,7 @@ public:
 	{
 		using ReturnType = decltype((ops.*c)(std::forward<Args>(aArgs)...));
 		new (storage.args) std::tuple<Args...>(aArgs...);
-		new (storage.method) C{c};
+		new (storage.method) MethodWrapper<C>{c};
 		executorCb = &ThreadedOps::exec<C, ReturnType, Args...>;
 	}
 private:
@@ -117,12 +124,12 @@ private:
 	template <class C, class R, class ...Args>
 	void execImpl(En<!std::is_same<void, R>::value> = nullptr)
 	{
-		auto methodPtr = reinterpret_cast<C>(storage.method);
+		auto *methodWrapper = reinterpret_cast<MethodWrapper<C> *>(storage.method);
 		auto &args = *reinterpret_cast<std::tuple<Args...> *>(storage.args);
 		auto invokeCb =
-			[methodPtr, this, &args](Args ...aArgs)
+			[methodWrapper, this, &args](Args ...aArgs)
 			{
-				return (ops.*methodPtr)(aArgs...);
+				return (ops.*(methodWrapper->method))(aArgs...);
 			};
 		// TODO test apply
 		new (storage.result) R{apply(invokeCb, args)};
@@ -131,12 +138,12 @@ private:
 	template <class C, class R, class ...Args>
 	void execImpl(En<std::is_same<void, R>::value> = nullptr)
 	{
-		auto methodPtr = reinterpret_cast<C>(storage.method);
+		auto *methodWrapper = reinterpret_cast<MethodWrapper<C> *>(storage.method);
 		auto &args = *reinterpret_cast<std::tuple<Args...> *>(storage.args);
 		auto invokeCb =
-			[methodPtr, this, &args](Args ...aArgs)
+			[methodWrapper, this, &args](Args ...aArgs)
 			{
-				(ops.*methodPtr)(aArgs...);
+				return (ops.*(methodWrapper->method))(aArgs...);
 			};
 		apply(invokeCb, args);
 	}
