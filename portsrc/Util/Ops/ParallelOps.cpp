@@ -5,10 +5,10 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
-#include "Port/MossePort.hpp"
-#include "Port/Thread.hpp"
 #include "Types/Tracking.hpp"
 #include "Types/Repr.hpp"
+#include "Port/MossePort.hpp"
+#include "Port/Thread.hpp"
 #include "ParallelOps.hpp"
 #include "Util/Ops/ThreadedOps.hpp"
 #include <cassert>
