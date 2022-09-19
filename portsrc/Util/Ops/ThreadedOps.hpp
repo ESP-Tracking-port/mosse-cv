@@ -45,6 +45,10 @@ private:
 	struct MethodPtrStub {
 		void c0(int, void *, char, Tp::Image);
 		virtual void c1(Tp::Image) = 0;
+		void c2();
+		virtual void c3(int, char, bool, Tp::Image);
+		static_assert(sizeof(&MethodPtrStub::c3) == sizeof(&MethodPtrStub::c1)
+			&& sizeof(&MethodPtrStub::c0) == sizeof(&MethodPtrStub::c2), "");
 	};
 
 	union MethodPtrSzofMarker {
