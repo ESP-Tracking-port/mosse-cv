@@ -9,7 +9,7 @@
 #include "Types/Repr.hpp"
 #include "Util/Arithm/Conv.hpp"
 #include "Util/Helper/EigenMem.hpp"
-#include "MossePort.hpp"
+#include "Port/MossePort.hpp"
 #include "Ops.hpp"
 #include "MosseApi.hpp"
 
