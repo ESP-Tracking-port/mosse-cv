@@ -94,6 +94,7 @@ public:
 	///
 	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum)
 	{
+		// TODO enable parallel processing
 		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
 
 		if (nullptr == sum) {
