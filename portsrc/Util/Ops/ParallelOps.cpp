@@ -113,6 +113,19 @@ Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
 	return ret;
 }
 
+Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean)
+{
+	setExec(&Ops::imageAbsDevLog2Sum, aImage, aMean);
+	Tp::NumVariant ret{0.0f};
+	ret = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), ret,
+		[](const Tp::NumVariant &aInit, const ThreadedOps &aRhs)
+		{
+			return Tp::NumVariant{aInit.f32 + aRhs.result().numVariant.f32};
+		});
+
+	return ret;
+}
+
 void ParallelOps::Threading::waitDone()
 {
 	for (auto op : threadedOpWrappers) {
