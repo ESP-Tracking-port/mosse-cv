@@ -3,7 +3,7 @@
 #include "selectROI.h"
 #include "MallocCounter.hpp"
 #include <Mosse.hpp>
-#include <MossePort.hpp>
+#include <Port/MossePort.hpp>
 
 Mosse::Tracker *sTracker;
 constexpr static bool sUsePredefinedRoi = true;
@@ -140,8 +140,8 @@ void img2avi(char* address)
 int main()
 {
 	//img2avi((char*)"img");
-	sTracker = &Mosse::getDebugStub();
-//	sTracker = &Mosse::getNaive();
+//	sTracker = &Mosse::getDebugStub();
+	sTracker = &Mosse::getNaive();
 	runPort();
 //	run();
 	debug(MallocCounter::getPeakCount());
