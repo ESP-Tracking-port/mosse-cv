@@ -9,6 +9,7 @@
 #define MOSSE_OPS_PARALLELOPS_HPP_
 
 #include "Util/Ops.hpp"
+#include "Util/Ops/ThreadedOps.hpp"
 #include <vector>
 #include <functional>
 #include <memory>
@@ -22,8 +23,6 @@ class Thread;
 
 namespace Ut {
 
-class ThreadedOps;
-
 class ParallelOps : public Ops {
 private:
 	struct Threading {
@@ -33,8 +32,19 @@ private:
 public:
 	void requestStop();
 	ParallelOps(std::vector<std::reference_wrapper<Ops>> ops, Port::Thread &thread);
+	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) override;
 protected:
 	void initImpl() override;
+	void fft2(void *aBufferComplex) override;
+	void ifft2(void *aBufferComplex) override;
+private:
+	template <class C, class ...Ts>
+	inline void setExec(C &&c, Ts &&...aArgs)
+	{
+		for (auto op : threading.threadedOpWrappers) {
+			op.setExec(c, std::forward<Ts>(aArgs)...);
+		}
+	}
 private:
 	std::vector<std::reference_wrapper<Ops>> ops;
 	Threading threading;

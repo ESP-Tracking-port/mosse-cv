@@ -37,6 +37,11 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops>> aOps, Port::Th
 	}
 }
 
+void ParallelOps::imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex)
+{
+	setExec(&Ops::imageConvFftDomain, aioCropFft2Complex, aMatrixAcomlex, aMatrixBcomplex);
+}
+
 /// \brief Designate each Ops instance with its ROI fragment
 ///
 void ParallelOps::initImpl()
@@ -67,6 +72,16 @@ void ParallelOps::initImpl()
 		frag.size(1) += remainder;
 		ops[ops.size() - 1].get().setRoiFragment(frag);
 	}
+}
+
+void ParallelOps::fft2(void *aBufferComplex)
+{
+	ops[0].get().fft2(aBufferComplex);
+}
+
+void ParallelOps::ifft2(void *aBufferComplex)
+{
+	ops[0].get().ifft2(aBufferComplex);
 }
 
 }  // namespace Ut
