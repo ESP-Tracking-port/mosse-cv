@@ -16,7 +16,7 @@ namespace Mosse {
 namespace Tp {
 
 class Image;
-class NumVariant;
+union NumVariant;
 
 }  // namespace Tp
 
@@ -25,6 +25,10 @@ namespace Ut {
 class Ops;
 
 class ThreadedOps {
+public:
+	union Result {
+		Tp::NumVariant numVariant;
+	};
 private:
 
 	/// \brief Being used as a marker to determine the size of the storage. It only covers argument sets w/ the max.
@@ -37,7 +41,7 @@ private:
 	};
 
 	struct MethodPtrStub {
-		void c0(int, void, char, Tp::Image);
+		void c0(int, void *, char, Tp::Image);
 		virtual void c1(Tp::Image) = 0;
 	};
 
@@ -55,13 +59,9 @@ private:
 
 	using ExecutorType = void (ThreadedOps::*)();
 public:
-	union Result {
-		Tp::NumVariant numVariant;
-	};
-public:
 	inline const void *result() const
 	{
-		return static_cast<void *>(storage.result);
+		return reinterpret_cast<const void *>(storage.result);
 	}
 
 	ThreadedOps(Ops &);
@@ -81,7 +81,7 @@ private:
 	template <class C, class R, class ...Args>
 	inline void exec()
 	{
-		execImpl<C, R, Args...>();
+		execImpl<C, R, Args...>(nullptr);
 	}
 
 	template <class C, class R, class ...Args>
@@ -90,7 +90,7 @@ private:
 		auto methodPtr = reinterpret_cast<C>(storage.method);
 		auto &args = *reinterpret_cast<std::tuple<Args...> *>(storage.args);
 		auto invokeCb =
-			[methodPtr, &ops, &args](Args ...aArgs)
+			[methodPtr, this, &args](Args ...aArgs)
 			{
 				return (ops.*methodPtr)(aArgs...);
 			};
@@ -104,7 +104,7 @@ private:
 		auto methodPtr = reinterpret_cast<C>(storage.method);
 		auto &args = *reinterpret_cast<std::tuple<Args...> *>(storage.args);
 		auto invokeCb =
-			[methodPtr, &ops, &args](Args ...aArgs)
+			[methodPtr, this, &args](Args ...aArgs)
 			{
 				(ops.*methodPtr)(aArgs...);
 			};
