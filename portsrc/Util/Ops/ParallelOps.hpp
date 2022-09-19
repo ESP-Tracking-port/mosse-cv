@@ -11,13 +11,27 @@
 #include "Util/Ops.hpp"
 #include <vector>
 #include <functional>
+#include <memory>
 
 namespace Mosse {
+namespace Port {
+
+class Thread;
+
+}  // namespace Port
+
 namespace Ut {
 
 class ParallelOps : public Ops {
+private:
+	struct Threading {
+		Port::Thread &thread;
+		std::vector<std::unique_ptr<Port::Thread>> opThreads;
+		// TODO ThreadedOp-s
+	};
 public:
-	ParallelOps(std::vector<std::reference_wrapper<Ops>> ops);
+	// TODO tear down threads
+	ParallelOps(std::vector<std::reference_wrapper<Ops>> ops, Port::Thread &thread);
 protected:
 	void initImpl() override;
 private:

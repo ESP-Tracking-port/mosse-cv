@@ -6,6 +6,7 @@
 //
 
 #include "Port/MossePort.hpp"
+#include "Port/Thread.hpp"
 #include "Types/Tracking.hpp"
 #include "ParallelOps.hpp"
 #include <cassert>
@@ -13,7 +14,7 @@
 namespace Mosse {
 namespace Ut {
 
-ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops> > aOps) : ops{aOps}
+ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops>> aOps, Port::Thread &) : ops{aOps}
 {
 	// TODO spawn threads
 	// TODO assert size
