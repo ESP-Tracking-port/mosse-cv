@@ -9,10 +9,13 @@
 #include "Types/Repr.hpp"
 #include "Port/MossePort.hpp"
 #include "Port/Thread.hpp"
-#include "ParallelOps.hpp"
 #include "Util/Ops/ThreadedOps.hpp"
+#include "Util/Arithm/Arithm.hpp"
+#include "Util/Arithm/MemLayout.hpp"
 #include <cassert>
 #include <numeric>
+#include <algorithm>
+#include "ParallelOps.hpp"
 
 namespace Mosse {
 namespace Ut {
@@ -130,6 +133,44 @@ void ParallelOps::imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferCom
 	Tp::NumVariant aAbsDevLog2Sum)
 {
 	setExec(&Ops::imageCropPreprocessImpl, aImageReal, aBufferComplex, aLog2Sum, aAbsDevLog2Sum);
+}
+
+void ParallelOps::maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *aSum)
+{
+	std::vector<Tp::PointRowCol> peakPos;
+	std::vector<float> sum;
+	peakPos.reserve(ops.size());
+
+	// Start operations and wait for them to finish
+
+	if (nullptr != aSum) {
+		sum.reserve(ops.size());
+		*aSum = 0.0f;
+	}
+
+	for (std::size_t i = 0; i < ops.size(); ++i) {
+		if (nullptr == aSum) {
+			threading.threadedOpWrappers[i].setExec(&Ops::maxReal, aComplexBuffer, peakPos[i], nullptr);
+		} else {
+			threading.threadedOpWrappers[i].setExec(&Ops::maxReal, aComplexBuffer, peakPos[i], &sum[i]);
+		}
+	}
+
+	// Merge the results into one
+
+	threading.waitDone();
+	aPeakPos = *std::max_element(peakPos.begin(), peakPos.end(),
+		[this, aComplexBuffer](const Tp::PointRowCol &aLargest, const Tp::PointRowCol &aCandidate)
+		{
+			auto largest = lowLevelAtomics.buffer.memLayout.atAsVariant(aLargest, roi(), aComplexBuffer);
+			auto candidate = lowLevelAtomics.buffer.memLayout.atAsVariant(aCandidate, roi(), aComplexBuffer);
+
+			return lowLevelAtomics.buffer.arithm.gt(candidate, largest);
+		});
+
+	if (nullptr != aSum) {
+		*aSum = std::accumulate(sum.begin(), sum.end(), 0.0f);
+	}
 }
 
 void ParallelOps::Threading::waitDone()
