@@ -26,6 +26,12 @@ namespace Ut {
 
 class Ops;
 
+/// \brief Wraps an instance of Ops, provides an easy-to-use API to swap worker `Ops` methods. Enables multi-threaded
+/// working of `Ops` instances.
+///
+/// \warning Considering number and structure of inter-thread interactions, lock-free synchronization approach
+/// suffices. But it must be revised, if this presupposition is no longer correct.
+///
 class ThreadedOps : Port::Task {
 public:
 	union Result {
@@ -70,12 +76,14 @@ public:
 		return reinterpret_cast<const void *>(storage.result);
 	}
 
+	/// \brief Spinlock. Checks whether the current op is finished.
+	///
 	inline bool isDone() const
 	{
 		return nullptr == executorCb;
 	}
 
-	inline bool stop()
+	inline void requestStop()
 	{
 		shouldRun = false;
 	}
