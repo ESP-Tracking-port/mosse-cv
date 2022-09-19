@@ -17,7 +17,7 @@ void ThreadedOps::run()
 	shouldRun = true;
 
 	while (shouldRun) {
-		if (isDone()) {
+		if (!isDone()) {
 			(this->*executorCb)();
 		}
 	}
