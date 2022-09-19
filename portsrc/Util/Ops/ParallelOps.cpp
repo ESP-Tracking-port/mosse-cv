@@ -94,5 +94,14 @@ void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComple
 	setExec(&Ops::matbUpdate, aMatBcomplex, aImageCropFftComplex, aInitial);
 }
 
+void ParallelOps::Threading::waitDone()
+{
+
+	for (auto op : threadedOpWrappers) {
+		while (!op.isDone()) {
+		}
+	}
+}
+
 }  // namespace Ut
 }  // namespace Mosse

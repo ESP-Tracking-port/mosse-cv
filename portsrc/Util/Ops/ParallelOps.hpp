@@ -28,6 +28,7 @@ private:
 	struct Threading {
 		std::vector<ThreadedOps> threadedOpWrappers;
 		std::vector<std::unique_ptr<Port::Thread>> opThreads;
+		void waitDone();
 	};
 public:
 	void requestStop();
@@ -46,6 +47,8 @@ private:
 		for (auto op : threading.threadedOpWrappers) {
 			op.setExec(c, std::forward<Ts>(aArgs)...);
 		}
+
+		threading.waitDone();
 	}
 private:
 	std::vector<std::reference_wrapper<Ops>> ops;
