@@ -5,14 +5,14 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
-#include "MossePort.hpp"
+#include "Port/MossePort.hpp"
 #include "Types/Port.hpp"
 #include "Types/Tracking.hpp"
 #include "Types/Repr.hpp"
 #include "Util/Mem.hpp"
 #include "Util/Ops.hpp"
 #include "Tracker.hpp"
-#include "MossePort.hpp"
+#include "Port/MossePort.hpp"
 
 namespace Mosse {
 
