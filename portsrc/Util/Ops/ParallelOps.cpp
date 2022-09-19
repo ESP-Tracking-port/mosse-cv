@@ -37,7 +37,7 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops>> aOps, Port::Th
 	}
 }
 
-/// \brief Designate each Ops instance with its ROI fragment to get it processed in parallel
+/// \brief Designate each Ops instance with its ROI fragment
 ///
 void ParallelOps::initImpl()
 {
