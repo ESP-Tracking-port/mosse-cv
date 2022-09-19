@@ -1,7 +1,7 @@
 #ifndef _TRACKER_H_HH
 #define _TRACKER_H_HH
 
-#include "MossePort.hpp"
+#include "Port/MossePort.hpp"
 #include "Util/Ops.hpp"
 
 # if !MOSSE_USE_OPENCV
