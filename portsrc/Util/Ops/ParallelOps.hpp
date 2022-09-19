@@ -42,6 +42,8 @@ protected:
 	void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial) override;
 	Tp::NumVariant imageLog2Sum(Tp::Image aImage) override;
 	Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean) override;
+	void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
+		Tp::NumVariant aAbsDevLog2Sum) override;
 private:
 	template <class C, class ...Ts>
 	inline void setExec(C &&c, Ts &&...aArgs)

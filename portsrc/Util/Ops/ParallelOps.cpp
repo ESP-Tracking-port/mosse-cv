@@ -107,7 +107,7 @@ Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
 	ret = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), ret,
 		[](const Tp::NumVariant &aInit, const ThreadedOps &aRhs)
 		{
-			return Tp::NumVariant{aInit.f32 + aRhs.result().numVariant.f32};
+			return Tp::NumVariant{aInit.f32 + aRhs.result().numVariant.f32};  // WARN May get broken after certain changes. See the description for `Ops`
 		});
 
 	return ret;
@@ -120,10 +120,16 @@ Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant 
 	ret = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), ret,
 		[](const Tp::NumVariant &aInit, const ThreadedOps &aRhs)
 		{
-			return Tp::NumVariant{aInit.f32 + aRhs.result().numVariant.f32};
+			return Tp::NumVariant{aInit.f32 + aRhs.result().numVariant.f32};  // WARN May get broken after certain changes. See the description for `Ops`
 		});
 
 	return ret;
+}
+
+void ParallelOps::imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
+	Tp::NumVariant aAbsDevLog2Sum)
+{
+	setExec(&Ops::imageCropPreprocessImpl, aImageReal, aBufferComplex, aLog2Sum, aAbsDevLog2Sum);
 }
 
 void ParallelOps::Threading::waitDone()
