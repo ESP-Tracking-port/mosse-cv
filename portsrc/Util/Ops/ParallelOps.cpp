@@ -24,8 +24,8 @@ void ParallelOps::requestStop()
 	}
 }
 
-ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops>> aOps, Port::Thread &aThread) : ops{aOps},
-	threading{{}, {}}
+ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops>> aOps, Port::Thread &aThread, ArithmBase &aArithmBase,
+		MemLayoutBase &aMemLayoutBase) : ops{aOps}, threading{{}, {}}, lowLevelAtomics{{aArithmBase, aMemLayoutBase}}
 {
 	assert(ops.size() > 0);
 	threading.threadedOpWrappers.reserve(ops.size());

@@ -23,6 +23,9 @@ class Thread;
 
 namespace Ut {
 
+class ArithmBase;
+class MemLayoutBase;
+
 class ParallelOps : public Ops {
 private:
 	struct Threading {
@@ -30,9 +33,20 @@ private:
 		std::vector<std::unique_ptr<Port::Thread>> opThreads;
 		void waitDone();
 	};
+
+	/// \brief Low level memory and arithmetic operations overriden for a particular implementation being used
+	///
+	struct LowLevelAtomics {
+		struct {
+			ArithmBase &arithm;
+			MemLayoutBase &memLayout;
+		} buffer;
+	};
+
 public:
 	void requestStop();
-	ParallelOps(std::vector<std::reference_wrapper<Ops>> ops, Port::Thread &thread);
+	ParallelOps(std::vector<std::reference_wrapper<Ops>> ops, Port::Thread &thread, ArithmBase &aArithmBaseBuffer,
+		MemLayoutBase &aMemLayoutBaseBuffer);
 	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) override;
 protected:
 	void initImpl() override;
@@ -57,6 +71,7 @@ private:
 private:
 	std::vector<std::reference_wrapper<Ops>> ops;
 	Threading threading;
+	LowLevelAtomics lowLevelAtomics;
 };
 
 }  // namespace Ut
