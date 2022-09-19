@@ -121,6 +121,24 @@ inline Tp::NumVariant atAsVariant(Ts &&...aArgs)
 	return {*static_cast<const ReTp<F> *>(at<F>(std::forward<Ts>(aArgs)...))};
 }
 
+struct MemLayoutBase {
+	virtual Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, void *mem) = 0;
+	virtual Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, const void *mem) = 0;
+};
+
+template <Tp::Repr::Flags F>
+struct MemLayout : MemLayoutBase {
+	Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, void *mem) override
+	{
+		return atAsVariant<F>(aCoordinates, aRoi, mem);
+	}
+
+	Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, const void *mem) override
+	{
+		return atAsVariant<F>(aCoordinates, aRoi, mem);
+	}
+};
+
 }  // namespace Ut
 }  // namespace Mosse
 
