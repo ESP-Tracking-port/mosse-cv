@@ -104,6 +104,27 @@ class Geometry {
 ///
 union NumVariant {
 	float f32;
+	std::int16_t i16;
+
+	inline operator std::int16_t &()
+	{
+		return i16;
+	}
+
+	inline operator float &()
+	{
+		return f32;
+	}
+
+	inline operator std::int16_t() const
+	{
+		return i16;
+	}
+
+	inline operator float()
+	{
+		return f32;
+	}
 };
 
 }  // namespace Tp
