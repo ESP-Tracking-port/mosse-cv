@@ -16,6 +16,13 @@
 namespace Mosse {
 namespace Ut {
 
+void ParallelOps::requestStop()
+{
+	for (auto op : threading.threadedOpWrappers) {
+		op.requestStop();
+	}
+}
+
 ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops>> aOps, Port::Thread &aThread) : ops{aOps},
 	threading{{}, {}}
 {

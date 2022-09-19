@@ -31,7 +31,7 @@ private:
 		std::vector<std::unique_ptr<Port::Thread>> opThreads;
 	};
 public:
-	// TODO tear down threads
+	void requestStop();
 	ParallelOps(std::vector<std::reference_wrapper<Ops>> ops, Port::Thread &thread);
 protected:
 	void initImpl() override;
