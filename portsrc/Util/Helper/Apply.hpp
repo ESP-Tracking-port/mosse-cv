@@ -10,13 +10,14 @@
 
 #include "Util/Helper/IndexSequence.hpp"
 #include <tuple>
+#include <type_traits>
 
 namespace Mosse {
 namespace Ut {
 namespace Impl {
 
 template <class C, class T, unsigned ...Is>
-auto apply(C &&aCallable, T &&aTuple, IndexSequence<Is...>) -> decltype(aCallable(std::get<Is>(aTuple)...))
+auto applyImpl(C &&aCallable, T &&aTuple, IndexSequence<Is...>) -> decltype(aCallable(std::get<Is>(aTuple)...))
 {
 	return aCallable(std::get<Is>(aTuple)...);
 }
@@ -24,11 +25,11 @@ auto apply(C &&aCallable, T &&aTuple, IndexSequence<Is...>) -> decltype(aCallabl
 }  // namespace Impl
 
 template <class C, class T>
-inline auto apply(C &&aCallable, T &&aTuple) -> decltype(Impl::apply(std::forward<C>(aCallable),
-	std::forward<T>(aTuple)), makeIndexSequence<std::tuple_size<T>::value>())
+inline auto apply(C &&aCallable, T &&aTuple) -> decltype(Impl::applyImpl(std::forward<C>(aCallable),
+	std::forward<T>(aTuple), makeIndexSequence<std::tuple_size<typename std::remove_reference<T>::type>::value>()))
 {
-	return Impl::apply(std::forward<C>(aCallable), std::forward<T>(aTuple)),
-		makeIndexSequence<std::tuple_size<T>::value>();
+	return Impl::applyImpl(std::forward<C>(aCallable), std::forward<T>(aTuple),
+		makeIndexSequence<std::tuple_size<typename std::remove_reference<T>::type>::value>());
 }
 
 }  // namespace Ut
