@@ -107,8 +107,7 @@ Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
 	ret = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), ret,
 		[](const Tp::NumVariant &aInit, const ThreadedOps &aRhs)
 		{
-			const Tp::NumVariant &result = *reinterpret_cast<const Tp::NumVariant *>(aRhs.result());
-			return Tp::NumVariant{aInit.f32 + result.f32};
+			return Tp::NumVariant{aInit.f32 + aRhs.result().numVariant.f32};
 		});
 
 	return ret;
