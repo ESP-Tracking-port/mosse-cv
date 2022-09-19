@@ -193,6 +193,21 @@ inline bool gt(ReTp<F1> aLhs, ReTp<F2>(aRhs))
 	return Impl::Gt<F1 & Tp::Repr::MaskTraitScalar, F2 & Tp::Repr::MaskTraitScalar>::call(aLhs, aRhs);
 }
 
+/// \brief Convenient wrapper over arithmetic operaitons. Removes the necessity to use templates in modules where
+/// there are only a few arithmetic operations required.
+///
+struct ArithmBase {
+	virtual bool gt(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs) = 0;
+};
+
+template <Tp::Repr::Flags F>
+struct Arithm : ArithmBase {
+	bool gt(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs) override
+	{
+		return gt<F>(aLhs, aRhs);
+	}
+};
+
 }  // namespace Ut
 }  // namespace Mosse
 
