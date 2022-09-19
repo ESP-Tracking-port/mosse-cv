@@ -71,15 +71,15 @@ private:
 
 	struct Storage {
 		std::uint8_t args[sizeof(ArgsSzofMarker)];
-		std::uint8_t result[sizeof(Result)];
 		std::uint8_t method[sizeof(MethodPtrSzofMarker)];
+		Result result;
 	};
 
 	using ExecutorType = void (ThreadedOps::*)();
 public:
-	inline const void *result() const
+	inline const Result &result() const
 	{
-		return reinterpret_cast<const void *>(storage.result);
+		return storage.result;
 	}
 
 	/// \brief Spinlock. Checks whether the current op is finished.
@@ -131,8 +131,7 @@ private:
 			{
 				return (ops.*(methodWrapper->method))(aArgs...);
 			};
-		// TODO test apply
-		new (storage.result) R{apply(invokeCb, args)};
+		storage.result = {R{apply(invokeCb, args)}};
 	}
 
 	template <class C, class R, class ...Args>
