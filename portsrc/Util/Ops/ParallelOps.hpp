@@ -37,6 +37,8 @@ protected:
 	void initImpl() override;
 	void fft2(void *aBufferComplex) override;
 	void ifft2(void *aBufferComplex) override;
+	void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial) override;
+	void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial) override;
 private:
 	template <class C, class ...Ts>
 	inline void setExec(C &&c, Ts &&...aArgs)

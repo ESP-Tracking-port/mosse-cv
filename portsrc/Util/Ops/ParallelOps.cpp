@@ -84,5 +84,15 @@ void ParallelOps::ifft2(void *aBufferComplex)
 	ops[0].get().ifft2(aBufferComplex);
 }
 
+void ParallelOps::mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial)
+{
+	setExec(&Ops::mataUpdate, aMatAcomplex, aImageCropFftComplex, aInitial);
+}
+
+void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial)
+{
+	setExec(&Ops::matbUpdate, aMatBcomplex, aImageCropFftComplex, aInitial);
+}
+
 }  // namespace Ut
 }  // namespace Mosse
