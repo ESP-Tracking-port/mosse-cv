@@ -26,6 +26,10 @@ void ParallelOps::initImpl()
 	assert(fragRows > 0);
 	auto frag = roiFragment();
 
+	for (auto op : ops) {
+		op.get().init(roi());
+	}
+
 	// Set each `Ops` instance its ROI fragment so it can be processed in parallel fashion
 	{
 		const auto fragShift = {fragRows, 0};
