@@ -59,6 +59,8 @@ protected:
 	void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
 		Tp::NumVariant aAbsDevLog2Sum) override;
 	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *aSum) override;
+	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
+		Tp::PointRowCol aMask = {11, 11}) override;
 private:
 	template <class C, class ...Ts>
 	inline void setExec(C &&c, Ts &&...aArgs)

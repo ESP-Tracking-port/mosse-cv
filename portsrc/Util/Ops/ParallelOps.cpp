@@ -173,6 +173,12 @@ void ParallelOps::maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos,
 	}
 }
 
+float ParallelOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak,
+	float aSumHint, Tp::PointRowCol aMask)
+{
+	return ops[0].get().calcPsr(aComplexBuffer, aPeak, aSumHint, aMask);
+}
+
 void ParallelOps::Threading::waitDone()
 {
 	for (auto op : threadedOpWrappers) {
