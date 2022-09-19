@@ -8,6 +8,7 @@
 #if !defined(MOSSE_UTIL_OPS_THREADEDOPS_HPP_)
 #define MOSSE_UTIL_OPS_THREADEDOPS_HPP_
 
+#include "Port/Task.hpp"
 #include "Util/Helper/En.h"
 #include "Util/Helper/Apply.hpp"
 #include <tuple>
@@ -25,7 +26,7 @@ namespace Ut {
 
 class Ops;
 
-class ThreadedOps {
+class ThreadedOps : Port::Task {
 public:
 	union Result {
 		Tp::NumVariant numVariant;
@@ -70,8 +71,18 @@ public:
 		return nullptr == executorCb;
 	}
 
+	inline bool stop()
+	{
+		shouldRun = false;
+	}
+
+	void run() override;
 	ThreadedOps(Ops &);
 
+	/// \brief Shortcut for creating compile time wrappers over the methods of `Ops`. It saves method pointer,
+	/// arguments, and invokes those in a parallel thread using the instance of `Ops` provided during construction.
+	/// See `exec`, `execImpl`, and `run` for more info
+	///
 	/// \tparam C method pointer
 	/// \tparam Args arguments for the method
 	template <class C, class ...Args>
@@ -122,6 +133,7 @@ private:
 	Storage storage;
 	Ops &ops;
 	ExecutorType executorCb;  ///< Pointer to executor method. Also serves as a spinlock.
+	bool shouldRun;  ///< Hook for ensuring thread termination
 };
 
 }  // namespace Ut

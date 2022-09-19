@@ -12,6 +12,17 @@
 namespace Mosse {
 namespace Ut {
 
+void ThreadedOps::run()
+{
+	shouldRun = true;
+
+	while (shouldRun) {
+		if (isDone()) {
+			(this->*executorCb)();
+		}
+	}
+}
+
 ThreadedOps::ThreadedOps(Ops &aOps) : storage{{0}, {0}, {0}}, ops{aOps}, executorCb{nullptr}
 {
 }
