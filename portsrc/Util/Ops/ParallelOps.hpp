@@ -22,12 +22,13 @@ class Thread;
 
 namespace Ut {
 
+class ThreadedOps;
+
 class ParallelOps : public Ops {
 private:
 	struct Threading {
-		Port::Thread &thread;
+		std::vector<ThreadedOps> threadedOpWrappers;
 		std::vector<std::unique_ptr<Port::Thread>> opThreads;
-		// TODO ThreadedOp-s
 	};
 public:
 	// TODO tear down threads
@@ -36,6 +37,7 @@ protected:
 	void initImpl() override;
 private:
 	std::vector<std::reference_wrapper<Ops>> ops;
+	Threading threading;
 };
 
 }  // namespace Ut

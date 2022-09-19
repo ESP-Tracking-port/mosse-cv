@@ -16,10 +16,18 @@
 namespace Mosse {
 namespace Ut {
 
-ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops>> aOps, Port::Thread &) : ops{aOps}
+ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops>> aOps, Port::Thread &aThread) : ops{aOps},
+	threading{{}, {}}
 {
-	// TODO spawn threads
-	// TODO assert size
+	assert(ops.size() > 0);
+	threading.threadedOpWrappers.reserve(ops.size());
+	threading.opThreads.reserve(ops.size());
+
+	for (auto op : ops) {
+		threading.threadedOpWrappers.emplace_back(op);
+		threading.opThreads.emplace_back(aThread.makeFromTask(threading.threadedOpWrappers.back()));
+		threading.opThreads.back()->start();
+	}
 }
 
 /// \brief Designate each Ops instance with its ROI fragment to get it processed in parallel
@@ -27,7 +35,7 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops>> aOps, Port::Th
 void ParallelOps::initImpl()
 {
 	Ops::initImpl();  // TODO (XXX): Any unintended effects?
-	const auto fragRows = roi().size(0) / ops.size();  // TODO handle uneven split
+	const auto fragRows = roi().size(0) / ops.size();
 	assert(fragRows > 0);
 	auto frag = roiFragment();
 
