@@ -16,7 +16,7 @@ namespace Port {
 class Task;
 
 struct Thread {
-	std::unique_ptr<Thread> makeFromTask(Task &) = 0;
+	virtual std::unique_ptr<Thread> makeFromTask(Task &) = 0;
 
 	/// \brief Starts the thread running the task it's been provided with
 	///
