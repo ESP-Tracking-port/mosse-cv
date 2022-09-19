@@ -66,7 +66,6 @@ private:
 		std::uint8_t args[sizeof(ArgsSzofMarker)];
 		std::uint8_t result[sizeof(Result)];
 		std::uint8_t method[sizeof(MethodPtrSzofMarker)];
-		// TODO: (XXX) static assert checking that all method pointers have the same `sizeof(...`)
 	};
 
 	using ExecutorType = void (ThreadedOps::*)();
