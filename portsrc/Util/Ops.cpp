@@ -33,7 +33,7 @@ void DecomposedOps::imageCropInto(Tp::Image aImage, void *aBufferCplx)
 	imageCropPreprocessImpl(aImage, aBufferCplx, {mean}, {stddev});
 }
 
-void Ops::imagePreprocess(void *)
+void DecomposedOps::imagePreprocess(void *)
 {
 }
 

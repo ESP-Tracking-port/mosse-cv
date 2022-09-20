@@ -50,7 +50,7 @@ public:
 	/// and imaginary channels
 	///
 	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) = 0;
-	virtual void imagePreprocess(void *aCropComplex) = 0;  ///< Obsolete
+	virtual void imagePreprocess(void *aCropComplex) = 0;  ///< Some implementations may implement preprocessing right inside `imageCropInto`, because both of these functions are guaranteed to use in this exact sequence, one after another.
 	virtual void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) = 0;
 	virtual void fft2(void *aBufferComplex) = 0;
 	virtual void ifft2(void *aBufferComplex) = 0;
@@ -109,6 +109,7 @@ private:
 class DecomposedOps : public Ops {
 public:
 	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override;
+	void imagePreprocess(void *) override;
 	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
 		Tp::PointRowCol aMask = {11, 11}) override;
 
