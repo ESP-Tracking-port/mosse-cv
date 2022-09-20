@@ -24,7 +24,7 @@ union NumVariant;
 
 namespace Ut {
 
-class Ops;
+class DecomposedOps;
 
 /// \brief Wraps an instance of Ops, provides an easy-to-use API to swap worker `Ops` methods. Enables multi-threaded
 /// execution of `Ops` instances.
@@ -95,7 +95,7 @@ public:
 	}
 
 	void run() override;
-	ThreadedOps(Ops &);
+	ThreadedOps(DecomposedOps &);
 
 	/// \brief Shortcut for creating compile time wrappers over the methods of `Ops`. It saves method pointer,
 	/// arguments, and invokes those in a parallel thread using the instance of `Ops` provided during construction.
@@ -148,7 +148,7 @@ private:
 	}
 private:
 	Storage storage;
-	Ops &ops;
+	DecomposedOps &ops;
 	ExecutorType executorCb;  ///< Pointer to executor method. Also serves as a spinlock.
 	bool shouldRun;  ///< Hook for ensuring thread termination
 };

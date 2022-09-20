@@ -23,7 +23,7 @@ void ThreadedOps::run()
 	}
 }
 
-ThreadedOps::ThreadedOps(Ops &aOps) : storage{{0}, {0}, {0}}, ops{aOps}, executorCb{nullptr}
+ThreadedOps::ThreadedOps(DecomposedOps &aOps) : storage{{0}, {0}, {0}}, ops{aOps}, executorCb{nullptr}
 {
 }
 
