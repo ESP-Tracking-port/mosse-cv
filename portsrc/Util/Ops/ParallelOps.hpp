@@ -65,7 +65,7 @@ private:
 	template <class C, class ...Ts>
 	inline void setExec(C &&c, Ts &&...aArgs)
 	{
-		for (auto op : threading.threadedOpWrappers) {
+		for (auto &op : threading.threadedOpWrappers) {
 			op.setExec(c, std::forward<Ts>(aArgs)...);
 		}
 

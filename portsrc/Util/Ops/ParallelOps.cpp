@@ -190,7 +190,7 @@ float ParallelOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aP
 
 void ParallelOps::Threading::waitDone()
 {
-	for (auto op : threadedOpWrappers) {
+	for (auto &op : threadedOpWrappers) {
 		while (!op.isDone()) {
 		}
 	}
