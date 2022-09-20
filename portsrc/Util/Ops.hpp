@@ -133,7 +133,7 @@ protected:
 	}
 
 	const Tp::Roi &roi() const;
-	virtual void initImpl();
+	virtual void initImpl();  ///< Set-up routine
 private:
 	Coeffs coeffs;
 	Tp::Roi mRoi;
