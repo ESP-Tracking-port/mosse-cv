@@ -68,7 +68,12 @@ inline bool isNan(...)
 #else
 # define mosseassertnotnan(...)
 
-struct MallocCounter {};
+struct MallocCounter {
+	static constexpr unsigned getPeakCount()
+	{
+		return 0;
+	}
+};
 
 #endif  // MOSSE_PORTABLE
 
