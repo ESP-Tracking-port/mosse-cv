@@ -131,7 +131,6 @@ public:
 	inline void setRoiFragment(const Tp::Roi &aRoiFrag)  ///< The Ops instance is aware of the ROI. However, it operates on its part called "ROI fragment" (ROI is a part of an image, ROI fragment is a part of a ROI). This decomposition enables parallelization.
 	{
 		roiFrag = aRoiFrag;
-		ohdebug(Ops::setRoiFragment, "roi fragment", roiFragment());
 	}
 
 	inline const Tp::Roi &roiFragment()
