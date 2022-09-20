@@ -1,7 +1,6 @@
 #include "tracker.h"
 #include <assert.h>
 #include "selectROI.h"
-#include "MallocCounter.hpp"
 #include <Mosse.hpp>
 #include <Port/MossePort.hpp>
 
