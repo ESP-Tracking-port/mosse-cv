@@ -36,6 +36,7 @@ class ThreadedOps : public Port::Task {
 public:
 	union Result {
 		Tp::NumVariant numVariant;
+		float f32;
 	};
 private:
 
