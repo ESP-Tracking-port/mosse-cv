@@ -10,7 +10,20 @@
 
 #include "Port/Task.hpp"
 #include "Port/Thread.hpp"
-#include <thread>
+#if !MOSSE_PORTABLE
+# include <thread>
+#else
+namespace std {
+
+struct thread {
+	template <class ...Ts>
+	thread(Ts...)
+	{
+	}
+};
+
+}  // namespace std
+#endif
 
 namespace Mosse {
 namespace Port {
