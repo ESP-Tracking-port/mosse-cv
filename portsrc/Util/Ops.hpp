@@ -87,6 +87,8 @@ public:
 		ohdebug(Ops::setRoiFragment, "roi fragment", roiFragment());
 	}
 
+	// Parallelizeable parts of `imageCropInto` (which includes the preprocessing stage the following method pertain to)
+
 	/// \brief Calculates sum of the image's log2-transformed log2-transformed image pixel values.
 	/// \returns Float
 	///
