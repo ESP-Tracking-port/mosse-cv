@@ -184,8 +184,28 @@ void ParallelOps::maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos,
 float ParallelOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak,
 	float aSumHint, Tp::PointRowCol aMask)
 {
-	// TODO Parallelize
-	return ops[0].get().calcPsr(aComplexBuffer, aPeak, aSumHint, aMask);
+	Tp::Roi roiMask{aPeak - (aMask / 2), aMask};
+	roiMask.fitShift(roi().size);
+	const float sizeMasked = static_cast<float>(roi().area() - roiMask.area());
+	float mean = (aSumHint - ops[0].get().bufferSum(aComplexBuffer, roiMask)) / sizeMasked;
+
+	for (std::size_t i = 0; i < ops.size(); ++i) {
+		threading.threadedOpWrappers[i].setExec(&DecomposedOps::bufferAbsDevSum, aComplexBuffer,
+			ops[i].get().roiFragment(), mean);
+	}
+
+	threading.waitDone();
+	float devsum = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), 0.0f,
+		[](float accumulated, const ThreadedOps &ops)
+		{
+			return accumulated + ops.result().f32;
+		});
+	devsum -= ops[0].get().bufferAbsDevSum(aComplexBuffer, roiMask, mean);
+	float stddev = devsum / sqrt(sizeMasked);
+	float maxValue = bufferAtAsFloat(aComplexBuffer, aPeak);
+	float psr = (maxValue - mean) / stddev;
+
+	return psr;
 }
 
 void ParallelOps::Threading::waitDone()
