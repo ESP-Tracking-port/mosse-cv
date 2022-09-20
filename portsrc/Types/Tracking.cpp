@@ -41,7 +41,7 @@ void Roi::setCenter(const PointRowCol &aCenter)
 void Roi::fitShift(const PointRowCol &aOuterBoundSize)
 {
 	for (auto c : {0, 1}) {
-		assert(size(c) < aOuterBoundSize(c));  ///< The ROI must fit
+		assert(size(c) <= aOuterBoundSize(c));  ///< The ROI must fit
 		Ut::clamp(origin(c), 0, aOuterBoundSize(c) - size(c) - 1);
 	}
 }
