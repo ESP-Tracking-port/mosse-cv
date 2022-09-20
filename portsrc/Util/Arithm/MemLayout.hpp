@@ -92,7 +92,7 @@ inline unsigned offsetFirstImag(const Tp::Roi &roi, En<F & Tp::Repr::CplxRenImn>
 template <Tp::Repr::Flags F>
 inline unsigned pointOffset(const Tp::PointRowCol &point, const Tp::Roi &roi)
 {
-	return strideOuter<F>(roi) * point(0) + point(1);
+	return strideOuter<F>(roi) * point(0) + point(1) * strideInner<F>();
 }
 
 template <Tp::Repr::Flags F>
