@@ -17,6 +17,7 @@ class Task;
 
 struct Thread {
 	virtual std::unique_ptr<Thread> makeFromTask(Task &) = 0;
+	virtual ~Thread() = default;
 
 	/// \brief Starts the thread running the task it's been provided with
 	///
