@@ -117,9 +117,9 @@ public:
 	virtual Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean);
 
 	// Parallelizeable parts of `calcPsr` (decomposition of `calcPsr`)
-	virtual float bufferAtAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak) = 0;  ///< Represents the peak value as a floating-point number
-	virtual float bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi) = 0;  ///< Calculates `mean` using `aSumHint` calculated in `maxReal`
-	virtual float bufferAbsDevSum(const void *aComplexBuffer, const Tp::Roi &aRoi, float aMean) = 0;
+	virtual float bufferAtAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak);  ///< Represents the peak value as a floating-point number
+	virtual float bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi);  ///< Calculates `mean` using `aSumHint` calculated in `maxReal`
+	virtual float bufferAbsDevSum(const void *aComplexBuffer, const Tp::Roi &aRoi, float aMean);
 
 	/// \brief Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
 	/// \arg aLog2Sum - expects to be storing float
