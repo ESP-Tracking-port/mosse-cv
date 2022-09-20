@@ -93,18 +93,18 @@ Tp::NumVariant DecomposedOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVarian
 	return {devsum};
 }
 
-float DecomposedOps::atAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak)
+float DecomposedOps::bufferAtAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak)
 {
 	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`maxValueAsFloat`, in this case)
 }
 
-float DecomposedOps::sum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,
+float DecomposedOps::bufferSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,
 	const Tp::PointRowCol &aMaskSize)
 {
 	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`mean`, in this case)
 }
 
-float DecomposedOps::absDevSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aMean,
+float DecomposedOps::bufferAbsDevSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aMean,
 	Tp::PointRowCol aMask)
 {
 	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`absDevSum`, in this case)
@@ -116,12 +116,12 @@ void DecomposedOps::imageCropPreprocessImpl(Tp::Image, void *, Tp::NumVariant, T
 
 float DecomposedOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint, Tp::PointRowCol aMaskSize)
 {
-	float sm = sum(aComplexBuffer, aPeak, aSumHint, aMaskSize);
+	float sm = bufferSum(aComplexBuffer, aPeak, aSumHint, aMaskSize);
 	auto sizeMasked = static_cast<float>(roi().area() - aMaskSize(0) * aMaskSize(1));
 	float mean = sm / sizeMasked;
-	float devSum = absDevSum(aComplexBuffer, aPeak, mean, aMaskSize);
+	float devSum = bufferAbsDevSum(aComplexBuffer, aPeak, mean, aMaskSize);
 	float stddev = devSum / sqrt(sizeMasked);
-	float maxValue = atAsFloat(aComplexBuffer, aPeak);
+	float maxValue = bufferAtAsFloat(aComplexBuffer, aPeak);
 	float psr = (maxValue - mean) / stddev;
 
 	return psr;
