@@ -131,6 +131,23 @@ struct CompositeVisitor {
 	}
 };
 
+template <Tp::Repr::Flags F, class W>
+struct OffsetAdapterVisitor {
+	using ValueType = ReTp<F>;
+	Tp::PointRowCol offset;
+	W wrapped;
+
+	inline void init(const ValueType &aValue, unsigned row, unsigned col)
+	{
+		wrapped.init(aValue, row + offset(0), col + offset(1));
+	}
+
+	inline void operator()(const ValueType &aValue, unsigned row, unsigned col)
+	{
+		wrapped(aValue, row + offset(0), col + offset(1));
+	}
+};
+
 }  // namespace Ut
 }  // namespace Mosse
 
