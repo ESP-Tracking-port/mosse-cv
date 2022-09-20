@@ -21,8 +21,6 @@ class RawF32Ops;
 ///
 class DebugRawF32Ops : public Ops {
 private:
-	/// \brief All the calls from opencvNative... will be gradually rerouted to rawF32...
-	///
 	struct Wrapped {
 		OpencvNativeRawF32Ops opencvNativeRawF32Ops;
 		RawF32Ops rawF32Ops;
