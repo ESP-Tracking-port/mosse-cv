@@ -167,21 +167,6 @@ public:
 		return visitor.devsum;
 	}
 
-	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
-		Tp::PointRowCol aMask) override
-	{
-		Tp::Roi roiMask{aPeak - (aMask / 2), aMask};
-		roiMask.fitShift(roi().size);
-		const float sizeMasked = static_cast<float>(roi().area() - roiMask.area());
-		float mean = (sumHint - bufferSum(aComplexBuffer, roiMask)) / sizeMasked;
-		float devsum = bufferAbsDevSum(aComplexBuffer, roiFragment(), mean) - bufferAbsDevSum(aComplexBuffer, roiMask, mean);
-		float stddev = devsum / sqrt(sizeMasked);
-		float maxValue = bufferAtAsFloat(aComplexBuffer, aPeak);
-		float psr = (maxValue - mean) / stddev;
-
-		return psr;
-	}
-
 	template <bool S = ScaledGauss>
 	inline typename std::enable_if<!S>::type gaussScale(ReTp<ReprGauss> &aGauss)
 	{
