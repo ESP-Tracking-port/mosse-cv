@@ -101,7 +101,7 @@ float DecomposedOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &
 	Tp::PointRowCol aMaskSize)
 {
 	const Tp::Roi mask = {aPeak - (aMaskSize / 2), aMaskSize};
-	auto sizeMasked = static_cast<float>(roi().area() - aMaskSize(0) * aMaskSize(1));
+	auto sizeMasked = static_cast<float>(roi().area() - mask.area());
 	float sumMask = bufferSum(aComplexBuffer, mask);
 	float mean = static_cast<float>(aSumHint - sumMask) / sizeMasked;
 	float devsum = bufferAbsDevSum(aComplexBuffer, roiFragment(), mean) - bufferAbsDevSum(aComplexBuffer, mask, mean);
