@@ -32,7 +32,7 @@ class DecomposedOps;
 /// \warning Considering the number and the structure of inter-thread interactions, lock-free synchronization approach
 /// suffices. But it must be revised, if this presupposition is no longer correct.
 ///
-class ThreadedOps : public Port::Task {
+class ThreadedOps : public Mosse::Port::Task {
 public:
 	union Result {
 		Tp::NumVariant numVariant;
