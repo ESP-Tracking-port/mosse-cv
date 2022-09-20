@@ -131,12 +131,12 @@ template <Tp::Repr::Flags F>
 struct MemLayout : MemLayoutBase {
 	Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, void *mem) const override
 	{
-		return atAsVariant<F>(aCoordinates, aRoi, mem);
+		return Ut::atAsVariant<F>(aCoordinates, aRoi, mem);
 	}
 
 	Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, const void *mem) const override
 	{
-		return atAsVariant<F>(aCoordinates, aRoi, mem);
+		return Ut::atAsVariant<F>(aCoordinates, aRoi, mem);
 	}
 };
 
