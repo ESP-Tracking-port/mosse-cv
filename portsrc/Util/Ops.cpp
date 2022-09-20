@@ -48,6 +48,16 @@ void Ops::initImpl()
 	setRoiFragment({{0, 0}, roi().size});
 }
 
+void Ops::roiResize(Mosse::Tp::Roi &aRoi)
+{
+	unsigned rows = aRoi.size(0);
+	unsigned cols = aRoi.size(1);
+	Mosse::getClosestWindow(rows, cols);
+	ohdebug(Ops::roiResize, "closest window", rows, cols);
+	aRoi.readjust({rows, cols});
+	ohdebug(Ops::roiResize, "after resize", aRoi);
+}
+
 Tp::NumVariant DecomposedOps::imageLog2Sum(Tp::Image aImage)
 {
 	const float *logTable = Mosse::getLogTable8bit();
@@ -103,16 +113,6 @@ float DecomposedOps::absDevSum(const void *aComplexBuffer, const Tp::PointRowCol
 
 void DecomposedOps::imageCropPreprocessImpl(Tp::Image, void *, Tp::NumVariant, Tp::NumVariant)
 {
-}
-
-void Ops::roiResize(Mosse::Tp::Roi &aRoi)
-{
-	unsigned rows = aRoi.size(0);
-	unsigned cols = aRoi.size(1);
-	Mosse::getClosestWindow(rows, cols);
-	ohdebug(Ops::roiResize, "closest window", rows, cols);
-	aRoi.readjust({rows, cols});
-	ohdebug(Ops::roiResize, "after resize", aRoi);
 }
 
 float DecomposedOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint, Tp::PointRowCol aMaskSize)
