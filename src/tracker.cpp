@@ -2,7 +2,6 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <time.h>
-#include "MallocCounter.hpp"
 #include "MosseApi.hpp"
 
 #if 1
