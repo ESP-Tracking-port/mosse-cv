@@ -122,18 +122,19 @@ inline Tp::NumVariant atAsVariant(Ts &&...aArgs)
 }
 
 struct MemLayoutBase {
-	virtual Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, void *mem) = 0;
-	virtual Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, const void *mem) = 0;
+	virtual Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, void *mem) const = 0;
+	virtual Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi,
+		const void *mem) const = 0;
 };
 
 template <Tp::Repr::Flags F>
 struct MemLayout : MemLayoutBase {
-	Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, void *mem) override
+	Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, void *mem) const override
 	{
 		return atAsVariant<F>(aCoordinates, aRoi, mem);
 	}
 
-	Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, const void *mem) override
+	Tp::NumVariant atAsVariant(const Tp::PointRowCol &aCoordinates, const Tp::Roi &aRoi, const void *mem) const override
 	{
 		return atAsVariant<F>(aCoordinates, aRoi, mem);
 	}
