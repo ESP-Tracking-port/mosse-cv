@@ -30,7 +30,7 @@ class ParallelOps : public DecomposedOps {
 private:
 	struct Threading {
 		std::vector<ThreadedOps> threadedOpWrappers;
-		std::vector<std::unique_ptr<Port::Thread>> opThreads;
+		std::vector<std::unique_ptr<Mosse::Port::Thread>> opThreads;
 		void waitDone();
 	};
 
@@ -45,7 +45,7 @@ private:
 
 public:
 	void requestStop();
-	ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> ops, Port::Thread &thread,
+	ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> ops, Mosse::Port::Thread &thread,
 		ArithmBase &aArithmBaseBuffer, MemLayoutBase &aMemLayoutBaseBuffer);
 	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) override;
 protected:
