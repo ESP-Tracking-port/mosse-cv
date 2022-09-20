@@ -83,6 +83,24 @@ Tp::NumVariant Ops::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant mean)
 	return {devsum};
 }
 
+float Ops::maxValueAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak)
+{
+	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`maxValueAsFloat`, in this case)
+}
+
+float Ops::mean(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,
+	const Tp::PointRowCol &aMaskSize)
+{
+	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`mean`, in this case)
+}
+
+float Ops::absDevSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aMean,
+	Tp::PointRowCol aMask)
+{
+	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`absDevSum`, in this case)
+
+}
+
 void Ops::imageCropPreprocessImpl(Tp::Image, void *, Tp::NumVariant, Tp::NumVariant)
 {
 }
