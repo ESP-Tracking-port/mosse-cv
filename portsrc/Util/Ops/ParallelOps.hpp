@@ -26,7 +26,7 @@ namespace Ut {
 class ArithmBase;
 class MemLayoutBase;
 
-class ParallelOps : public Ops {
+class ParallelOps : public DecomposedOps {
 private:
 	struct Threading {
 		std::vector<ThreadedOps> threadedOpWrappers;
@@ -45,8 +45,8 @@ private:
 
 public:
 	void requestStop();
-	ParallelOps(std::vector<std::reference_wrapper<Ops>> ops, Port::Thread &thread, ArithmBase &aArithmBaseBuffer,
-		MemLayoutBase &aMemLayoutBaseBuffer);
+	ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> ops, Port::Thread &thread,
+		ArithmBase &aArithmBaseBuffer, MemLayoutBase &aMemLayoutBaseBuffer);
 	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) override;
 protected:
 	void initImpl() override;
@@ -72,7 +72,7 @@ private:
 		threading.waitDone();
 	}
 private:
-	std::vector<std::reference_wrapper<Ops>> ops;
+	std::vector<std::reference_wrapper<DecomposedOps>> ops;
 	Threading threading;
 	LowLevelAtomics lowLevelAtomics;
 };

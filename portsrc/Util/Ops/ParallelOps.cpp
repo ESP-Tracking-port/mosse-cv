@@ -27,8 +27,11 @@ void ParallelOps::requestStop()
 	}
 }
 
-ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops>> aOps, Port::Thread &aThread, ArithmBase &aArithmBase,
-		MemLayoutBase &aMemLayoutBase) : ops{aOps}, threading{{}, {}}, lowLevelAtomics{{aArithmBase, aMemLayoutBase}}
+ParallelOps::ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> aOps, Port::Thread &aThread,
+	ArithmBase &aArithmBase, MemLayoutBase &aMemLayoutBase) :
+	ops{aOps},
+	threading{{}, {}},
+	lowLevelAtomics{{aArithmBase, aMemLayoutBase}}
 {
 	assert(ops.size() > 0);
 	threading.threadedOpWrappers.reserve(ops.size());
@@ -43,14 +46,14 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<Ops>> aOps, Port::Th
 
 void ParallelOps::imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex)
 {
-	setExec(&Ops::imageConvFftDomain, aioCropFft2Complex, aMatrixAcomlex, aMatrixBcomplex);
+	setExec(&DecomposedOps::imageConvFftDomain, aioCropFft2Complex, aMatrixAcomlex, aMatrixBcomplex);
 }
 
 /// \brief Designate each Ops instance with its ROI fragment
 ///
 void ParallelOps::initImpl()
 {
-	Ops::initImpl();  // TODO (XXX): Any unintended effects?
+	DecomposedOps::initImpl();  // TODO (XXX): Any unintended effects?
 	const auto fragRows = roi().size(0) / ops.size();
 	assert(fragRows > 0);
 	auto frag = roiFragment();
@@ -90,12 +93,12 @@ void ParallelOps::ifft2(void *aBufferComplex)
 
 void ParallelOps::mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
-	setExec(&Ops::mataUpdate, aMatAcomplex, aImageCropFftComplex, aInitial);
+	setExec(&DecomposedOps::mataUpdate, aMatAcomplex, aImageCropFftComplex, aInitial);
 }
 
 void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
-	setExec(&Ops::matbUpdate, aMatBcomplex, aImageCropFftComplex, aInitial);
+	setExec(&DecomposedOps::matbUpdate, aMatBcomplex, aImageCropFftComplex, aInitial);
 }
 
 // TODO Generalize the approach beyond floats (probably, won't be needed)
@@ -105,7 +108,7 @@ void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComple
 ///
 Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
 {
-	setExec(&Ops::imageLog2Sum, aImage);
+	setExec(&DecomposedOps::imageLog2Sum, aImage);
 	Tp::NumVariant ret{0.0f};
 	ret = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), ret,
 		[](const Tp::NumVariant &aInit, const ThreadedOps &aRhs)
@@ -118,7 +121,7 @@ Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
 
 Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean)
 {
-	setExec(&Ops::imageAbsDevLog2Sum, aImage, aMean);
+	setExec(&DecomposedOps::imageAbsDevLog2Sum, aImage, aMean);
 	Tp::NumVariant ret{0.0f};
 	ret = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), ret,
 		[](const Tp::NumVariant &aInit, const ThreadedOps &aRhs)
@@ -132,7 +135,7 @@ Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant 
 void ParallelOps::imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
 	Tp::NumVariant aAbsDevLog2Sum)
 {
-	setExec(&Ops::imageCropPreprocessImpl, aImageReal, aBufferComplex, aLog2Sum, aAbsDevLog2Sum);
+	setExec(&DecomposedOps::imageCropPreprocessImpl, aImageReal, aBufferComplex, aLog2Sum, aAbsDevLog2Sum);
 }
 
 void ParallelOps::maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *aSum)
