@@ -118,7 +118,6 @@ private:
 	Tp::Roi roiFrag;
 };
 
-
 class DecomposedOps : public Ops {
 public:
 	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex);
