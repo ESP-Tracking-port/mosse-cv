@@ -198,20 +198,20 @@ inline bool gt(ReTp<F1> aLhs, ReTp<F2>(aRhs))
 ///
 struct ArithmBase {
 	virtual bool gt(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs) = 0;
-	virtual void sum(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs, Tp::NumVariant &aOut) = 0;
+	virtual void sumA3(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs, Tp::NumVariant &aOut) = 0;
 };
 
-template <Tp::Repr::Flags F>
+template <Tp::Repr::Flags F, Tp::Repr::Flags F2 = F, Tp::Repr::Flags F3 = F>
 struct Arithm : ArithmBase {
 	bool gt(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs) override
 	{
-		return gt<F>(aLhs, aRhs);
+		return Ut::gt<F>(aLhs, aRhs);
 	}
 
 	void sumA3(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs, Tp::NumVariant &aOut) override
 	{
 		ReTp<F> res;
-		sumA3(aLhs, aRhs, res);
+		Ut::sumA3<F, F, F>(aLhs, aRhs, res);
 		aOut = {res};
 	}
 };
