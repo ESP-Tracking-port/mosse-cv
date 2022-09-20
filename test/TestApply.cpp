@@ -12,6 +12,7 @@
 #include <Util/Ops/ThreadedOps.hpp>
 #include <Util/Ops/RawF32Ops.hpp>
 #include <doctest/doctest.h>
+#include <iostream>
 
 int max(int a, int b)
 {
