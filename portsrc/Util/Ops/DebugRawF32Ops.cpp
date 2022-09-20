@@ -6,15 +6,27 @@
 //
 
 #include <Fft.h>
-#include "OpencvNativeRawF32Ops.hpp"
-#include "RawF32Ops.hpp"
+#include "Types/Tracking.hpp"
+#include "Types/Repr.hpp"
+#include "Port/Thread.hpp"
+#include "Port/Thread/StlThread.hpp"
+#include "Util/Ops/OpencvNativeRawF32Ops.hpp"
+#include "Util/Ops/RawF32Ops.hpp"
+#include "Util/Ops/ParallelOps.hpp"
+#include <functional>
 #include "DebugRawF32Ops.hpp"
 
 namespace Mosse {
 namespace Ut {
 
-DebugRawF32Ops::DebugRawF32Ops() : wrapped{{}, {}}
+DebugRawF32Ops::DebugRawF32Ops() : wrapped{{}, {}, {{}, {}, {}}}
 {
+	static Ut::Arithm<RawF32Ops::reprFlags.buffer> arithmOpsBuffer;
+	static Ut::MemLayout<RawF32Ops::reprFlags.buffer> memLayoutOpsBuffer;
+	static Port::StlThread stlThread;
+	wrapped.parallelOps.ops = std::unique_ptr<ParallelOps>{
+		new ParallelOps{{std::ref<DecomposedOps>(wrapped.parallelOps.th1),
+		std::ref<DecomposedOps>(wrapped.parallelOps.th2)}, stlThread, arithmOpsBuffer, memLayoutOpsBuffer}};
 }
 
 void DebugRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)

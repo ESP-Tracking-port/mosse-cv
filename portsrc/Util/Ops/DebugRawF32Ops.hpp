@@ -9,12 +9,14 @@
 #define MOSSE_UTIL_OPS_DEBUGRAWF32OPS_HPP_
 
 #include "Util/Ops.hpp"
+#include <memory>
 
 namespace Mosse {
 namespace Ut {
 
 class OpencvNativeRawF32Ops;
 class RawF32Ops;
+class ParallelOps;
 
 /// \brief Decorator class for gradually reimplementing the reference CV-based MOSSE tracking algorithm implementation
 /// w/ the custom one.
@@ -24,6 +26,12 @@ private:
 	struct Wrapped {
 		OpencvNativeRawF32Ops opencvNativeRawF32Ops;
 		RawF32Ops rawF32Ops;
+
+		struct {
+			RawF32Ops th1;
+			RawF32Ops th2;
+			std::unique_ptr<ParallelOps> ops;
+		} parallelOps;
 	};
 public:
 	DebugRawF32Ops();
