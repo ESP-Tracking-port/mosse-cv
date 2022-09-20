@@ -121,7 +121,7 @@ union NumVariant {
 		return i16;
 	}
 
-	inline operator float()
+	inline operator float() const
 	{
 		return f32;
 	}
