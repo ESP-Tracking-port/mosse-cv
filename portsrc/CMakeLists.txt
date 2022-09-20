@@ -5,7 +5,3 @@ add_library(embmosse ${SOURCEFILES} )
 target_link_libraries(embmosse mosselibs)
 target_compile_options(embmosse PRIVATE -g)
 target_include_directories(embmosse PUBLIC ".")
-
-if(NOT MOSSE_PORTABLE)
-	target_link_libraries(embmosse PUBLIC pthread)
-endif()
