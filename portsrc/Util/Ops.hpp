@@ -108,9 +108,10 @@ private:
 
 class DecomposedOps : public Ops {
 public:
-	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex);
-	virtual float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
-		Tp::PointRowCol aMask = {11, 11});
+	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override;
+	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
+		Tp::PointRowCol aMask = {11, 11}) override;
+
 	// Parallelizeable parts of `imageCropInto` (which includes the preprocessing stage the following method pertain to)
 	virtual Tp::NumVariant imageLog2Sum(Tp::Image aImage);
 	virtual Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean);
