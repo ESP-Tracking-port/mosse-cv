@@ -148,7 +148,6 @@ public:
 	float bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi)
 	{
 		auto r = aRoi;
-		r.fitShift(roi().size);
 		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
 		auto mapBlock = Ut::makeEigenBlock(map, r);
 		FloatSumVisitor<ReprBuffer> visitor;
@@ -171,33 +170,13 @@ public:
 	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
 		Tp::PointRowCol aMask) override
 	{
-		// TODO ensure parallel processing
-		ohdebugonce(psr, 0, "CommonOps::calcPsr");
-		// Mean value excluding the masked (usually, 11x11 field) around the peak
-		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
-		float mean = 0.0f;
-		Tp::Roi roiMask{roi().origin + aPeak - (aMask / 2), aMask};
+		Tp::Roi roiMask{aPeak - (aMask / 2), aMask};
 		roiMask.fitShift(roi().size);
 		const float sizeMasked = static_cast<float>(roi().area() - roiMask.area());
-
-		// Calculating the mean
-		{
-			auto mapMask = map.block(roiMask.origin(0), roiMask.origin(1), roiMask.size(0), roiMask.size(1));
-			FloatSumVisitor<ReprBuffer> visitor;
-			mapMask.visit(visitor);
-			sumHint -= visitor.sum;
-			mean = sumHint / sizeMasked;
-		}
-
-		// Calculating standard deviation
-		float stddev = 0.0f;
-		{
-			FloatDevSumVisitor<ReprBuffer, true> visitor{0.0f, mean, roiMask};
-			map.visit(visitor);
-			stddev = visitor.devsum / sqrt(sizeMasked);
-		}
-
-		float maxValue = Ut::fromRepr<float, ReprBuffer>(map(aPeak(0), aPeak(1)));
+		float mean = (sumHint - bufferSum(aComplexBuffer, roiMask)) / sizeMasked;
+		float devsum = bufferAbsDevSum(aComplexBuffer, roiFragment(), mean) - bufferAbsDevSum(aComplexBuffer, roiMask, mean);
+		float stddev = devsum / sqrt(sizeMasked);
+		float maxValue = bufferAtAsFloat(aComplexBuffer, aPeak);
 		float psr = (maxValue - mean) / stddev;
 
 		return psr;
