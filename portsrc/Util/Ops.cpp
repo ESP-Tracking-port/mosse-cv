@@ -98,13 +98,13 @@ void DecomposedOps::imageCropPreprocessImpl(Tp::Image, void *, Tp::NumVariant, T
 }
 
 float DecomposedOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,
-	Tp::PointRowCol aMaskSize)
+	Tp::PointRowCol aMask)
 {
-	const Tp::Roi mask = {aPeak - (aMaskSize / 2), aMaskSize};
-	auto sizeMasked = static_cast<float>(roi().area() - mask.area());
-	float sumMask = bufferSum(aComplexBuffer, mask);
-	float mean = static_cast<float>(aSumHint - sumMask) / sizeMasked;
-	float devsum = bufferAbsDevSum(aComplexBuffer, roiFragment(), mean) - bufferAbsDevSum(aComplexBuffer, mask, mean);
+	Tp::Roi roiMask{aPeak - (aMask / 2), aMask};
+	roiMask.fitShift(roi().size);
+	const float sizeMasked = static_cast<float>(roi().area() - roiMask.area());
+	float mean = (aSumHint - bufferSum(aComplexBuffer, roiMask)) / sizeMasked;
+	float devsum = bufferAbsDevSum(aComplexBuffer, roiFragment(), mean) - bufferAbsDevSum(aComplexBuffer, roiMask, mean);
 	float stddev = devsum / sqrt(sizeMasked);
 	float maxValue = bufferAtAsFloat(aComplexBuffer, aPeak);
 	float psr = (maxValue - mean) / stddev;
