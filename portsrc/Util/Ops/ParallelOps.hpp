@@ -48,7 +48,6 @@ public:
 	ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> ops, Mosse::Port::Thread &thread,
 		ArithmBase &aArithmBaseBuffer, MemLayoutBase &aMemLayoutBaseBuffer);
 	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) override;
-protected:
 	void initImpl() override;
 	void fft2(void *aBufferComplex) override;
 	void ifft2(void *aBufferComplex) override;
