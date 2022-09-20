@@ -9,5 +9,5 @@ target_link_libraries(mosselibs INTERFACE fft mosseapi ohdebug doctest eigen)
 
 if(NOT MOSSE_PORTABLE)
 	add_subdirectory(malloccounter)
-	target_link_libraries(mosselibs INTERFACE malloccounter)
+	target_link_libraries(mosselibs INTERFACE malloccounter pthread)
 endif()
