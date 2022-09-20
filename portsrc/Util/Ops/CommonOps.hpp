@@ -140,7 +140,9 @@ public:
 
 	float bufferAtAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak) override
 	{
-		return Ut::fromRepr<float, ReprBuffer>(Ut::atAsVariant<ReprBuffer>(aPeak, roi(), aComplexBuffer));
+		auto ret = Ut::fromRepr<float, ReprBuffer>(Ut::atAsVariant<ReprBuffer>(aPeak, roi(), aComplexBuffer));
+
+		return ret;
 	}
 
 	float bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi)
@@ -158,10 +160,9 @@ public:
 	virtual float bufferAbsDevSum(const void *aComplexBuffer, const Tp::Roi &aRoi, float aMean) override
 	{
 		auto r = aRoi;
-		r.fitShift(roi().size);
 		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
 		auto mapBlock = Ut::makeEigenBlock(map, r);
-		FloatDevSumVisitor<ReprBuffer, false> visitor{0.0f, aMean, r};
+		FloatDevSumVisitor<ReprBuffer, false> visitor{0.0f, aMean, {}};
 		mapBlock.visit(visitor);
 
 		return visitor.devsum;
