@@ -150,6 +150,7 @@ public:
 		roiMask.fitShift(roi().size);
 		const float sizeMasked = static_cast<float>(roi().area() - roiMask.area());
 
+		// Calculating the mean
 		{
 			auto mapMask = map.block(roiMask.origin(0), roiMask.origin(1), roiMask.size(0), roiMask.size(1));
 			FloatSumVisitor<ReprBuffer> visitor;
@@ -158,6 +159,7 @@ public:
 			mean = sumHint / sizeMasked;
 		}
 
+		// Calculating standard deviation
 		float stddev = 0.0f;
 		{
 			FloatDevSumVisitor<ReprBuffer, true> visitor{0.0f, mean, roiMask};
