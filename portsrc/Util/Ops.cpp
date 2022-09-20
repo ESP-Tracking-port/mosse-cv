@@ -24,7 +24,7 @@ void Ops::init(Tp::Roi aRoi)
 	initImpl();
 }
 
-void Ops::imageCropInto(Tp::Image aImage, void *aBufferCplx)
+void DecomposedOps::imageCropInto(Tp::Image aImage, void *aBufferCplx)
 {
 	float sum = imageLog2Sum(aImage).f32;  // Calculating sum
 	const float mean = sum / static_cast<float>(roi().area());
@@ -48,7 +48,7 @@ void Ops::initImpl()
 	setRoiFragment({{0, 0}, roi().size});
 }
 
-Tp::NumVariant Ops::imageLog2Sum(Tp::Image aImage)
+Tp::NumVariant DecomposedOps::imageLog2Sum(Tp::Image aImage)
 {
 	const float *logTable = Mosse::getLogTable8bit();
 	auto blockImage = Ut::makeEigenBlock(aImage, roi());
@@ -67,7 +67,7 @@ Tp::NumVariant Ops::imageLog2Sum(Tp::Image aImage)
 	return {sum};
 }
 
-Tp::NumVariant Ops::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant mean)
+Tp::NumVariant DecomposedOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant mean)
 {
 	float devsum = 0.0f;
 	auto blockImage = Ut::makeEigenBlock(aImage, roi());
@@ -84,24 +84,24 @@ Tp::NumVariant Ops::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant mean)
 	return {devsum};
 }
 
-float Ops::atAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak)
+float DecomposedOps::atAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak)
 {
 	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`maxValueAsFloat`, in this case)
 }
 
-float Ops::sum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,
+float DecomposedOps::sum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,
 	const Tp::PointRowCol &aMaskSize)
 {
 	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`mean`, in this case)
 }
 
-float Ops::absDevSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aMean,
+float DecomposedOps::absDevSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aMean,
 	Tp::PointRowCol aMask)
 {
 	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`absDevSum`, in this case)
 }
 
-void Ops::imageCropPreprocessImpl(Tp::Image, void *, Tp::NumVariant, Tp::NumVariant)
+void DecomposedOps::imageCropPreprocessImpl(Tp::Image, void *, Tp::NumVariant, Tp::NumVariant)
 {
 }
 
@@ -115,7 +115,7 @@ void Ops::roiResize(Mosse::Tp::Roi &aRoi)
 	ohdebug(Ops::roiResize, "after resize", aRoi);
 }
 
-float Ops::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint, Tp::PointRowCol aMaskSize)
+float DecomposedOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint, Tp::PointRowCol aMaskSize)
 {
 	float sm = sum(aComplexBuffer, aPeak, aSumHint, aMaskSize);
 	auto sizeMasked = static_cast<float>(roi().area() - aMaskSize(0) * aMaskSize(1));

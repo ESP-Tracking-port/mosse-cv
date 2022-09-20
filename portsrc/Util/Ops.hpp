@@ -49,8 +49,8 @@ public:
 	/// \brief Crop the image into buffer and perform preprocessing. The output buffer is expected to contain both real
 	/// and imaginary channels
 	///
-	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex);
-	virtual void imagePreprocess(void *aCropComplex);  ///< Obsolete
+	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) = 0;
+	virtual void imagePreprocess(void *aCropComplex) = 0;  ///< Obsolete
 	virtual void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) = 0;
 	virtual void fft2(void *aBufferComplex) = 0;
 	virtual void ifft2(void *aBufferComplex) = 0;
@@ -70,7 +70,7 @@ public:
 	///
 	virtual void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *sum = nullptr) = 0;
 	virtual float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
-		Tp::PointRowCol aMask = {11, 11});
+		Tp::PointRowCol aMask = {11, 11}) = 0;
 
 	/// \brief Updates the A matrix (ref. to the MOSSE paper:
 	/// https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf)
@@ -89,28 +89,6 @@ public:
 
 	// Parallelizeable parts of `imageCropInto` (which includes the preprocessing stage the following method pertain to)
 
-	/// \brief Calculates sum of the image's log2-transformed log2-transformed image pixel values.
-	/// \returns Float
-	///
-	virtual Tp::NumVariant imageLog2Sum(Tp::Image aImage);
-
-	/// \brief Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
-	/// \returns float
-	///
-	virtual Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean);
-	// Parallelizeable parts of `calcPsr` (decomposition of `calcPsr`)
-	virtual float atAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak);  ///< Represents the peak value as a floating-point number
-	virtual float sum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,  ///< Calculates `mean` using `aSumHint` calculated in `maxReal`
-		const Tp::PointRowCol &aMaskSize);
-	virtual float absDevSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak,
-		float aMean, Tp::PointRowCol aMask);  ///< Calculates sum of absolute deviations from the mean value
-
-	/// \brief Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
-	/// \arg aLog2Sum - expects to be storing float
-	/// \arg aAbsDevLog2Sum - expects to be storing float
-	///
-	virtual void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
-		Tp::NumVariant aAbsDevLog2Sum);
 protected:
 	inline float eta() const
 	{
@@ -138,6 +116,31 @@ private:
 	Coeffs coeffs;
 	Tp::Roi mRoi;
 	Tp::Roi roiFrag;
+};
+
+
+class DecomposedOps : public Ops {
+public:
+	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex);
+	virtual float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
+		Tp::PointRowCol aMask = {11, 11});
+	// Parallelizeable parts of `imageCropInto` (which includes the preprocessing stage the following method pertain to)
+	virtual Tp::NumVariant imageLog2Sum(Tp::Image aImage);
+	virtual Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean);
+
+	// Parallelizeable parts of `calcPsr` (decomposition of `calcPsr`)
+	virtual float atAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak);  ///< Represents the peak value as a floating-point number
+	virtual float sum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,  ///< Calculates `mean` using `aSumHint` calculated in `maxReal`
+		const Tp::PointRowCol &aMaskSize);
+	virtual float absDevSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak,
+		float aMean, Tp::PointRowCol aMask);  ///< Calculates sum of absolute deviations from the mean value
+
+	/// \brief Calculates sum of absolute deviations of log2-transformed image pixel values from the mean value
+	/// \arg aLog2Sum - expects to be storing float
+	/// \arg aAbsDevLog2Sum - expects to be storing float
+	///
+	virtual void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
+		Tp::NumVariant aAbsDevLog2Sum);
 };
 
 }  // namespace Ut
