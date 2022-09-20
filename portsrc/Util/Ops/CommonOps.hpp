@@ -69,7 +69,7 @@ template <
 	Tp::Repr::Flags ReprAbHookIntermDiv,
 	Tp::Repr::Flags ReprGauss,
 	bool ScaledGauss = false>
-class CommonOps : public Ops {
+class CommonOps : public DecomposedOps {
 public:
 	static_assert(ReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
 	static_assert(Tp::Repr::isValid<ReprBuffer>(), "");
