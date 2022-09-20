@@ -159,13 +159,18 @@ void ParallelOps::maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos,
 	// Merge the results into one
 
 	threading.waitDone();
+	auto largest = lowLevelAtomics.buffer.memLayout.atAsVariant(peakPos[0], roi(), aComplexBuffer);  // Opt.: Optimizes out unnecessary object construction
 	aPeakPos = *std::max_element(peakPos.begin(), peakPos.end(),
-		[this, aComplexBuffer](const Tp::PointRowCol &aLargest, const Tp::PointRowCol &aCandidate)
+		[this, aComplexBuffer, &largest](const Tp::PointRowCol &, const Tp::PointRowCol &aCandidate)
 		{
-			auto largest = lowLevelAtomics.buffer.memLayout.atAsVariant(aLargest, roi(), aComplexBuffer);
 			auto candidate = lowLevelAtomics.buffer.memLayout.atAsVariant(aCandidate, roi(), aComplexBuffer);
+			bool res = lowLevelAtomics.buffer.arithm.gt(candidate, largest);
 
-			return lowLevelAtomics.buffer.arithm.gt(candidate, largest);
+			if (res) {
+				largest = candidate;
+			}
+
+			return res;
 		});
 
 	if (nullptr != aSum) {
