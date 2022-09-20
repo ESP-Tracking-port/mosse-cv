@@ -81,12 +81,6 @@ public:
 	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial) = 0;
 	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial) = 0;
 
-	inline void setRoiFragment(const Tp::Roi &aRoiFrag)  ///< The Ops instance is aware of the ROI. However, it operates on its part called "ROI fragment" (ROI is a part of an image, ROI fragment is a part of a ROI). This decomposition enables parallelization.
-	{
-		roiFrag = aRoiFrag;
-		ohdebug(Ops::setRoiFragment, "roi fragment", roiFragment());
-	}
-
 	// Parallelizeable parts of `imageCropInto` (which includes the preprocessing stage the following method pertain to)
 
 protected:
@@ -105,17 +99,11 @@ protected:
 		coeffs = {eta, 1.0f - eta};
 	}
 
-	inline const Tp::Roi &roiFragment()
-	{
-		return roiFrag;
-	}
-
 	const Tp::Roi &roi() const;
 	virtual void initImpl();  ///< Set-up routine
 private:
 	Coeffs coeffs;
 	Tp::Roi mRoi;
-	Tp::Roi roiFrag;
 };
 
 class DecomposedOps : public Ops {
@@ -140,6 +128,21 @@ public:
 	///
 	virtual void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
 		Tp::NumVariant aAbsDevLog2Sum);
+
+	inline void setRoiFragment(const Tp::Roi &aRoiFrag)  ///< The Ops instance is aware of the ROI. However, it operates on its part called "ROI fragment" (ROI is a part of an image, ROI fragment is a part of a ROI). This decomposition enables parallelization.
+	{
+		roiFrag = aRoiFrag;
+		ohdebug(Ops::setRoiFragment, "roi fragment", roiFragment());
+	}
+protected:
+	inline const Tp::Roi &roiFragment()
+	{
+		return roiFrag;
+	}
+
+	void initImpl() override;
+private:
+	Tp::Roi roiFrag;
 };
 
 }  // namespace Ut

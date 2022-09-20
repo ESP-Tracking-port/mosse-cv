@@ -45,7 +45,6 @@ const Tp::Roi &Ops::roi() const
 void Ops::initImpl()
 {
 	ohdebug(Ops::initImpl);
-	setRoiFragment({{0, 0}, roi().size});
 }
 
 void Ops::roiResize(Mosse::Tp::Roi &aRoi)
@@ -126,6 +125,12 @@ float DecomposedOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &
 	float psr = (maxValue - mean) / stddev;
 
 	return psr;
+}
+
+void DecomposedOps::initImpl()
+{
+	ohdebug(Ops::initImpl);
+	setRoiFragment({{0, 0}, roi().size});
 }
 
 }  // namespace Ut
