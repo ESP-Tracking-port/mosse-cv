@@ -143,32 +143,28 @@ public:
 		return Ut::fromRepr<float, ReprBuffer>(Ut::atAsVariant<ReprBuffer>(aPeak, roi(), aComplexBuffer));
 	}
 
-	float bufferSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,
-		const Tp::PointRowCol &aMask) override
+	float bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi)
 	{
+		auto r = aRoi;
+		r.fitShift(roi().size);
 		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
-		Tp::Roi roiMask{roi().origin + aPeak - (aMask / 2), aMask};
-		roiMask.fitShift(roi().size);
-		auto mapMask = map.block(roiMask.origin(0), roiMask.origin(1), roiMask.size(0), roiMask.size(1));
+		auto mapBlock = Ut::makeEigenBlock(map, r);
 		FloatSumVisitor<ReprBuffer> visitor;
-		mapMask.visit(visitor);
-		aSumHint -= visitor.sum;
-
-		return aSumHint;
-	}
-
-	virtual float bufferAbsDevSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak,
-		float aMean, Tp::PointRowCol aMask) override
-	{
-		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
-		auto mapBlock = Ut::makeEigenBlock(map, roiFragment());
-		Tp::Roi roiMask{roi().origin + aPeak - (aMask / 2), aMask};
-		roiMask.fitShift(roi().size);
-		OffsetAdapterVisitor<ReprBuffer, FloatDevSumVisitor<ReprBuffer, true>> visitor{roiFragment().origin,
-			{0.0f, aMean, roiMask}};
 		mapBlock.visit(visitor);
 
-		return visitor.wrapped.devsum;
+		return visitor.sum;
+	}
+
+	virtual float bufferAbsDevSum(const void *aComplexBuffer, const Tp::Roi &aRoi, float aMean) override
+	{
+		auto r = aRoi;
+		r.fitShift(roi().size);
+		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
+		auto mapBlock = Ut::makeEigenBlock(map, r);
+		FloatDevSumVisitor<ReprBuffer, false> visitor{0.0f, aMean, r};
+		mapBlock.visit(visitor);
+
+		return visitor.devsum;
 	}
 
 	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
