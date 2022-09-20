@@ -12,6 +12,7 @@
 #include "Port/MossePort.hpp"
 #include "Ops.hpp"
 #include "MosseApi.hpp"
+#include <cmath>
 
 namespace Mosse {
 namespace Ut {
@@ -83,12 +84,12 @@ Tp::NumVariant Ops::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant mean)
 	return {devsum};
 }
 
-float Ops::maxValueAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak)
+float Ops::atAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak)
 {
 	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`maxValueAsFloat`, in this case)
 }
 
-float Ops::mean(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,
+float Ops::sum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,
 	const Tp::PointRowCol &aMaskSize)
 {
 	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`mean`, in this case)
@@ -98,7 +99,6 @@ float Ops::absDevSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, f
 	Tp::PointRowCol aMask)
 {
 	assert(false);  // The implementor defines its own version of `calcPsr`, or redefines its components (`absDevSum`, in this case)
-
 }
 
 void Ops::imageCropPreprocessImpl(Tp::Image, void *, Tp::NumVariant, Tp::NumVariant)
@@ -113,6 +113,19 @@ void Ops::roiResize(Mosse::Tp::Roi &aRoi)
 	ohdebug(Ops::roiResize, "closest window", rows, cols);
 	aRoi.readjust({rows, cols});
 	ohdebug(Ops::roiResize, "after resize", aRoi);
+}
+
+float Ops::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint, Tp::PointRowCol aMaskSize)
+{
+	float sm = sum(aComplexBuffer, aPeak, aSumHint, aMaskSize);
+	auto sizeMasked = static_cast<float>(roi().area() - aMaskSize(0) * aMaskSize(1));
+	float mean = sm / sizeMasked;
+	float devSum = absDevSum(aComplexBuffer, aPeak, mean, aMaskSize);
+	float stddev = devSum / sqrt(sizeMasked);
+	float maxValue = atAsFloat(aComplexBuffer, aPeak);
+	float psr = (maxValue - mean) / stddev;
+
+	return psr;
 }
 
 }  // namespace Ut

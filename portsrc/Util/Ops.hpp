@@ -70,7 +70,7 @@ public:
 	///
 	virtual void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *sum = nullptr) = 0;
 	virtual float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
-		Tp::PointRowCol aMask = {11, 11}) = 0;
+		Tp::PointRowCol aMask = {11, 11});
 
 	/// \brief Updates the A matrix (ref. to the MOSSE paper:
 	/// https://www.cs.colostate.edu/~draper/papers/bolme_cvpr10.pdf)
@@ -99,8 +99,8 @@ public:
 	///
 	virtual Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean);
 	// Parallelizeable parts of `calcPsr` (decomposition of `calcPsr`)
-	virtual float maxValueAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak);  ///< Represents the peak value as a floating-point number
-	virtual float mean(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,  ///< Calculates `mean` using `aSumHint` calculated in `maxReal`
+	virtual float atAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak);  ///< Represents the peak value as a floating-point number
+	virtual float sum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float aSumHint,  ///< Calculates `mean` using `aSumHint` calculated in `maxReal`
 		const Tp::PointRowCol &aMaskSize);
 	virtual float absDevSum(const void *aComplexBuffer, const Tp::PointRowCol &aPeak,
 		float aMean, Tp::PointRowCol aMask);  ///< Calculates sum of absolute deviations from the mean value
