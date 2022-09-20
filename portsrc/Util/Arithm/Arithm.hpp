@@ -197,18 +197,18 @@ inline bool gt(ReTp<F1> aLhs, ReTp<F2>(aRhs))
 /// there are only a few arithmetic operations required.
 ///
 struct ArithmBase {
-	virtual bool gt(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs) = 0;
-	virtual void sumA3(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs, Tp::NumVariant &aOut) = 0;
+	virtual bool gt(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs) const = 0;
+	virtual void sumA3(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs, Tp::NumVariant &aOut) const = 0;
 };
 
 template <Tp::Repr::Flags F, Tp::Repr::Flags F2 = F, Tp::Repr::Flags F3 = F>
 struct Arithm : ArithmBase {
-	bool gt(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs) override
+	bool gt(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs) const override
 	{
 		return Ut::gt<F>(aLhs, aRhs);
 	}
 
-	void sumA3(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs, Tp::NumVariant &aOut) override
+	void sumA3(const Tp::NumVariant aLhs, const Tp::NumVariant aRhs, Tp::NumVariant &aOut) const override
 	{
 		ReTp<F> res;
 		Ut::sumA3<F, F, F>(aLhs, aRhs, res);
