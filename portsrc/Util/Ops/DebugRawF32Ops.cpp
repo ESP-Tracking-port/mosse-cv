@@ -88,7 +88,7 @@ void DebugRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol &aPeakP
 {
 #if 0
 	wrapped.opencvNativeRawF32Ops.maxReal(aBufferComplex, aPeakPos, sum);
-#elif 0
+#elif 1
 	wrapped.parallelOps.ops->maxReal(aBufferComplex, aPeakPos, sum);
 #else
 	wrapped.rawF32Ops.maxReal(aBufferComplex, aPeakPos, sum);
