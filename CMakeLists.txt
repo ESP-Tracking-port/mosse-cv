@@ -1,7 +1,7 @@
 option(MOSSE_PORTABLE "Only include libraries that can be ported on an embedded platform" OFF)
 cmake_minimum_required(VERSION 2.8)
 project(mosse)
-find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED PATHS /home/dmurashov/bin/libopencv/lib/cmake NO_DEFAULT_PATH)
 add_subdirectory(lib)
 add_subdirectory(portsrc)
 include_directories(src)
