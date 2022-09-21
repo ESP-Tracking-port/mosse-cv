@@ -35,8 +35,6 @@ private:
 		float invEta;
 	};
 public:
-	// TODO setup / teardown
-
 	/// \brief Implementation MUST expect that it will be called multiple times during the tracking process and therefore
 	/// optimize for unnecessary time and memory expenses. A descendant is, therefore, responsible for maintaining
 	/// consistency.
