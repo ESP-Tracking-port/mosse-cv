@@ -60,17 +60,14 @@ void Ops::roiResize(Mosse::Tp::Roi &aRoi)
 
 Tp::NumVariant DecomposedOps::imageLog2Sum(Tp::Image aImage)
 {
-	const float *logTable = Mosse::getLogTable8bit();
+	float sum = 0.0f;
 	auto blockImage = Ut::makeEigenBlock(aImage, roi());
 	auto blockFragment = Ut::makeEigenBlock(blockImage, roiFragment());
-	float sum = 0.0f;
+	const float *logTable = Mosse::getLogTable8bit();
 
 	for (unsigned row = 0; row < blockFragment.rows(); ++row) {
 		for (unsigned col = 0; col < blockFragment.cols(); ++col) {
 			sum += logTable[blockImage(row, col)];
-			mosseassertnotnan(CommonOps::imageLogSum, blockImage(row, col), blockImage(row, col), roi());
-			mosseassertnotnan(CommonOps::imageLogSum, logTable[blockImage(row, col)], row, col,
-				blockImage(row, col));
 		}
 	}
 
