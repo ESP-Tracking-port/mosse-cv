@@ -47,7 +47,6 @@ std::ostream &operator<<(std::basic_ostream<T> &out, const Mosse::Tp::PointRowCo
 
 }  // namespace std
 
-
 namespace Mosse {
 
 inline bool isNan(float a)
