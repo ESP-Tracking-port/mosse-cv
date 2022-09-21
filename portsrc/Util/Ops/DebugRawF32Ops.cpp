@@ -44,7 +44,7 @@ void DebugRawF32Ops::imagePreprocess(void *aCropComplex)
 {
 #if 0
 	wrapped.opencvNativeRawF32Ops.imagePreprocess(aCropComplex);
-#elif 0
+#elif 1
 	wrapped.parallelOps.ops->imagePreprocess(aCropComplex);
 #else
 	wrapped.rawF32Ops.imagePreprocess(aCropComplex);
