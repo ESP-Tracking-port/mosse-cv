@@ -22,11 +22,8 @@ void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferCom
 {
 #if MOSSE_USE_OPENCV
 # if 1
-	ohdebug(OpencvNativeRawF32Ops::imageCropInto, aImageReal.rows(), aImageReal.cols());
 	auto image = bufferToMat<CV_8UC1>(aImageReal.data(), aImageReal.rows(), aImageReal.cols());
-	ohdebug(OpencvNativeRawF32Ops::imageCropInto, image.size());
 	image = imcrop(_roi, image);
-	ohdebug(OpencvNativeRawF32Ops::imageCropInto, _roi, roi(), image.size());
 	image = preprocess(image);
 
 	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
@@ -51,7 +48,6 @@ void OpencvNativeRawF32Ops::imageConvFftDomain(void *aioCropFft2Complex, void *a
 	auto out = bufferToMat<CV_32FC2>(aioCropFft2Complex, roi());
 	auto mata = bufferToMat<CV_32FC2>(aMatrixAcomplex, roi());
 	auto matb = bufferToMat<CV_32FC2>(aMatrixBcomplex, roi());
-	ohdebug(OpencvNativeRawF32Ops::imageConvFftDomain);
 
 	out = complexMultiplication(complexDivision(mata, matb), out);
 	matCvCopyInto(out, aioCropFft2Complex);
@@ -65,7 +61,6 @@ void OpencvNativeRawF32Ops::imageConvFftDomain(void *aioCropFft2Complex, void *a
 void OpencvNativeRawF32Ops::fft2(void *aBufferComplex)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::fft2);
 	auto mat = bufferToMat<CV_32FC2>(aBufferComplex, roi());
 	mat = fft(mat);
 	matCvCopyInto(mat, aBufferComplex);
@@ -77,7 +72,6 @@ void OpencvNativeRawF32Ops::fft2(void *aBufferComplex)
 void OpencvNativeRawF32Ops::ifft2(void *aBufferComplex)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::ifft2);
 	auto mat = bufferToMat<CV_32FC2>(aBufferComplex, roi());
 	mat = fft(mat, true);
 	matCvCopyInto(mat, aBufferComplex);
@@ -98,7 +92,6 @@ void OpencvNativeRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol 
 	cv::minMaxLoc(resp_cv8u, NULL, NULL, NULL, &ps);
 	aPeakPos = {ps.y, ps.x};
 
-	ohdebug(OpencvNativeRawF32Ops::maxReal, aPeakPos, (aSum ? *aSum : 0.0f));
 #else
 	(void)aBufferComplex;
 	(void)aPeakPos;
@@ -109,7 +102,6 @@ void OpencvNativeRawF32Ops::maxReal(const void *aBufferComplex, Tp::PointRowCol 
 float OpencvNativeRawF32Ops::calcPsr(const void *aBufferComplex, const Tp::PointRowCol &aPeak, float aSumHint,
 	Tp::PointRowCol aMask)
 {
-	ohdebug(OpencvNativeRawF32Ops::calcPsr);
 #if MOSSE_USE_OPENCV
 	return 0.0f;
 #else
@@ -145,7 +137,6 @@ void OpencvNativeRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCro
 void OpencvNativeRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::matbUpdate);
 	auto imagefft = bufferToMat<CV_32FC2>(aImageCropFftComplex, roi());
 	auto matb = bufferToMat<CV_32FC2>(aMatBcomplex, roi());
 
@@ -167,8 +158,6 @@ void OpencvNativeRawF32Ops::initImpl()
 {
 #if MOSSE_USE_OPENCV
 	sPrecompiledMatrixHelper.update(roi());
-	ohdebug(OpencvNativeRawF32Ops::initImpl);
-	ohdebug(OpencvNativeRawF32Ops::initImpl, _roi, roiCv(), roi());
 	setEta(0.125f);
 	_roi = roiCv();
 #else
@@ -178,7 +167,6 @@ void OpencvNativeRawF32Ops::initImpl()
 const void *OpencvNativeRawF32Ops::hannMatrix()
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(void *OpencvNativeRawF32Ops::hannMatrix);
 	return sPrecompiledMatrixHelper.hann();
 #else
 	return nullptr;
@@ -188,8 +176,6 @@ const void *OpencvNativeRawF32Ops::hannMatrix()
 const void *OpencvNativeRawF32Ops::gaussFft()
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(void *OpencvNativeRawF32Ops::gaussFft);
-	ohdebugassert(OpencvNativeRawF32Ops::gaussFft, sPrecompiledMatrixHelper.gauss() != nullptr);
 	return sPrecompiledMatrixHelper.gauss();
 #else
 	return nullptr;
@@ -210,7 +196,6 @@ void OpencvNativeRawF32Ops::matCvCopyInto(const cv::Mat &aMat, void *aOut)
 cv::Rect2i OpencvNativeRawF32Ops::roiCv()
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::roiCv);
 	return {static_cast<int>(roi().origin(1)), static_cast<int>(roi().origin(0)), static_cast<int>(roi().size(1)),
 		static_cast<int>(roi().size(0))};
 #else
@@ -227,7 +212,6 @@ void OpencvNativeRawF32Ops::init_param()
 cv::Mat OpencvNativeRawF32Ops::imcrop(cv::Rect roi, const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::imcrop, roi, image.size());
 	return image(roi);
 #else
 	(void)roi;
@@ -238,7 +222,6 @@ cv::Mat OpencvNativeRawF32Ops::imcrop(cv::Rect roi, const cv::Mat& image)
 cv::Mat OpencvNativeRawF32Ops::fft(cv::Mat image, bool backwards)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::fft);
 	if(image.channels() == 1)
 	{
 		cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
@@ -258,7 +241,6 @@ cv::Mat OpencvNativeRawF32Ops::fft(cv::Mat image, bool backwards)
 cv::Mat OpencvNativeRawF32Ops::conj(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::conj);
 	assert(image.channels() == 2);
 	cv::Mat mat[2];
 	cv::split(image, mat);
@@ -276,7 +258,6 @@ cv::Mat OpencvNativeRawF32Ops::conj(const cv::Mat& image)
 cv::Mat OpencvNativeRawF32Ops::createHanningMats(int rows, int cols)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::createHanningMats);
 	cv::Mat hann1t = cv::Mat(cv::Size(cols, 1), CV_32F, cv::Scalar(0));
 	cv::Mat hann2t = cv::Mat(cv::Size(1, rows), CV_32F, cv::Scalar(0));
 
@@ -296,10 +277,8 @@ cv::Mat OpencvNativeRawF32Ops::createHanningMats(int rows, int cols)
 cv::Mat OpencvNativeRawF32Ops::preprocess(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::preprocess, image.size(), image.rows, image.cols, image.channels());
 	cv::Mat win = bufferToMat<CV_32FC1>(hannMatrix(), roi());
 //	cv::Mat win = createHanningMats(image.rows, image.cols);
-	ohdebug(OpencvNativeRawF32Ops::preprocess(), image.size(), win.size());
 	float eps = 1e-5;
 	cv::Mat img = image + cv::Scalar::all(1);
 	img = cv::Mat_<float>(img);
@@ -317,7 +296,6 @@ cv::Mat OpencvNativeRawF32Ops::preprocess(const cv::Mat& image)
 cv::Mat OpencvNativeRawF32Ops::rand_warp(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::rand_warp);
 	srand((unsigned)time(NULL));
 	float a = -180.0 / 16;
 	float b = -a;
@@ -343,7 +321,6 @@ cv::Mat OpencvNativeRawF32Ops::rand_warp(const cv::Mat& image)
 cv::Mat OpencvNativeRawF32Ops::complexMultiplication(cv::Mat a, cv::Mat b)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::complexMultiplication, a.size(), a.channels(), b.size(), b.channels());
 	std::vector<cv::Mat> pa;
 	std::vector<cv::Mat> pb;
 	cv::split(a, pa);
@@ -375,7 +352,6 @@ cv::Mat OpencvNativeRawF32Ops::complexMultiplication(cv::Mat a, cv::Mat b)
 double OpencvNativeRawF32Ops::calculatePsr(const cv::Mat &aResponse)
 {
 
-	ohdebug(OpencvNativeRawF32Ops::calculatePsr);
 #if MOSSE_USE_OPENCV
 	// Get max response value
 	double maxValue = 0.0f;
@@ -400,7 +376,6 @@ double OpencvNativeRawF32Ops::calculatePsr(const cv::Mat &aResponse)
 void OpencvNativeRawF32Ops::init(cv::Rect roi, const cv::Mat& gray)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::init);
 	init_param();
 	unsigned rows = roi.height;
 	unsigned cols = roi.width;
@@ -439,7 +414,6 @@ void OpencvNativeRawF32Ops::init(cv::Rect roi, const cv::Mat& gray)
 cv::Mat OpencvNativeRawF32Ops::convert(const cv::Mat& src)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::convert);
 	cv::Mat cv8uc1 = cv::Mat::zeros(src.size(), CV_8UC1);
 	for(int r = 0; r < src.rows; r++)
 		for(int c = 0; c < src.cols; c++)
@@ -459,7 +433,6 @@ cv::Mat OpencvNativeRawF32Ops::convert(const cv::Mat& src)
 cv::Mat OpencvNativeRawF32Ops::real(cv::Mat image)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::real);
 	std::vector<cv::Mat> mats;
 	cv::split(image, mats);
 	return mats[0];
@@ -472,7 +445,6 @@ cv::Mat OpencvNativeRawF32Ops::real(cv::Mat image)
 cv::Mat OpencvNativeRawF32Ops::imag(cv::Mat image)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::imag);
 	std::vector<cv::Mat> mats;
 	cv::split(image, mats);
 	return mats[1];
@@ -485,7 +457,6 @@ cv::Mat OpencvNativeRawF32Ops::imag(cv::Mat image)
 cv::Mat OpencvNativeRawF32Ops::complexDivision(cv::Mat a, cv::Mat b)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::complexDivision);
 	std::vector<cv::Mat> pa;
 	std::vector<cv::Mat> pb;
 
@@ -513,7 +484,6 @@ cv::Mat OpencvNativeRawF32Ops::complexDivision(cv::Mat a, cv::Mat b)
 cv::Rect OpencvNativeRawF32Ops::update(const cv::Mat& gray)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::update);
 	fi = imcrop(_roi, gray);
 	//cv::resize(_roi, gray);
 	cv::resize(fi, fi, init_sz);
@@ -550,7 +520,6 @@ cv::Rect OpencvNativeRawF32Ops::update(const cv::Mat& gray)
 void OpencvNativeRawF32Ops::train(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
-	ohdebug(OpencvNativeRawF32Ops::train);
 	fi = imcrop(_roi, image);
 	cv::resize(fi, fi, init_sz);
 	fi = preprocess(fi);
