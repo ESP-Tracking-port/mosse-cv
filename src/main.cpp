@@ -37,7 +37,6 @@ void runPort()
 	while(cap.read(frame))
 	{
 		auto gray = bgr2gray(frame);
-		ohdebug(runport, gray.size());
 		if(init)
 		{
 			if (sUsePredefinedRoi) {
@@ -45,18 +44,14 @@ void runPort()
 			} else {
 				roi = box.add(trackingWindow, frame);
 			}
-			ohdebug(runPort, roi);
 			Mosse::Tp::Roi mosseRoi{{roi.y, roi.x}, {roi.size().height, roi.size().width}};
-			ohdebug(runPort, mosseRoi, gray.data != nullptr);
 			Mosse::Tp::Image mosseImage{gray.data, gray.size().height, gray.size().width};
-			ohdebug(runPort);
 			sTracker->init(mosseImage, mosseRoi);
 			init = false;
 		}
 		else {
 			Mosse::Tp::Image mosseImage{gray.data, gray.size().height, gray.size().width};
 			sTracker->update(mosseImage, true);
-			ohdebug(psr, sTracker->lastPsr());
 			auto mosseRoi = sTracker->roi();
 			roi = {mosseRoi.origin(1), mosseRoi.origin(0), mosseRoi.size(1), mosseRoi.size(0)};  // Create cv-compatible row-major ROI
 		}
@@ -90,7 +85,6 @@ void run()
 			} else {
 				roi = box.add(trackingWindow, frame);
 			}
-			ohdebug(run, roi);
 			track.init(roi, gray);
 			init = false;
 		}
