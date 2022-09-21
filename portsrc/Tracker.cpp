@@ -27,6 +27,7 @@ void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 	port.ops.roiResize(tracking.roi);
 	tracking.roi.fitShift({aImage.rows(), aImage.cols()});
 	port.mem.init(tracking.roi);
+	port.ops.tearDown();  //
 	ohdebugstr(Tracker::init, port.ops.init(tracking.roi));
 	port.ops.imageCropInto(aImage, port.mem.buffer());
 	port.ops.imagePreprocess(port.mem.buffer());
