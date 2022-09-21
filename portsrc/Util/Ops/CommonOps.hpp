@@ -18,6 +18,7 @@
 #include "Util/Helper/EigenVisitor.hpp"
 #include "Util/Helper/EigenMem.hpp"
 #include "Util/Helper/ReTp.hpp"
+#include "Util/Helper/InstanceCounter.hpp"
 #include "Port/MossePort.hpp"
 #include "MosseApi.hpp"
 #include <Eigen/Core>
@@ -27,6 +28,10 @@
 
 namespace Mosse {
 namespace Ut {
+
+#if defined(OHDEBUG)
+struct CommonOpsDebugCompileMarker;
+#endif
 
 /// \brief Serves as a boilerplate-reducing intermediary between the API (virtual method) and a particular
 /// implementation of the tracker.
@@ -69,7 +74,11 @@ template <
 	Tp::Repr::Flags ReprAbHookIntermDiv,
 	Tp::Repr::Flags ReprGauss,
 	bool ScaledGauss = false>
+#if defined(OHDEBUG)
+class CommonOps : public DecomposedOps, public InstanceCounter<CommonOpsDebugCompileMarker> {
+#else
 class CommonOps : public DecomposedOps {
+#endif
 public:
 	static constexpr struct {
 		Tp::Repr::Flags buffer;
