@@ -56,7 +56,6 @@ inline bool isNan(float a)
 
 inline bool isNan(...)
 {
-	ohdebugonce(Mosse::isNan, 0, "stub, fallback");
 	return false;
 }
 
