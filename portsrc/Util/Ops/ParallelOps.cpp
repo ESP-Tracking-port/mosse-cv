@@ -145,12 +145,12 @@ void ParallelOps::maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos,
 {
 	std::vector<Tp::PointRowCol> peakPos;
 	std::vector<float> sum;
-	peakPos.reserve(ops.size());
+	peakPos.resize(ops.size());
 
 	// Start operations and wait for them to finish
 
 	if (nullptr != aSum) {
-		sum.reserve(ops.size());
+		sum.resize(ops.size(), 0.0f);
 		*aSum = 0.0f;
 	}
 
