@@ -111,6 +111,18 @@ void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComple
 ///
 Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
 {
+#if 1
+	// Debug. Decomposition.
+	{
+		auto frag = ops[0].get().roiFragment();
+		ops[0].get().setRoiFragment({{0, 0}, roiFragment().size});
+		auto ret = ops[0].get().imageLog2Sum(aImage);
+		ops[0].get().setRoiFragment(frag);
+
+		return ret;
+	}
+#endif
+
 	setExec(&DecomposedOps::imageLog2Sum, aImage);
 	Tp::NumVariant ret{0.0f};
 	ret = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), ret,
@@ -124,6 +136,18 @@ Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
 
 Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean)
 {
+#if 1
+	// Debug. Decomposition.
+	{
+		auto frag = ops[0].get().roiFragment();
+		ops[0].get().setRoiFragment({{0, 0}, roiFragment().size});
+		auto ret = ops[0].get().imageAbsDevLog2Sum(aImage, aMean);
+		ops[0].get().setRoiFragment(frag);
+
+		return ret;
+	}
+#endif
+
 	setExec(&DecomposedOps::imageAbsDevLog2Sum, aImage, aMean);
 	Tp::NumVariant ret{0.0f};
 	ret = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), ret,
@@ -138,6 +162,17 @@ Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant 
 void ParallelOps::imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
 	Tp::NumVariant aAbsDevLog2Sum)
 {
+#if 1
+	// Debug. Decomposition.
+	{
+		auto frag = ops[0].get().roiFragment();
+		ops[0].get().setRoiFragment({{0, 0}, roiFragment().size});
+		ops[0].get().imageCropPreprocessImpl(aImageReal, aBufferComplex, aLog2Sum, aAbsDevLog2Sum);
+		ops[0].get().setRoiFragment(frag);
+
+		return;
+	}
+#endif
 	setExec(&DecomposedOps::imageCropPreprocessImpl, aImageReal, aBufferComplex, aLog2Sum, aAbsDevLog2Sum);
 }
 
