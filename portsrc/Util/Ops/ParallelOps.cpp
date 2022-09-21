@@ -56,18 +56,16 @@ void ParallelOps::initImpl()
 	DecomposedOps::initImpl();  // TODO (XXX): Any unintended effects?
 	const auto fragRows = roi().size(0) / ops.size();
 	assert(fragRows > 0);
-	auto frag = roiFragment();
-
-	for (auto op : ops) {
-		op.get().init(roi());
-	}
 
 	// Set each `Ops` instance its ROI fragment so it can be processed in parallel fashion
+	Tp::Roi frag = {{0, 0}, {fragRows, roi().size(1)}};
 	{
 		Tp::PointRowCol fragShift = {fragRows, 0};
 
 		for (auto op : ops) {
+			op.get().init(roi());
 			op.get().setRoiFragment(frag);
+			ohdebug(parallel, "setting ROI fragment", frag);
 			frag.origin += fragShift;
 		}
 	}
