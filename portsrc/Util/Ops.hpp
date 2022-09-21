@@ -145,7 +145,7 @@ public:
 		roiFrag = aRoiFrag;
 	}
 
-	inline const Tp::Roi &roiFragment()
+	inline const Tp::Roi &roiFragment() const
 	{
 		return roiFrag;
 	}
