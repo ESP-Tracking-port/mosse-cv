@@ -107,6 +107,7 @@ public:
 	template <class C, class ...Args>
 	void setExec(C c, Args &&...aArgs)
 	{
+		assert(isDone());
 		using ReturnType = decltype((ops.*c)(std::forward<Args>(aArgs)...));
 		new (storage.args) std::tuple<Args...>(aArgs...);
 		new (storage.method) MethodWrapper<C>{c};
@@ -117,7 +118,6 @@ private:
 	template <class C, class R, class ...Args>
 	inline void exec()
 	{
-		assert(isDone());
 		execImpl<C, R, Args...>(nullptr);
 		executorCb = nullptr;
 	}
