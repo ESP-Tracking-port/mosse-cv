@@ -57,25 +57,27 @@ void ParallelOps::initImpl()
 	const auto fragRows = roi().size(0) / ops.size();
 	assert(fragRows > 0);
 
-	// Set each `Ops` instance its ROI fragment so it can be processed in parallel fashion
-	Tp::Roi frag = {{0, 0}, {fragRows, roi().size(1)}};
-	{
-		Tp::PointRowCol fragShift = {fragRows, 0};
+	if (isFirstInit()) {
+		// Set each `Ops` instance its ROI fragment so it can be processed in parallel fashion
+		Tp::Roi frag = {{0, 0}, {fragRows, roi().size(1)}};
+		{
+			Tp::PointRowCol fragShift = {fragRows, 0};
 
-		for (auto op : ops) {
-			op.get().init(roi());
-			op.get().setRoiFragment(frag);
-			ohdebug(parallel, "setting ROI fragment", frag);
-			frag.origin += fragShift;
+			for (auto op : ops) {
+				op.get().init(roi());
+				op.get().setRoiFragment(frag);
+				ohdebug(parallel, "setting ROI fragment", frag);
+				frag.origin += fragShift;
+			}
 		}
-	}
 
-	// Handle uneven split
-	{
-		const auto remainder = roi().size(0) - fragRows * ops.size();
-		frag.origin(0) -= fragRows;  // It's been shifted over the ROI boundary in the loop above
-		frag.size(1) += remainder;
-		ops[ops.size() - 1].get().setRoiFragment(frag);
+		// Handle uneven split
+		{
+			const auto remainder = roi().size(0) - fragRows * ops.size();
+			frag.origin(0) -= fragRows;  // It's been shifted over the ROI boundary in the loop above
+			frag.size(1) += remainder;
+			ops[ops.size() - 1].get().setRoiFragment(frag);
+		}
 	}
 }
 
