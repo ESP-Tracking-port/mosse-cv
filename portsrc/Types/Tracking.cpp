@@ -26,10 +26,8 @@ bool Roi::isInside(const PointRowCol &aPoint) const
 
 void Roi::readjust(const PointRowCol &aSize)
 {
-	ohdebug(Roi::readjust, "before resize", aSize, origin, size);
 	origin = origin + size / 2 - aSize / 2;
 	size = aSize;
-	ohdebug(Roi::readjust, "after resize", origin, size);
 	origin = origin + size / 2 - aSize / 2;
 }
 
