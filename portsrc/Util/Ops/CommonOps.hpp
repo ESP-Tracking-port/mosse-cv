@@ -140,8 +140,8 @@ public:
 		ReTp<ReprAbHookIntermDiv> hRe;  // H = divCplx(A, B)
 		ReTp<ReprAbHookIntermDiv> hIm;
 
-		for (auto row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
-			for (auto col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
+		for (auto row = roiFragment().origin(0); row < roiFragment().origin(0) + roiFragment().size(0); ++row) {
+			for (auto col = roiFragment().origin(1); col < roiFragment().origin(1) + roiFragment().size(1); ++col) {
 				Ut::divCplxA3<ReprAb, ReprAb, ReprAbHookIntermDiv>(mapA(row, col), mapAimag(row, col), mapB(row, col),
 					mapBimag(row, col), hRe, hIm);
 				Ut::mulCplxA3<ReprBuffer, ReprAbHookIntermDiv, ReprBuffer>(mapFft(row, col), mapFftImag(row, col), hRe,
@@ -203,8 +203,8 @@ public:
 		auto mapGauss = Ut::makeEigenMap<ReprGauss>(gaussFft(), roi());
 		auto mapGaussImag = Ut::makeEigenMapImag<ReprGauss>(gaussFft(), roi());
 
-		for (auto row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
-			for (auto col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
+		for (auto row = roiFragment().origin(0); row < roiFragment().origin(0) + roiFragment().size(0); ++row) {
+			for (auto col = roiFragment().origin(1); col < roiFragment().origin(1) + roiFragment().size(1); ++col) {
 				auto gauss = mapGauss(row, col);
 				auto gaussIm = mapGaussImag(row, col);
 				auto aPrev = mapA(row, col);
@@ -234,8 +234,8 @@ public:
 		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aImageCropFftComplex, roi());
 		auto mapFftImag = Ut::makeEigenMapImag<ReprBuffer>(aImageCropFftComplex, roi());
 
-		for (auto row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
-			for (auto col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
+		for (auto row = roiFragment().origin(0); row < roiFragment().origin(0) + roiFragment().size(0); ++row) {
+			for (auto col = roiFragment().origin(1); col < roiFragment().origin(1) + roiFragment().size(1); ++col) {
 				auto frameFftImConj = Ut::minus<ReprBuffer>(mapFftImag(row, col));
 				auto bPrev = mapB(row, col);
 				auto bImPrev = mapB(row, col);
@@ -269,8 +269,8 @@ public:
 		const float *logTable = Mosse::getLogTable8bit();
 		auto mapHann = makeEigenMap<ReprHann>(hannMatrix(), roi());
 
-		for (auto row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
-			for (auto col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
+		for (auto row = roiFragment().origin(0); row < roiFragment().origin(0) + roiFragment().size(0); ++row) {
+			for (auto col = roiFragment().origin(1); col < roiFragment().origin(1) + roiFragment().size(1); ++col) {
 				constexpr float kEps = 1e-5;  // Small fraction to prevent zero division
 				mapImag(row, col) = toRepr<ReprBuffer>(0.0f);
 				float pixel = (logTable[blockImage(row, col)] - mean.f32) / (stddev.f32 + kEps)
