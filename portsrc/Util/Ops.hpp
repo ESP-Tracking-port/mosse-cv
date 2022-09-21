@@ -150,7 +150,6 @@ public:
 		return roiFrag;
 	}
 protected:
-
 	void initImpl() override;
 private:
 	Tp::Roi roiFrag;
