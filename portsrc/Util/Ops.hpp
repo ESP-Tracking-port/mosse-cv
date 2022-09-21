@@ -83,6 +83,12 @@ public:
 
 	// Parallelizeable parts of `imageCropInto` (which includes the preprocessing stage the following method pertain to)
 
+	inline void tearDown()
+	{
+		tearDownImpl();
+		firstInit = true;
+	}
+
 protected:
 	inline float eta() const
 	{
@@ -99,11 +105,18 @@ protected:
 		coeffs = {eta, 1.0f - eta};
 	}
 
+	inline bool isFirstInit() const
+	{
+		return firstInit;
+	}
+
 	const Tp::Roi &roi() const;
 	virtual void initImpl();  ///< Set-up routine
+	virtual void tearDownImpl();
 private:
-	Coeffs coeffs;
-	Tp::Roi mRoi;
+	Coeffs coeffs = {0.0f, 0.0f};
+	Tp::Roi mRoi = {{0, 0}, {0, 0}};
+	bool firstInit = true;
 };
 
 class DecomposedOps : public Ops {

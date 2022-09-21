@@ -21,6 +21,7 @@ void Ops::init(Tp::Roi aRoi)
 {
 	mRoi = aRoi;
 	initImpl();
+	firstInit = false;
 }
 
 void DecomposedOps::imageCropInto(Tp::Image aImage, void *aBufferCplx)
@@ -42,6 +43,10 @@ const Tp::Roi &Ops::roi() const
 }
 
 void Ops::initImpl()
+{
+}
+
+void Ops::tearDownImpl()
 {
 }
 
