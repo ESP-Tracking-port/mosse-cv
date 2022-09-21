@@ -3,6 +3,8 @@
 #include "selectROI.h"
 #include <Mosse.hpp>
 #include <Port/MossePort.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/videoio/legacy/constants_c.h>
 
 Mosse::Tracker *sTracker;
 constexpr static bool sUsePredefinedRoi = true;
@@ -17,7 +19,7 @@ static cv::Mat bgr2gray(const cv::Mat& image)
 	cv::Mat res;
 	int chans = image.channels();
 	if(chans == 3)
-		cv::cvtColor(image, res, CV_BGR2GRAY);
+		cv::cvtColor(image, res, cv::ColorConversionCodes::COLOR_BGR2GRAY);
 	else res = image.clone();
 	return res;
 }
