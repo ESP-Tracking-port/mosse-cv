@@ -20,7 +20,6 @@ namespace Ut {
 void Ops::init(Tp::Roi aRoi)
 {
 	mRoi = aRoi;
-	ohdebug(Ops::init, aRoi);
 	initImpl();
 }
 
@@ -44,7 +43,6 @@ const Tp::Roi &Ops::roi() const
 
 void Ops::initImpl()
 {
-	ohdebug(Ops::initImpl);
 }
 
 void Ops::roiResize(Mosse::Tp::Roi &aRoi)
@@ -52,9 +50,7 @@ void Ops::roiResize(Mosse::Tp::Roi &aRoi)
 	unsigned rows = aRoi.size(0);
 	unsigned cols = aRoi.size(1);
 	Mosse::getClosestWindow(rows, cols);
-	ohdebug(Ops::roiResize, "closest window", rows, cols);
 	aRoi.readjust({rows, cols});
-	ohdebug(Ops::roiResize, "after resize", aRoi);
 }
 
 Tp::NumVariant DecomposedOps::imageLog2Sum(Tp::Image aImage)
@@ -82,7 +78,6 @@ Tp::NumVariant DecomposedOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVarian
 	auto blockImage = Ut::makeEigenBlock(aImage, roi());
 	auto blockFragment = Ut::makeEigenBlock(blockImage, roiFragment());
 	const float *logTable = Mosse::getLogTable8bit();
-	ohdebugonce(Ops::imageAbsDevLog2Sum, 0, roi(), roiFragment(), blockImage.size());
 
 	for (unsigned row = 0; row < blockFragment.rows(); ++row) {
 		for (unsigned col = 0; col < blockFragment.cols(); ++col) {
@@ -129,7 +124,6 @@ float DecomposedOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &
 
 void DecomposedOps::initImpl()
 {
-	ohdebug(Ops::initImpl);
 	setRoiFragment({{0, 0}, roi().size});
 }
 
