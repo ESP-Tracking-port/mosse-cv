@@ -121,7 +121,6 @@ public:
 
 	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomplex, void *aMatrixBcomplex) override
 	{
-		ohdebugonce(CommonOps::imageConvFftDomain, 10);
 		auto mapFft = Ut::makeEigenMap<ReprBuffer>(aioCropFft2Complex, roi());
 		auto mapFftImag = Ut::makeEigenMapImag<ReprBuffer>(aioCropFft2Complex, roi());
 		auto mapA = Ut::makeEigenMap<ReprAb>(aMatrixAcomplex, roi());
@@ -174,7 +173,6 @@ public:
 	template <bool S = ScaledGauss>
 	inline typename std::enable_if<!S>::type gaussScale(ReTp<ReprGauss> &aGauss)
 	{
-		ohdebugonce(CommonOps::gaussScale, 0);
 		Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprGauss, ReprGauss>(eta(), aGauss, aGauss);
 	}
 
@@ -203,7 +201,6 @@ public:
 				auto aPrev = mapA(row, col);
 				auto aImPrev = mapAimag(row, col);
 				auto frameFftImag = Ut::minus<ReprBuffer>(mapFftImag(row, col));  // Complex conjugate. See the mosse paper.
-				ohdebugonce(CommonOps::mataUpdate, 1, "conjugate", mapFftImag(row, col), "inverted", frameFftImag);
 
 				gaussScale(gauss);  // Multiplication by $\eta$ (if an already pre-multiplied filter is not used). See the mosse paper
 				gaussScale(gaussIm);
@@ -262,7 +259,6 @@ public:
 		auto blockImage = Ut::makeEigenBlock(aImage, roi());
 		const float *logTable = Mosse::getLogTable8bit();
 		auto mapHann = makeEigenMap<ReprHann>(hannMatrix(), roi());
-		ohdebug(imageCropPreprocessImpl, roiFragment());
 
 		for (auto row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
 			for (auto col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
