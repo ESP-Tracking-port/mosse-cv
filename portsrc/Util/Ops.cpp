@@ -129,7 +129,9 @@ float DecomposedOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &
 
 void DecomposedOps::initImpl()
 {
-	setRoiFragment({{0, 0}, roi().size});
+	if (isFirstInit()) {
+		setRoiFragment({{0, 0}, roi().size});
+	}
 }
 
 }  // namespace Ut
