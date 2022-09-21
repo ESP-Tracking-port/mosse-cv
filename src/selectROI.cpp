@@ -1,4 +1,5 @@
 #include "selectROI.h"
+#include <opencv2/highgui.hpp>
 
 selectROI::selectROI()
 {
@@ -13,16 +14,16 @@ void selectROI_handler::onMouse(int event, int x, int y, int flags, void* param)
 	selectROI_handler_param* shparam = (selectROI_handler_param*)param;
 	switch (event)
 	{
-	case CV_EVENT_LBUTTONDOWN:
+	case cv::MouseEventTypes::EVENT_LBUTTONDOWN:
 		shparam->drawRoi = true;
 		shparam->click_1.x = x;
 		shparam->click_1.y = y;
 		break;
-	case CV_EVENT_MOUSEMOVE:
+	case cv::MouseEventTypes::EVENT_MOUSEMOVE:
 		shparam->click_move.x = x;
 		shparam->click_move.y = y;
 		break;
-	case CV_EVENT_LBUTTONUP:
+	case cv::MouseEventTypes::EVENT_LBUTTONUP:
 		shparam->click_2.x = x;
 		shparam->click_2.y = y;
 		shparam->drawRoi = false;
