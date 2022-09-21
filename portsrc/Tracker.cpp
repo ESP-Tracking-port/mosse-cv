@@ -22,23 +22,16 @@ Tracker::Tracker(Ut::Port aPort) : tracking{{}, 0.0f}, port{aPort}
 
 void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 {
-	ohdebugonce(Tracker::init, 0, aImage.rows(), aImage.cols(), aRoi);
 	// A set of precompiled gaussian matrices is used, so the window's size will be changed to the closest one
 	tracking.roi = aRoi;
 	port.ops.roiResize(tracking.roi);
 	tracking.roi.fitShift({aImage.rows(), aImage.cols()});
-	ohdebugonce(Tracker::init, 0, "ROI after crop", tracking.roi);
 	port.mem.init(tracking.roi);
 	ohdebugstr(Tracker::init, port.ops.init(tracking.roi));
 	port.ops.imageCropInto(aImage, port.mem.buffer());
 	port.ops.imagePreprocess(port.mem.buffer());
-	ohdebug(Tracker::init, "fft2");
 	port.ops.fft2(port.mem.buffer());
-	ohdebug(Tracker::init, "mataUpdate");
 	port.ops.mataUpdate(port.mem.matA(), port.mem.buffer(), true);
-	ohdebug(Tracker::init, port.mem.matA() != nullptr);
-	ohdebug(Tracker::init, port.mem.matB() != nullptr);
-	ohdebug(Tracker::init, "matbUpdate");
 	port.ops.matbUpdate(port.mem.matB(), port.mem.buffer(), true);
 
 	// TODO: rand warp-based pretraining XXX: It seems to work without
@@ -57,15 +50,12 @@ void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
 	Tp::PointRowCol maxResponsePos{};
 
 	if (aUpdatePsr) {
-		ohdebugonce(psr, 0, "hit psr");
 		float sum = 0.0f;
 		port.ops.maxReal(port.mem.buffer(), maxResponsePos, &sum);
 		const Tp::PointRowCol kMaskSize{11, 11};
 		tracking.psr = port.ops.calcPsr(port.mem.buffer(), maxResponsePos, sum, kMaskSize);
-		ohdebug(Tracker::update, maxResponsePos);
 	} else {
 		port.ops.maxReal(port.mem.buffer(), maxResponsePos, nullptr);
-		ohdebug(Tracker::update, maxResponsePos);
 	}
 
 	// Update ROI
