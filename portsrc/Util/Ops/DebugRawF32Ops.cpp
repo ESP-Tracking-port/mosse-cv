@@ -110,7 +110,7 @@ void DebugRawF32Ops::mataUpdate(void *aMatAcomplex, const void *aImageCropFftCom
 {
 #if 0
 	wrapped.opencvNativeRawF32Ops.mataUpdate(aMatAcomplex, aImageCropFftComplex, aInitial);
-#elif 0
+#elif 1
 	wrapped.parallelOps.ops->mataUpdate(aMatAcomplex, aImageCropFftComplex, aInitial);
 #else
 	wrapped.rawF32Ops.mataUpdate(aMatAcomplex, aImageCropFftComplex, aInitial);
@@ -121,7 +121,7 @@ void DebugRawF32Ops::matbUpdate(void *aMatBcomplex, const void *aImageCropFftCom
 {
 #if 0
 	wrapped.opencvNativeRawF32Ops.matbUpdate(aMatBcomplex, aImageCropFftComplex, aInitial);
-#elif 0
+#elif 1
 	wrapped.parallelOps.ops->matbUpdate(aMatBcomplex, aImageCropFftComplex, aInitial);
 #else
 	wrapped.rawF32Ops.matbUpdate(aMatBcomplex, aImageCropFftComplex, aInitial);
