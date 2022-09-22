@@ -30,6 +30,12 @@ public:
 protected:
 	Thread(Task *aTask);
 	Task *task();
+
+	template <class T>
+	static std::unique_ptr<Thread> makeUnique(Task &aTask)
+	{
+		return std::unique_ptr<Thread>{new T{&aTask}};
+	}
 private:
 	Task *mtask;
 };
