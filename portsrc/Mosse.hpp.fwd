@@ -13,7 +13,12 @@
 namespace Mosse {
 
 class Tracker;
-using ThreadSpawnCb = void(*)(void (*aTask)(void *), void *aArg);
+
+namespace Port {
+
+class Thread;  ///< Thread API, see "Port/Thread.hpp"
+
+}  // namespace Port
 
 /// \brief No effective representations are used. Buffers store raw floats. Primarily, it is used for testing purposes.
 ///
@@ -23,6 +28,10 @@ Tracker &getNaive();
 /// (swappable) implementation, while the former gets gradually stripped away as bugs in the latter one get fixed.
 ///
 Tracker &getDebugStub();
+
+/// \brief Uses `ParallelOps` implementation wrapped aroung `RawF32Ops` used by `getNaive`
+///
+Tracker &getNaiveMultithreaded(Port::Thread &thread, unsigned nThreads);
 
 }  // namespace Mosse
 

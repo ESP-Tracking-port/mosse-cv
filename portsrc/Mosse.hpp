@@ -19,6 +19,9 @@
 #include "Util/Ops/ParallelOps.hpp"
 #include "Util/Mem/DynRawF32Mem.hpp"
 #include "Tracker.hpp"
+#include "Port/MossePort.hpp"
+#include "Util/Ops/OpencvNativeRawF32Ops.hpp"
+#include "Util/Ops/DebugRawF32Ops.hpp"
 #include "Mosse.hpp.fwd"
 
 #endif // MOSSE_MOSSE_HPP_
