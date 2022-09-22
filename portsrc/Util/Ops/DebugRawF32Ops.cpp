@@ -21,6 +21,8 @@ namespace Ut {
 
 DebugRawF32Ops::DebugRawF32Ops() : wrapped{{}, {}, {{}, {}, {}}}
 {
+	ohdebug(DebugRawF32Ops(CONSTRUCTOR), wrapped.rawF32Ops.instanceNum, wrapped.parallelOps.th1.instanceNum,
+		wrapped.parallelOps.th2.instanceNum);
 	static Ut::Arithm<RawF32Ops::reprFlags.buffer> arithmOpsBuffer;
 	static Ut::MemLayout<RawF32Ops::reprFlags.buffer> memLayoutOpsBuffer;
 	static Port::StlThread stlThread;
@@ -33,7 +35,7 @@ void DebugRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
 {
 #if 0
 	wrapped.opencvNativeRawF32Ops.imageCropInto(aImageReal, aBufferComplex);
-#elif 0
+#elif 1
 	wrapped.parallelOps.ops->imageCropInto(aImageReal, aBufferComplex);
 #else
 	wrapped.rawF32Ops.imageCropInto(aImageReal, aBufferComplex);
