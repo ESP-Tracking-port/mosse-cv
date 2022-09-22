@@ -60,6 +60,9 @@ public:
 	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *aSum) override;
 	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
 		Tp::PointRowCol aMask = {11, 11}) override;
+	float bufferAtAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak) override;  ///< Represents the peak value as a floating-point number
+	float bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi) override;  ///< Calculates `mean` using `aSumHint` calculated in `maxReal`
+	float bufferAbsDevSum(const void *aComplexBuffer, const Tp::Roi &aRoi, float aMean) override;
 private:
 	template <class C, class ...Ts>
 	inline void setExec(C &&c, Ts &&...aArgs)

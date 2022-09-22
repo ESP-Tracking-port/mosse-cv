@@ -246,6 +246,35 @@ float ParallelOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aP
 	return psr;
 }
 
+float ParallelOps::bufferAtAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak)
+{
+	return ops[0].get().bufferAtAsFloat(aComplexBuffer, aPeak);
+}
+
+float ParallelOps::bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi)
+{
+	setExec(&DecomposedOps::bufferSum, aComplexBuffer, aRoi);
+	float res = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), 0.0f,
+		[](float accumulated, const ThreadedOps &aOps)
+		{
+			return accumulated + aOps.result().f32;
+		});
+
+	return res;
+}
+
+float ParallelOps::bufferAbsDevSum(const void *aComplexBuffer, const Tp::Roi &aRoi, float aMean)
+{
+	setExec(&DecomposedOps::bufferAbsDevSum, aComplexBuffer, aRoi, aMean);
+	float res = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), 0.0f,
+		[](float accumulated, const ThreadedOps &aOps)
+		{
+			return accumulated + aOps.result().f32;
+		});
+
+	return res;
+}
+
 void ParallelOps::Threading::waitDone()
 {
 	for (auto &op : threadedOpWrappers) {
