@@ -104,14 +104,14 @@ void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComple
 	setExec(&DecomposedOps::matbUpdate, aMatBcomplex, aImageCropFftComplex, aInitial);
 }
 
-// TODO Generalize the approach beyond floats (probably, won't be needed)
+// TODO Generalize the approach beyond floats (WONTBEDONE: probably, won't be needed)
 //
 /// \warning While the architectural approach implies use of arbitrary types, this implementation expects FLOATS in
 /// Tp::NumVariant
 ///
 Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
 {
-#if 1
+#if 0
 	// Debug. Decomposition.
 	{
 		auto frag = ops[0].get().roiFragment();
@@ -136,7 +136,7 @@ Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
 
 Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean)
 {
-#if 1
+#if 0
 	// Debug. Decomposition.
 	{
 		auto frag = ops[0].get().roiFragment();
@@ -162,7 +162,7 @@ Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant 
 void ParallelOps::imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
 	Tp::NumVariant aAbsDevLog2Sum)
 {
-#if 1
+#if 0
 	// Debug. Decomposition.
 	{
 		auto frag = ops[0].get().roiFragment();
