@@ -26,6 +26,7 @@ public:
 	/// by MOSSE implementation. If any is requried, the task must be wrapped accordingly.
 	///
 	virtual void start() = 0;
+	Thread();
 protected:
 	Thread(Task *aTask);
 	Task *task();

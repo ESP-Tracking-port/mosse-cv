@@ -10,6 +10,10 @@
 namespace Mosse {
 namespace Port {
 
+Thread::Thread() : mtask{nullptr}
+{
+}
+
 Thread::Thread(Task *aTask) : mtask{aTask}
 {
 }
