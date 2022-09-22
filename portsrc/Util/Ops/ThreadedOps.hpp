@@ -23,6 +23,24 @@ union NumVariant;
 }  // namespace Tp
 
 namespace Ut {
+namespace Impl {
+
+template <class T>
+struct CustomDecay {
+	using Type = T;
+};
+
+template <class T>
+struct CustomDecay<T *> {
+	using Type = T *;
+};
+
+template <class T>
+struct CustomDecay<T &> {
+	using Type = T &;
+};
+
+}  // namespace Impl
 
 class DecomposedOps;
 
@@ -109,9 +127,9 @@ public:
 	{
 		assert(isDone());
 		using ReturnType = decltype((ops.*c)(std::forward<Args>(aArgs)...));
-		new (storage.args) std::tuple<Args...>(aArgs...);
+		new (storage.args) std::tuple<typename Impl::CustomDecay<Args>::Type...>(std::forward<Args>(aArgs)...);
 		new (storage.method) MethodWrapper<C>{c};
-		executorCb = &ThreadedOps::exec<C, ReturnType, Args...>;
+		executorCb = &ThreadedOps::exec<C, ReturnType, typename Impl::CustomDecay<Args>::Type...>;
 	}
 private:
 
