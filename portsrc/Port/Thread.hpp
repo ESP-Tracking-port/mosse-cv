@@ -15,7 +15,8 @@ namespace Port {
 
 class Task;
 
-struct Thread {
+class Thread {
+public:
 	virtual std::unique_ptr<Thread> makeFromTask(Task &) = 0;
 	virtual ~Thread() = default;
 
@@ -25,6 +26,11 @@ struct Thread {
 	/// by MOSSE implementation. If any is requried, the task must be wrapped accordingly.
 	///
 	virtual void start() = 0;
+protected:
+	Thread(Task *aTask);
+	Task *task();
+private:
+	Task *mtask;
 };
 
 }  // namespace Port
