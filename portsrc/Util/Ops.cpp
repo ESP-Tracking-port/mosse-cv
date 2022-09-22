@@ -67,7 +67,7 @@ Tp::NumVariant DecomposedOps::imageLog2Sum(Tp::Image aImage)
 
 	for (unsigned row = 0; row < blockFragment.rows(); ++row) {
 		for (unsigned col = 0; col < blockFragment.cols(); ++col) {
-			sum += logTable[blockImage(row, col)];
+			sum += logTable[blockFragment(row, col)];
 		}
 	}
 
@@ -83,7 +83,7 @@ Tp::NumVariant DecomposedOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVarian
 
 	for (unsigned row = 0; row < blockFragment.rows(); ++row) {
 		for (unsigned col = 0; col < blockFragment.cols(); ++col) {
-			devsum += fabs(mean.f32 - logTable[blockImage(row, col)]);
+			devsum += fabs(mean.f32 - logTable[blockFragment(row, col)]);
 		}
 	}
 
