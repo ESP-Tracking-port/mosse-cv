@@ -12,10 +12,20 @@
 #include <Util/Ops/ThreadedOps.hpp>
 #include <Util/Ops/RawF32Ops.hpp>
 #include <doctest/doctest.h>
+#include <MallocCounter.hpp>
 
 // Only tests whether the `ThreadedOps` module is able to get successfully compiled.
 TEST_CASE("ThreadedOps : Compilation") {
+	std::array<std::uint8_t, 240*240> bufImg;
+	std::array<float, 64 * 64 * 2> bufCplxCrop;
+	Mosse::Tp::Roi roi{{10, 10}, {70, 70}};
 	Mosse::Ut::RawF32Ops ops;
 	Mosse::Ut::ThreadedOps threadedOps{ops};
-	threadedOps.setExec(&Mosse::Ut::Ops::mataUpdate, nullptr, nullptr, true);
+	Mosse::Tp::Image image{bufImg.data(), 240, 240};
+	ops.init(roi);
+	{
+		MallocCounter mc{};
+		threadedOps.setExec(&Mosse::Ut::DecomposedOps::imageCropInto, image, static_cast<void *>(bufCplxCrop.data()));
+		ohdebug(Test ThreadedOps : Compilation, MallocCounter::getPeakCount());
+	}
 }
