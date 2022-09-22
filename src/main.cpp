@@ -2,6 +2,7 @@
 #include <assert.h>
 #include "selectROI.h"
 #include <Mosse.hpp>
+#include <Port/Thread/StlThread.hpp>
 #include <Port/MossePort.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/videoio/legacy/constants_c.h>
@@ -135,9 +136,11 @@ void img2avi(char* address)
 
 int main()
 {
+	Mosse::Port::StlThread stlThread;
 	//img2avi((char*)"img");
-	sTracker = &Mosse::getDebugStub();
+//	sTracker = &Mosse::getDebugStub();
 //	sTracker = &Mosse::getNaive();
+	sTracker = &Mosse::getNaiveMultithreaded(stlThread, 2);
 	runPort();
 //	run();
 	debug(MallocCounter::getPeakCount());
