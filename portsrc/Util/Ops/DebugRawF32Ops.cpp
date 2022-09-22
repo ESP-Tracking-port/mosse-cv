@@ -101,7 +101,7 @@ float DebugRawF32Ops::calcPsr(const void *aBufferComplex, const Tp::PointRowCol 
 {
 #if 0
 	wrapped.opencvNativeRawF32Ops.calcPsr(aBufferComplex, aPeak, sumHint, aMask);
-#elif 0
+#elif 1
 	wrapped.parallelOps.ops->calcPsr(aBufferComplex, aPeak, sumHint, aMask);
 #else
 	wrapped.rawF32Ops.calcPsr(aBufferComplex, aPeak, sumHint, aMask);
