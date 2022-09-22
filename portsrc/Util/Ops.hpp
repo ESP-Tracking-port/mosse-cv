@@ -9,6 +9,12 @@
 #define MOSSE_UTIL_OPS_HPP_
 
 #include <utility>
+#if !MOSSE_PORTABLE
+# include "Port/MossePort.hpp"
+# if defined(OHDEBUG)
+#  include "Util/Helper/InstanceCounter.hpp"
+# endif
+#endif
 
 namespace Mosse {
 namespace Tp {
@@ -22,13 +28,21 @@ union NumVariant;
 
 namespace Ut {
 
+#if defined(OHDEBUG)
+struct OpsInstanceCounterMarker;
+#endif
+
 /// \brief A numeric representation may use fixed point, or some other compact representation. Therefore, all the
 /// matrix operations are delegated to descendants of `Ops`
 ///
 /// \warning Default implementations of preprocessing routines (imageLog2Sum, imageAbsDevLog2Sum,
 /// imageCropPreprocessingImpl use float representation, and ParallelOps depends on this presupposition.
 ///
+#if defined(OHDEBUG)
+class Ops : public Ut::InstanceCounter<Ut::OpsInstanceCounterMarker> {
+#else
 class Ops {
+#endif
 private:
 	struct Coeffs {
 		float eta;
