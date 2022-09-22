@@ -28,6 +28,4 @@ TEST_CASE("ParallelOps : Compilation") {
 	Mosse::Ut::RawF32Ops rawOps2;
 	Mosse::Ut::Arithm<Mosse::Ut::RawF32Ops::reprFlags.buffer> bufferArithm;
 	Mosse::Ut::MemLayout<Mosse::Ut::RawF32Ops::reprFlags.buffer> bufferMemLayout;
-	Mosse::Ut::ParallelOps ops{{std::ref<Mosse::Ut::DecomposedOps>(rawOps1),
-		std::ref<Mosse::Ut::DecomposedOps>(rawOps2)}, thread, bufferArithm, bufferMemLayout};
 }
