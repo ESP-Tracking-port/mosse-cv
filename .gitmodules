@@ -1,3 +1,6 @@
 [submodule "lib/doctest/doctest"]
 	path = lib/doctest/doctest
 	url = https://github.com/ESP-Tracking-port/doctest
+[submodule "lib/espdsp/espdsp"]
+	path = lib/espdsp/espdsp
+	url = git@github.com:ESP-Tracking-port/esp-dsp.git
