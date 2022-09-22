@@ -35,8 +35,6 @@ public:
 	StlThread();
 private:
 	StlThread(Task &aTask);
-private:
-	Task *task;
 	std::thread thread;
 };
 

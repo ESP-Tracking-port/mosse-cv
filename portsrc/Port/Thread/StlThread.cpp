@@ -19,16 +19,16 @@ std::unique_ptr<Thread> StlThread::makeFromTask(Task &aTask)
 
 void StlThread::start()
 {
-	assert(nullptr != task);
-	thread = std::thread(&Task::run, task);
+	assert(nullptr != task());
+	thread = std::thread(&Task::run, task());
 	ohdebug(StlThread::start, "starting task");
 }
 
-StlThread::StlThread() : task{nullptr}, thread{}
+StlThread::StlThread() : Thread{nullptr}, thread{}
 {
 }
 
-StlThread::StlThread(Task &aTask) : task{&aTask}
+StlThread::StlThread(Task &aTask) : Thread{&aTask}
 {
 }
 
