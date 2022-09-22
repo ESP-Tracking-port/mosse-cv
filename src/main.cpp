@@ -54,6 +54,7 @@ void runPort()
 		else {
 			Mosse::Tp::Image mosseImage{gray.data, gray.size().height, gray.size().width};
 			sTracker->update(mosseImage, true);
+			ohdebug(main, sTracker->lastPsr());
 			auto mosseRoi = sTracker->roi();
 			roi = {mosseRoi.origin(1), mosseRoi.origin(0), mosseRoi.size(1), mosseRoi.size(0)};  // Create cv-compatible row-major ROI
 		}
