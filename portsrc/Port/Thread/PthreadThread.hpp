@@ -28,6 +28,7 @@ private:
 #if !MOSSE_PORTABLE
 	pthread_attr_t attr;
 	pthread_t threadId;
+	cpu_set_t cpuSet;
 #endif
 };
 

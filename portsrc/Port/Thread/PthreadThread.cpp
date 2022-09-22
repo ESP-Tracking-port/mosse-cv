@@ -31,12 +31,27 @@ std::unique_ptr<Thread> PthreadThread::makeFromTask(Task &aTask)
 void PthreadThread::start()
 {
 #if !MOSSE_PORTABLE
-	ohdebug(PthreadThread::start);
-	int s = pthread_attr_init(&attr);
+	static constexpr std::size_t knCores = 2;
+	static std::size_t currentCore = 0;
+	int s = 0;
+	s = pthread_attr_init(&attr);
 	assert(0 == s);
+	CPU_ZERO(&cpuSet);
+	CPU_SET(currentCore, &cpuSet);
+	s = pthread_attr_setaffinity_np(&attr, sizeof(cpuSet), &cpuSet);
+	assert(0 == s);
+	ohdebug(PthreadThread::start);
 	void *threadArg = static_cast<void *>(this);
 	s = pthread_create(&threadId, &attr, threadTask, threadArg);
 	assert(0 == s);
+	s = pthread_setaffinity_np(threadId, sizeof(cpuSet), &cpuSet);
+	assert(0 == s);
+	{
+		cpu_set_t cpuSetReference;
+		assert(0 == pthread_getaffinity_np(threadId, sizeof(cpuSetReference), &cpuSetReference));
+		assert(CPU_EQUAL(&cpuSetReference, &cpuSet));
+	}
+	currentCore = (currentCore + 1) % knCores;
 #endif
 }
 
