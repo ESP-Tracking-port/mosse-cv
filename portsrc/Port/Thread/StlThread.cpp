@@ -6,6 +6,7 @@
 //
 
 #include "StlThread.hpp"
+#include "Port/MossePort.hpp"
 #include <cassert>
 
 namespace Mosse {
@@ -20,6 +21,7 @@ void StlThread::start()
 {
 	assert(nullptr != task);
 	thread = std::thread(&Task::run, task);
+	ohdebug(StlThread::start, "starting task");
 }
 
 StlThread::StlThread() : task{nullptr}, thread{}
