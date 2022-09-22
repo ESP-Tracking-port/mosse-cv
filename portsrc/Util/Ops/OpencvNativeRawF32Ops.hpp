@@ -1,5 +1,5 @@
-#ifndef _TRACKER_H_HH
-#define _TRACKER_H_HH
+#if !defined(MOSSE_UTIL_OPS_OPENCVNATIVERAWF32OPS_HPP_)
+#define MOSSE_UTIL_OPS_OPENCVNATIVERAWF32OPS_HPP_
 
 #include "Port/MossePort.hpp"
 #include "Util/Ops.hpp"
@@ -100,7 +100,7 @@ private:
 	cv::Size init_sz;							/*初始化尺寸*/
 	cv::Rect _roi;								/*每一帧跟踪结果*/
 };
-#endif
-
 }  // namespace Ut
 }  // namespace Mosse
+
+#endif // MOSSE_UTIL_OPS_OPENCVNATIVERAWF32OPS_HPP_
