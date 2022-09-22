@@ -22,7 +22,7 @@
 #include <functional>
 
 // Only tests whether the `ThreadedOps` module is able to get successfully compiled.
-TEST_CASE("ThreadedOps : Compilation") {
+TEST_CASE("ParallelOps : Compilation") {
 	Mosse::Port::StlThread thread;
 	Mosse::Ut::RawF32Ops rawOps1;
 	Mosse::Ut::RawF32Ops rawOps2;
