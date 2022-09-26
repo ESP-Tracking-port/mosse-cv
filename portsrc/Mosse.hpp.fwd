@@ -33,6 +33,8 @@ Tracker &getDebugStub();
 ///
 Tracker &getNaiveMultithreaded(Port::Thread &thread, unsigned nThreads);
 
+Tracker &getNaiveRadix2Fft();
+
 }  // namespace Mosse
 
 #endif // MOSSE_MOSSE_HPP_FWD_
