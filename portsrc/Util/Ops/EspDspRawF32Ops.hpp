@@ -14,15 +14,17 @@
 namespace Mosse {
 namespace Ut {
 
-class EspDspFft2Base;
+template <Tp::Repr::Flags>
+class EspDspFft2;
 
 class EspDspRawF32Ops : public RawF32Ops {
 public:
 	EspDspRawF32Ops();
 	void fft2(void *aBufferComplex) override;
 	void ifft2(void *aBufferComplex) override;
+	void initImpl() override;
 private:
-	std::unique_ptr<EspDspFft2Base> espDspFft2;
+	EspDspFft2<RawF32Ops::reprFlags.buffer> espDspFft2;
 };
 
 }  // namespace Ut
