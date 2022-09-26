@@ -11,6 +11,7 @@
 #include "Types/Repr.hpp"
 #include "Types/Tracking.hpp"
 #include "Util/Helper/En.h"
+#include "Util/Helper/ReTp.hpp"
 #include <type_traits>
 
 namespace Mosse {
@@ -127,10 +128,10 @@ inline Tp::NumVariant atAsVariant(Ts &&...aArgs)
 	return {*static_cast<const ReTp<F> *>(at<F>(std::forward<Ts>(aArgs)...))};
 }
 
-template <Tp::Repr::Flags F, class ...Ts>
-inline Tp::NumVariant atImagAsVariant(Ts &&...aArgs)
+template <Tp::Repr::Flags F, class B>
+inline Tp::NumVariant atImagAsVariant(const Tp::PointRowCol &point, const Tp::Roi &roi, B mem)
 {
-	return {*static_cast<const ReTp<F> *>(atImag<F>(std::forward<Ts>(aArgs)...))};
+	return {*static_cast<const ReTp<F> *>(atImag<F>(point, roi, mem))};
 }
 
 struct MemLayoutBase {
