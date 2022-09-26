@@ -109,12 +109,14 @@ struct EspDspFft2Base {
 template <Tp::Repr::Flags F>
 class EspDspFft2 : public EspDspFft2Base {
 public:
-	EspDspFft2(const Tp::Roi &aRoi, const ReTp<F> *aRowsCoeffTable = nullptr,
-		const ReTp<F> *aColsCoeffTable = nullptr) :
-		roi{aRoi},
-		rowsCoeffTable{aRowsCoeffTable},
-		colsCoeffTable{aColsCoeffTable}
+	EspDspFft2() = default;
+
+	void init(const Tp::Roi &aRoi, const ReTp<F> *aRowsCoeffTable = nullptr, const ReTp<F> *aColsCoeffTable = nullptr)
 	{
+		roi = aRoi;
+		rowsCoeffTable = aRowsCoeffTable;
+		colsCoeffTable = aColsCoeffTable;
+
 		if (nullptr == rowsCoeffTable) {
 			rowsCoeffTableBuf = std::unique_ptr<ReTp<F>[]>{new ReTp<F>[roi.size(0)]};
 			Impl::EspDspFftR2Callable<ReTp<F>>::init(rowsCoeffTableBuf.get(), roi.size(0));
@@ -148,7 +150,7 @@ public:
 
 			for (; !wrap.isEnd(); wrap.nextCol()) {
 				Impl::EspDspFftR2Callable<ReTp<F>>::template fft<Wrap>(wrap, roi.size(1), colsCoeffTable);
-				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(0));
+				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(1));
 			}
 		}
 	}
@@ -160,11 +162,11 @@ public:
 		Impl::EspDspFftR2Callable<ReTp<F>>::mulc(arg, arg, roi.area() * 2, 1.0f / static_cast<float>(roi.area()), 1, 1); // TODO XXX
 	}
 private:
-	Tp::Roi roi;
-	const ReTp<F> *rowsCoeffTable;
-	const ReTp<F> *colsCoeffTable;
-	std::unique_ptr<ReTp<F>[]> rowsCoeffTableBuf;
-	std::unique_ptr<ReTp<F>[]> colsCoeffTableBuf;
+	Tp::Roi roi = {};
+	const ReTp<F> *rowsCoeffTable = nullptr;
+	const ReTp<F> *colsCoeffTable = nullptr ;
+	std::unique_ptr<ReTp<F>[]> rowsCoeffTableBuf = {};
+	std::unique_ptr<ReTp<F>[]> colsCoeffTableBuf = {};
 };
 
 }  // namespace Ut
