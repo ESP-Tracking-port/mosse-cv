@@ -35,7 +35,7 @@ struct EspDspFft2BufferWrapRow {
 	void *buffer;
 	std::size_t row;
 
-	inline void nextRow()
+	inline void advanceRow()
 	{
 		++row;
 	}
@@ -48,7 +48,7 @@ struct EspDspFft2BufferWrapRow {
 	inline ReTp<F> &operator[](std::size_t col)
 	{
 		if (coordIsIm(col)) {
-			return *static_cast<ReTp<F> *>(atImag<F>({row, col}, roi, buffer));
+			return *static_cast<ReTp<F> *>(atImag<F>({row, col / 2}, roi, buffer));
 		} else {
 			return *static_cast<ReTp<F> *>(at<F>({row, col}, roi, buffer));
 		}
@@ -64,7 +64,7 @@ struct EspDspFft2BufferWrapCol {
 	void *buffer;
 	std::size_t col;
 
-	inline void nextCol()
+	inline void advanceCol()
 	{
 		++col;
 	}
@@ -77,7 +77,7 @@ struct EspDspFft2BufferWrapCol {
 	inline ReTp<F> &operator[](std::size_t row)
 	{
 		if (coordIsIm(col)) {
-			return *static_cast<ReTp<F> *>(atImag<F>({row, col}, roi, buffer));
+			return *static_cast<ReTp<F> *>(atImag<F>({row / 2, col}, roi, buffer));
 		} else {
 			return *static_cast<ReTp<F> *>(at<F>({row, col}, roi, buffer));
 		}
@@ -137,7 +137,7 @@ public:
 			using Wrap = typename Impl::EspDspFft2BufferWrapRow<F>;
 			Wrap wrap{roi, aBuffer, 0};
 
-			for (; !wrap.isEnd(); wrap.nextRow()) {
+			for (; !wrap.isEnd(); wrap.advanceRow()) {
 				Impl::EspDspFftR2Callable<ReTp<F>>::template fft<Wrap>(wrap, roi.size(0), rowsCoeffTable);
 				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(0));
 			}
@@ -148,7 +148,7 @@ public:
 			using Wrap = Impl::EspDspFft2BufferWrapCol<F>;
 			Wrap wrap{roi, aBuffer, 0};
 
-			for (; !wrap.isEnd(); wrap.nextCol()) {
+			for (; !wrap.isEnd(); wrap.advanceCol()) {
 				Impl::EspDspFftR2Callable<ReTp<F>>::template fft<Wrap>(wrap, roi.size(1), colsCoeffTable);
 				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(1));
 			}
