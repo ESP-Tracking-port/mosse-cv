@@ -157,7 +157,7 @@ public:
 	{
 		fft2(aBuffer);
 		auto arg = static_cast<ReTp<F> *>(aBuffer);
-		Impl::EspDspFftR2Callable<ReTp<F>>::mulc(arg, arg, roi.area(), 1.0f / static_cast<float>(roi.area()), 1, 1); // TODO XXX
+		Impl::EspDspFftR2Callable<ReTp<F>>::mulc(arg, arg, roi.area() * 2, 1.0f / static_cast<float>(roi.area()), 1, 1); // TODO XXX
 	}
 private:
 	Tp::Roi roi;
