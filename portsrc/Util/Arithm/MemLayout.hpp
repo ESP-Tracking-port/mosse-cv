@@ -97,6 +97,12 @@ inline unsigned pointOffset(const Tp::PointRowCol &point, const Tp::Roi &roi)
 }
 
 template <Tp::Repr::Flags F>
+inline unsigned pointOffsetImag(const Tp::PointRowCol &point, const Tp::Roi &roi)
+{
+	return offsetFirstImag<F>(roi) + pointOffset<F>(point, roi);
+}
+
+template <Tp::Repr::Flags F>
 inline void *at(unsigned offset, void *mem)
 {
 	using ValueType = typename Tp::Repr::Type<F>;
@@ -119,7 +125,7 @@ inline auto at(const Tp::PointRowCol &point, const Tp::Roi &roi, B mem) -> B
 template <Tp::Repr::Flags F, class B>
 inline auto atImag(const Tp::PointRowCol &point, const Tp::Roi &roi, B mem) -> B
 {
-	return at<F>(offsetFirstImag<F>(roi) + pointOffset<F>(point, roi), mem);
+	return at<F>(pointOffsetImag<F>(point, roi), mem);
 }
 
 template <Tp::Repr::Flags F, class B>
