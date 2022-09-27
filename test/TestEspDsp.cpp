@@ -145,6 +145,7 @@ TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
 	static constexpr std::size_t kRows = 64;
 	static constexpr std::size_t kCols = 64;
 	auto signalDirect = kSignal4096f32;
+	CHECK(signalDirect == kSignal4096f32);
 	auto ptrSignalDirect = static_cast<void *>(signalDirect.data());
 	Tp::Roi roi{{0, 0}, {kRows, kCols}};
 	std::array<float, kRows> rowCoeffs{{0.0f}};
@@ -170,6 +171,7 @@ TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
 
 	// FFT2 using the wrapper
 	auto signalWrapper = kSignal4096f32;
+	CHECK(signalWrapper == kSignal4096f32);
 	auto ptrSignalWrapper = static_cast<void *>(signalWrapper.data());
 	Ut::EspDspFft2<kRepr> espDspFft2;
 	espDspFft2.init(roi, rowCoeffs.data(), colCoeffs.data());
