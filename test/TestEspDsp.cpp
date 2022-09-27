@@ -107,12 +107,13 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
 	auto signalPtr = static_cast<void *>(signal.data());
 	static constexpr float kEpsilon = 0.001f;
 
-	SUBCASE("Compare slices") {
-		{
-			WrapRow wrap{roi, signalPtr, 0};
+	{
+		WrapRow wrap{roi, signalPtr, 0};
 
-			for (; !wrap.isEnd(); wrap.advance()) {
-				auto slice = getRowRe1Im1(signalPtr, roi, wrap.rowcol);
+		for (; !wrap.isEnd(); wrap.advance()) {
+			auto slice = getRowRe1Im1(signalPtr, roi, wrap.rowcol);
+
+			SUBCASE("Compare slices") {
 				auto sliceCol = getColRe1Im1(signalPtr, roi, wrap.rowcol);
 				CHECK(slice != sliceCol);
 
@@ -124,19 +125,22 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
 				}
 			}
 		}
-		{
-			WrapCol wrap{roi, signalPtr, 0};
+	}
+	{
+		WrapCol wrap{roi, signalPtr, 0};
 
-			for (; !wrap.isEnd(); wrap.advance()) {
-				auto slice = getColRe1Im1(signalPtr, roi, wrap.rowcol);
+		for (; !wrap.isEnd(); wrap.advance()) {
+			auto slice = getColRe1Im1(signalPtr, roi, wrap.rowcol);
+
+			SUBCASE("Compare slices") {
 				auto sliceRow = getRowRe1Im1(signalPtr, roi, wrap.rowcol);
 				CHECK(slice != sliceRow);
 
 				for (std::size_t row = 0; row < roi.size(0); ++row) {
-					CHECK(abs(slice[row * 2] - Ut::atAsVariant<kRepr>({row, wrap.rowcol}, roi, signalPtr).f32)
-						< kEpsilon);
-					CHECK(abs(slice[row * 2 + 1] - Ut::atImagAsVariant<kRepr>({row, wrap.rowcol}, roi, signalPtr).f32)
-						< kEpsilon);
+						CHECK(abs(slice[row * 2] - Ut::atAsVariant<kRepr>({row, wrap.rowcol}, roi, signalPtr).f32)
+							< kEpsilon);
+						CHECK(abs(slice[row * 2 + 1] - Ut::atImagAsVariant<kRepr>({row, wrap.rowcol}, roi, signalPtr).f32)
+							< kEpsilon);
 				}
 			}
 		}
