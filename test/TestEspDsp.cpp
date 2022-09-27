@@ -173,7 +173,6 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
 
 TEST_CASE("Test ESP DSP : Radix 2 F32 FFT2, wrapped")
 {
-	return;  // TODO. This test does not clear up yet. It crashes. Fix required.
 	auto signal = kSignal;
 	static constexpr std::size_t kRoiSideSize = 8;
 	Tp::Roi roi{{0, 0}, {8, 8}};
