@@ -20,22 +20,24 @@ EspDspRawF32Ops::EspDspRawF32Ops() : RawF32Ops{}, espDspFft2{}
 void EspDspRawF32Ops::fft2(void *aBufferComplex)
 {
 	ohdebugsect(EspDspRawF32Ops::fft2, {
-		for (std::size_t row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
-			for (std::size_t col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
-				assert(!std::isnan(atAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
-				assert(!std::isnan(atImagAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
-			}
+		std::size_t bufferLength = roi().area() * 2;
+		const float *ptrBuf = static_cast<const float *>(aBufferComplex);
+
+		for (std::size_t i = 0; i < bufferLength; ++i) {
+			ohdebug(EspDspRawF32Ops::fft2, i, *(ptrBuf + i), ptrBuf + i);
+			assert(!std::isnan(*(ptrBuf + i)));
 		}
 	});
 
 	espDspFft2.fft2(aBufferComplex);
 
 	ohdebugsect(EspDspRawF32Ops::fft2, {
-		for (std::size_t row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
-			for (std::size_t col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
-				assert(!std::isnan(atAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
-				assert(!std::isnan(atImagAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
-			}
+		std::size_t bufferLength = roi().area() * 2;
+		const float *ptrBuf = static_cast<const float *>(aBufferComplex);
+
+		for (std::size_t i = 0; i < bufferLength; ++i) {
+			ohdebug(EspDspRawF32Ops::fft2, i, *(ptrBuf + i), ptrBuf + i);
+			assert(!std::isnan(*(ptrBuf + i)));
 		}
 	});
 }
