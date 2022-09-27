@@ -12,6 +12,7 @@
 #include "Types/Repr.hpp"
 #include "Util/Arithm/MemLayout.hpp"
 #include "Util/Helper/ReTp.hpp"
+#include "Port/MossePort.hpp"
 #include <dsps_fft2r.hpp>
 #include <esp_dsp.h>
 #include <type_traits>
@@ -28,58 +29,44 @@ inline bool coordIsIm(std::size_t coord)
 
 /// \brief ESP DSP library expects a complex buffer w/ ReImReIm layout type. EspDspFft2BuffeRWrapCols serves as
 /// an adapter enabling column-wise iteration
+/// \tparam D Dimension (0 or 1)
 ///
-template <Tp::Repr::Flags F>
-struct EspDspFft2BufferWrapRow {
+template <Tp::Repr::Flags F, std::size_t D>
+struct EspDspFft2BufferWrap {
+	static_assert(D == 0 || D == 1, "");
 	Tp::Roi roi;
 	void *buffer;
-	std::size_t row;
+	std::size_t rowcol;
 
-	inline void advanceRow()
+	inline void advance()
 	{
-		++row;
+		++rowcol;
 	}
 
 	inline bool isEnd() const
 	{
-		return row == roi.size(0);
+		return rowcol >= roi.size(D);
 	}
 
-	inline ReTp<F> &operator[](std::size_t col)
+	template <std::size_t D1 = D>
+	inline typename std::enable_if<D1 == 0, ReTp<F> &>::type operator[](std::size_t col)
 	{
+//		ohdebug(WrapRow::operator[row], rowcol, col);
 		if (coordIsIm(col)) {
-			return *static_cast<ReTp<F> *>(atImag<F>({row, col / 2}, roi, buffer));
+			return *static_cast<ReTp<F> *>(atImag<F>({rowcol, col / 2}, roi, buffer));
 		} else {
-			return *static_cast<ReTp<F> *>(at<F>({row, col}, roi, buffer));
+			return *static_cast<ReTp<F> *>(at<F>({rowcol, col}, roi, buffer));
 		}
 	}
-};
 
-/// \brief ESP DSP library expects a complex buffer w/ ReImReIm layout type. EspDspFft2BuffeRWrapCols serves as
-/// an adapter enabling row-wise iteration
-///
-template <Tp::Repr::Flags F>
-struct EspDspFft2BufferWrapCol {
-	Tp::Roi roi;
-	void *buffer;
-	std::size_t col;
-
-	inline void advanceCol()
+	template <std::size_t D1 = D>
+	inline typename std::enable_if<D1 == 1, ReTp<F> &>::type operator[](std::size_t row)
 	{
-		++col;
-	}
-
-	inline bool isEnd()
-	{
-		return col == roi.size(1);
-	}
-
-	inline ReTp<F> &operator[](std::size_t row)
-	{
-		if (coordIsIm(col)) {
-			return *static_cast<ReTp<F> *>(atImag<F>({row / 2, col}, roi, buffer));
+//		ohdebug(WrapCol::operator[col], row, rowcol);
+		if (coordIsIm(row)) {
+			return *static_cast<ReTp<F> *>(atImag<F>({row / 2, rowcol}, roi, buffer));
 		} else {
-			return *static_cast<ReTp<F> *>(at<F>({row, col}, roi, buffer));
+			return *static_cast<ReTp<F> *>(at<F>({row, rowcol}, roi, buffer));
 		}
 	}
 };
@@ -113,6 +100,7 @@ public:
 
 	void init(const Tp::Roi &aRoi, const ReTp<F> *aRowsCoeffTable = nullptr, const ReTp<F> *aColsCoeffTable = nullptr)
 	{
+		ohdebug("EspDspFft2::init");
 		roi = aRoi;
 		rowsCoeffTable = aRowsCoeffTable;
 		colsCoeffTable = aColsCoeffTable;
@@ -121,23 +109,26 @@ public:
 			rowsCoeffTableBuf = std::unique_ptr<ReTp<F>[]>{new ReTp<F>[roi.size(0)]};
 			Impl::EspDspFftR2Callable<ReTp<F>>::init(rowsCoeffTableBuf.get(), roi.size(0));
 			rowsCoeffTable = rowsCoeffTableBuf.get();
+			ohdebug("EspDspFft2::init", "rowCoeffTable");
 		}
 
 		if (nullptr == colsCoeffTable) {
 			colsCoeffTableBuf = std::unique_ptr<ReTp<F>[]>{new ReTp<F>[roi.size(1)]};
 			Impl::EspDspFftR2Callable<ReTp<F>>::init(colsCoeffTableBuf.get(), roi.size(1));
 			colsCoeffTable = colsCoeffTableBuf.get();
+			ohdebug("EspDspFft2::init", "colsCoeffTable");
 		}
 	}
 
 	void fft2(void *aBuffer) override
 	{
+		ohdebug("", atAsVariant<F>({10, 10}, roi, aBuffer).f32);
 		// Row-wise
 		{
-			using Wrap = typename Impl::EspDspFft2BufferWrapRow<F>;
+			using Wrap = Impl::EspDspFft2BufferWrap<F, 0>;
 			Wrap wrap{roi, aBuffer, 0};
 
-			for (; !wrap.isEnd(); wrap.advanceRow()) {
+			for (; !wrap.isEnd(); wrap.advance()) {
 				Impl::EspDspFftR2Callable<ReTp<F>>::template fft<Wrap>(wrap, roi.size(0), rowsCoeffTable);
 				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(0));
 			}
@@ -145,10 +136,10 @@ public:
 
 		// Col-wise
 		{
-			using Wrap = Impl::EspDspFft2BufferWrapCol<F>;
+			using Wrap = Impl::EspDspFft2BufferWrap<F, 1>;
 			Wrap wrap{roi, aBuffer, 0};
 
-			for (; !wrap.isEnd(); wrap.advanceCol()) {
+			for (; !wrap.isEnd(); wrap.advance()) {
 				Impl::EspDspFftR2Callable<ReTp<F>>::template fft<Wrap>(wrap, roi.size(1), colsCoeffTable);
 				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(1));
 			}
