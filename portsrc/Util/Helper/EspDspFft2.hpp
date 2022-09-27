@@ -18,6 +18,8 @@
 #include <type_traits>
 #include <memory>
 
+ohdebuggroup("")
+
 namespace Mosse {
 namespace Ut {
 namespace Impl {
@@ -122,7 +124,6 @@ public:
 
 	void fft2(void *aBuffer) override
 	{
-		ohdebug("", atAsVariant<F>({10, 10}, roi, aBuffer).f32);
 		// Row-wise
 		{
 			using Wrap = Impl::EspDspFft2BufferWrap<F, 0>;
