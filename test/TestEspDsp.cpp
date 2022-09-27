@@ -154,7 +154,6 @@ TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
 	dsps_fft2r_init_fc32(colCoeffs.data(), colCoeffs.size());
 
 	// Direct FFT2
-
 	for (auto row = 0; row < roi.size(0); ++row) {  // Row-wise
 		auto slice = getRowRe1Im1(ptrSignalDirect, roi, row);
 		dsps_fft2r_fc32_ansi_(slice.data(), slice.size() / 2, rowCoeffs.data());
@@ -168,7 +167,6 @@ TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
 	}
 
 	CHECK(!vecIsClose(kSignal4096f32, signalDirect));
-
 	// FFT2 using the wrapper
 	auto signalWrapper = kSignal4096f32;
 	CHECK(signalWrapper == kSignal4096f32);
