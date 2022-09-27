@@ -128,8 +128,8 @@ public:
 			Wrap wrap{roi, aBuffer, 0};
 
 			for (; !wrap.isEnd(); wrap.advance()) {
-				Impl::EspDspFftR2Callable<ReTp<F>>::template fft<Wrap>(wrap, roi.size(0), rowsCoeffTable);
-				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(0));
+				Impl::EspDspFftR2Callable<ReTp<F>>::template fft<Wrap>(wrap, roi.size(1), rowsCoeffTable);
+				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(1));
 			}
 		}
 
@@ -139,8 +139,8 @@ public:
 			Wrap wrap{roi, aBuffer, 0};
 
 			for (; !wrap.isEnd(); wrap.advance()) {
-				Impl::EspDspFftR2Callable<ReTp<F>>::template fft<Wrap>(wrap, roi.size(1), colsCoeffTable);
-				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(1));
+				Impl::EspDspFftR2Callable<ReTp<F>>::template fft<Wrap>(wrap, roi.size(0), colsCoeffTable);
+				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(0));
 			}
 		}
 	}
