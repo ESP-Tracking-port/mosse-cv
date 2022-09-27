@@ -123,6 +123,18 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
 						< kEpsilon);
 					CHECK(abs(slice[col * 2 + 1] - Ut::atImagAsVariant<kRepr>({wrap.rowcol, col}, roi, signalPtr).f32)
 						< kEpsilon);
+					CHECK(abs(slice[col * 2] - wrap[col * 2]) < kEpsilon);
+					CHECK(abs(slice[col * 2 + 1] - wrap[col * 2 + 1]) < kEpsilon);
+				}
+			}
+
+			SUBCASE("Compare FFT, rows") {
+				dsps_fft2r_init_fc32(sCoeffs, roi.size(1));
+				dsps_fft2r_fc32_ansi_(slice.data(), roi.size(1), sCoeffs);
+				dsps_fft2r_fc32_ansi_step(wrap, roi.size(1), sCoeffs);
+
+				for (std::size_t i = 0; i < slice.size(); ++i) {
+					CHECK(abs(slice[i] - wrap[i]) < kEpsilon);
 				}
 			}
 		}
@@ -139,10 +151,20 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
 				CHECK_EQ(slice.size(), 2 * roi.size(0));
 
 				for (std::size_t row = 0; row < roi.size(0); ++row) {
-						CHECK(abs(slice[row * 2] - Ut::atAsVariant<kRepr>({row, wrap.rowcol}, roi, signalPtr).f32)
-							< kEpsilon);
-						CHECK(abs(slice[row * 2 + 1] - Ut::atImagAsVariant<kRepr>({row, wrap.rowcol}, roi, signalPtr).f32)
-							< kEpsilon);
+					CHECK(abs(slice[row * 2] - Ut::atAsVariant<kRepr>({row, wrap.rowcol}, roi, signalPtr).f32)
+						< kEpsilon);
+					CHECK(abs(slice[row * 2 + 1] - Ut::atImagAsVariant<kRepr>({row, wrap.rowcol}, roi, signalPtr).f32)
+						< kEpsilon);
+				}
+			}
+
+			SUBCASE("Compare FFT, columns") {
+				dsps_fft2r_init_fc32(sCoeffs, roi.size(0));
+				dsps_fft2r_fc32_ansi_(slice.data(), roi.size(0), sCoeffs);
+				dsps_fft2r_fc32_ansi_step(wrap, roi.size(0), sCoeffs);
+
+				for (std::size_t i = 0; i < slice.size(); ++i) {
+					CHECK((abs(slice[i] - wrap[i])) < kEpsilon);
 				}
 			}
 		}
