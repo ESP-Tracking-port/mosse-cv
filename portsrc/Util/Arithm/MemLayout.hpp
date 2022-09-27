@@ -122,10 +122,10 @@ inline auto atImag(const Tp::PointRowCol &point, const Tp::Roi &roi, B mem) -> B
 	return at<F>(offsetFirstImag<F>(roi) + pointOffset<F>(point, roi), mem);
 }
 
-template <Tp::Repr::Flags F, class ...Ts>
-inline Tp::NumVariant atAsVariant(Ts &&...aArgs)
+template <Tp::Repr::Flags F, class B>
+inline Tp::NumVariant atAsVariant(const Tp::PointRowCol &point, const Tp::Roi &roi, B mem)
 {
-	return {*static_cast<const ReTp<F> *>(at<F>(std::forward<Ts>(aArgs)...))};
+	return {*static_cast<const ReTp<F> *>(at<F>(point, roi, mem))};
 }
 
 template <Tp::Repr::Flags F, class B>
