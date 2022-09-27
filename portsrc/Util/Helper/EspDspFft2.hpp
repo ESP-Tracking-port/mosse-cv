@@ -53,22 +53,20 @@ struct EspDspFft2BufferWrap {
 	template <std::size_t D1 = D>
 	inline typename std::enable_if<D1 == 0, ReTp<F> &>::type operator[](std::size_t col)
 	{
-//		ohdebug(WrapRow::operator[row], rowcol, col);
 		if (coordIsIm(col)) {
 			return *static_cast<ReTp<F> *>(atImag<F>({rowcol, col / 2}, roi, buffer));
 		} else {
-			return *static_cast<ReTp<F> *>(at<F>({rowcol, col}, roi, buffer));
+			return *static_cast<ReTp<F> *>(at<F>({rowcol, col / 2}, roi, buffer));
 		}
 	}
 
 	template <std::size_t D1 = D>
 	inline typename std::enable_if<D1 == 1, ReTp<F> &>::type operator[](std::size_t row)
 	{
-//		ohdebug(WrapCol::operator[col], row, rowcol);
 		if (coordIsIm(row)) {
 			return *static_cast<ReTp<F> *>(atImag<F>({row / 2, rowcol}, roi, buffer));
 		} else {
-			return *static_cast<ReTp<F> *>(at<F>({row, rowcol}, roi, buffer));
+			return *static_cast<ReTp<F> *>(at<F>({row / 2, rowcol}, roi, buffer));
 		}
 	}
 };
