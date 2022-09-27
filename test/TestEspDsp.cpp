@@ -28,6 +28,14 @@ std::ostream &operator<<(std::ostream &aOut, const std::array<T, N> &aArr)
 	return aOut;
 }
 
+template <class T>
+std::ostream &operator<<(std::ostream &aOut, const std::vector<T> &aArr)
+{
+	std::copy(aArr.begin(), aArr.end(), std::ostream_iterator<T>(aOut, ", "));
+
+	return aOut;
+}
+
 static constexpr std::size_t kSignalLength = 64;
 
 static constexpr std::array<float, kSignalLength * 2> kSignal{{
@@ -129,9 +137,11 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
 			}
 
 			SUBCASE("Compare FFT, rows") {
+				ohdebug("Compare FFT, rows", "before", slice);
 				dsps_fft2r_init_fc32(sCoeffs, roi.size(1));
 				dsps_fft2r_fc32_ansi_(slice.data(), roi.size(1), sCoeffs);
 				dsps_fft2r_fc32_ansi_step(wrap, roi.size(1), sCoeffs);
+				ohdebug("Compare FFT, rows", "after", slice);
 
 				for (std::size_t i = 0; i < slice.size(); ++i) {
 					CHECK(abs(slice[i] - wrap[i]) < kEpsilon);
@@ -161,9 +171,11 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
 			}
 
 			SUBCASE("Compare FFT, columns") {
+				ohdebug("Compare FFT, columns", "before", slice);
 				dsps_fft2r_init_fc32(sCoeffs, roi.size(0));
 				dsps_fft2r_fc32_ansi_(slice.data(), roi.size(0), sCoeffs);
 				dsps_fft2r_fc32_ansi_step(wrap, roi.size(0), sCoeffs);
+				ohdebug("Compare FFT, columns", "after", slice);
 
 				for (std::size_t i = 0; i < slice.size(); ++i) {
 					CHECK((abs(slice[i] - wrap[i])) < kEpsilon);
