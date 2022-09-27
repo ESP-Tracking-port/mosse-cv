@@ -5,6 +5,7 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
+#include "Signal.hpp"
 #include <Fft.h>
 #include <Port/MossePort.hpp>
 #include <Types/Tracking.hpp>
@@ -12,11 +13,12 @@
 #include <Util/Ops/ThreadedOps.hpp>
 #include <Util/Ops/RawF32Ops.hpp>
 #include <Util/Helper/EspDspFft2.hpp>
-#include "esp_dsp.h"
+#include <esp_dsp.h>
 #include <doctest/doctest.h>
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <numeric>
 
 using namespace Mosse;
 
@@ -37,6 +39,7 @@ std::ostream &operator<<(std::ostream &aOut, const std::vector<T> &aArr)
 }
 
 static constexpr std::size_t kSignalLength = 64;
+static constexpr Tp::Repr::Flags kRepr = Tp::Repr::ReprRaw | Tp::Repr::CplxRe1Im1 | Tp::Repr::StorageF32;
 
 static constexpr std::array<float, kSignalLength * 2> kSignal{{
 	4.734472441456392f, 0.0f, 5.084260978553312f, 0.0f, 3.5033694329113065f, 0.0f, -10.076512743774064f, 0.0f,
@@ -105,9 +108,78 @@ static std::vector<float> getColRe1Im1(const void *aDataRe1Im1, const Tp::Roi &a
 	return out;
 }
 
+void setColRe1Im1(void *aDataRe1Im1Out, const Tp::Roi &aRoi, std::size_t aCol, const std::vector<float> &aIn)
+{
+	for (std::size_t row = 0; row < aRoi.size(0); ++row) {
+		float *re = static_cast<float *>(Ut::at<kRepr>({row, aCol}, aRoi, aDataRe1Im1Out));
+		float *im = static_cast<float *>(Ut::atImag<kRepr>({row, aCol}, aRoi, aDataRe1Im1Out));
+		*re = aIn[row * 2];
+		*im = aIn[row * 2 + 1];
+	}
+}
+
+void setRowRe1Im1(void *aDataRe1Im1Out, const Tp::Roi &aRoi, std::size_t aRow, const std::vector<float> &aIn)
+{
+	for (std::size_t col = 0; col < aRoi.size(1); ++col) {
+		float *re = static_cast<float *>(Ut::at<kRepr>({aRow, col}, aRoi, aDataRe1Im1Out));
+		float *im = static_cast<float *>(Ut::atImag<kRepr>({aRow, col}, aRoi, aDataRe1Im1Out));
+		*re = aIn[col * 2];
+		*im = aIn[col * 2 + 1];
+	}
+}
+
+template <class T>
+bool vecIsClose(const T &aLhs, const T &aRhs)
+{
+	static constexpr float kEpsilon = 0.001f;
+	const float accAbsDiff = std::inner_product(aLhs.begin(), aLhs.end(), aRhs.begin(), 0.0f,
+		[](float acc, float diff) {return acc + diff;},
+		[](float lhs, float rhs) {return abs(rhs - lhs); });
+	const bool res = (accAbsDiff < kEpsilon);
+
+	return res;
+}
+
+TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
+{
+	static constexpr std::size_t kRows = 64;
+	static constexpr std::size_t kCols = 64;
+	auto signalDirect = kSignal4096f32;
+	auto ptrSignalDirect = static_cast<void *>(signalDirect.data());
+	Tp::Roi roi{{0, 0}, {kRows, kCols}};
+	std::array<float, kRows> rowCoeffs{{0.0f}};
+	std::array<float, kCols> colCoeffs{{0.0f}};
+	dsps_fft2r_init_fc32(rowCoeffs.data(), rowCoeffs.size());
+	dsps_fft2r_init_fc32(colCoeffs.data(), colCoeffs.size());
+
+	// Direct FFT2
+
+	for (auto row = 0; row < roi.size(0); ++row) {  // Row-wise
+		auto slice = getRowRe1Im1(ptrSignalDirect, roi, row);
+		dsps_fft2r_fc32_ansi_(slice.data(), slice.size() / 2, rowCoeffs.data());
+		setRowRe1Im1(ptrSignalDirect, roi, row, slice);
+	}
+
+	for (auto col = 0; col < roi.size(1); ++col) {  // Col-wise
+		auto slice = getColRe1Im1(ptrSignalDirect, roi, col);
+		dsps_fft2r_fc32_ansi_(slice.data(), slice.size() / 2, colCoeffs.data());
+		setColRe1Im1(ptrSignalDirect, roi, col, slice);
+	}
+
+	CHECK(!vecIsClose(kSignal4096f32, signalDirect));
+
+	// FFT2 using the wrapper
+	auto signalWrapper = kSignal4096f32;
+	auto ptrSignalWrapper = static_cast<void *>(signalWrapper.data());
+	Ut::EspDspFft2<kRepr> espDspFft2;
+	espDspFft2.init(roi, rowCoeffs.data(), colCoeffs.data());
+	espDspFft2.fft2(static_cast<void *>(signalWrapper.data()));
+	CHECK(!vecIsClose(kSignal4096f32, signalWrapper));  // FFT actually took place
+	CHECK(vecIsClose(signalWrapper, signalDirect));
+}
+
 TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare, atomics")
 {
-	static constexpr Tp::Repr::Flags kRepr = Tp::Repr::ReprRaw | Tp::Repr::CplxRe1Im1 | Tp::Repr::StorageF32;
 	using WrapRow = Ut::Impl::EspDspFft2BufferWrap<kRepr, 0>;
 	using WrapCol = Ut::Impl::EspDspFft2BufferWrap<kRepr, 1>;
 	Tp::Roi roi{{0, 0}, {8, 8}};
