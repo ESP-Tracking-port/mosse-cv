@@ -67,11 +67,14 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, non-wrapped") {
 	}
 }
 
-TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped")
+TEST_CASE("Test ESP DSP : Radix 2 F32 FFT2, wrapped")
 {
 	auto signal = kSignal;
 	static constexpr std::size_t kRoiSideSize = 8;
 	Tp::Roi roi{{0, 0}, {8, 8}};
+
+	CHECK(1 == Ut::offsetFirstImag<Ut::RawF32Ops::reprFlags.buffer>(roi));
+
 	dsps_fft2r_init_fc32(sCoeffs, kRoiSideSize);
 	Ut::EspDspFft2<Ut::RawF32Ops::reprFlags.buffer> espDsp;
 	espDsp.init(roi, sCoeffs, sCoeffs);
