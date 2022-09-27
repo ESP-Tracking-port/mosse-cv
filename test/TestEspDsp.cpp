@@ -105,7 +105,7 @@ static std::vector<float> getColRe1Im1(const void *aDataRe1Im1, const Tp::Roi &a
 	return out;
 }
 
-TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
+TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare, atomics")
 {
 	static constexpr Tp::Repr::Flags kRepr = Tp::Repr::ReprRaw | Tp::Repr::CplxRe1Im1 | Tp::Repr::StorageF32;
 	using WrapRow = Ut::Impl::EspDspFft2BufferWrap<kRepr, 0>;
