@@ -135,6 +135,8 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
 
 				for (std::size_t i = 0; i < slice.size(); ++i) {
 					CHECK(abs(slice[i] - wrap[i]) < kEpsilon);
+					CHECK(!std::isnan(slice[i]));
+					CHECK(!std::isnan(wrap[i]));
 				}
 			}
 		}
@@ -165,6 +167,8 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
 
 				for (std::size_t i = 0; i < slice.size(); ++i) {
 					CHECK((abs(slice[i] - wrap[i])) < kEpsilon);
+					CHECK(!std::isnan(slice[i]));
+					CHECK(!std::isnan(wrap[i]));
 				}
 			}
 		}
