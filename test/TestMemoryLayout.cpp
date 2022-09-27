@@ -137,7 +137,7 @@ static constexpr std::array<float, kSignalLength * 2> kSignal{{
 	-3.8948364416148653f, 0.0f, 12.894276897091462f, 0.0f, 15.259709870504022f, 0.0f, 11.145543733143622f, kSig77Im
 }};
 
-TEST_CASE("Memory layout : ReIm getters")
+TEST_CASE("Memory layout : ReIm getters, Re1Im1 layout")
 {
 	static constexpr Tp::Repr::Flags kReprFlags = Tp::Repr::CplxRe1Im1 | Tp::Repr::ReprRaw | Tp::Repr::StorageF32;
 	const Tp::Roi roi{{0, 0}, {8, 8}};
