@@ -113,6 +113,8 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
 
 			for (; !wrap.isEnd(); wrap.advance()) {
 				auto slice = getRowRe1Im1(signalPtr, roi, wrap.rowcol);
+				auto sliceCol = getColRe1Im1(signalPtr, roi, wrap.rowcol);
+				CHECK(slice != sliceCol);
 
 				for (std::size_t col = 0; col < roi.size(1); ++col) {
 					CHECK(abs(slice[col * 2] - Ut::atAsVariant<kRepr>({wrap.rowcol, col}, roi, signalPtr).f32)
@@ -127,6 +129,8 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare")
 
 			for (; !wrap.isEnd(); wrap.advance()) {
 				auto slice = getColRe1Im1(signalPtr, roi, wrap.rowcol);
+				auto sliceRow = getRowRe1Im1(signalPtr, roi, wrap.rowcol);
+				CHECK(slice != sliceRow);
 
 				for (std::size_t row = 0; row < roi.size(0); ++row) {
 					CHECK(abs(slice[row * 2] - Ut::atAsVariant<kRepr>({row, wrap.rowcol}, roi, signalPtr).f32)
