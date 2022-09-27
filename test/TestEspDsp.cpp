@@ -140,6 +140,18 @@ bool vecIsClose(const T &aLhs, const T &aRhs)
 	return res;
 }
 
+template <class T>
+bool vecHasNan(const T &vec)
+{
+	for (auto i : vec) {
+		if (std::isnan(i)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
 {
 	static constexpr std::size_t kRows = 64;
@@ -167,6 +179,8 @@ TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
 	}
 
 	CHECK(!vecIsClose(kSignal4096f32, signalDirect));
+	CHECK(!vecHasNan(signalDirect));
+
 	// FFT2 using the wrapper
 	auto signalWrapper = kSignal4096f32;
 	CHECK(signalWrapper == kSignal4096f32);
@@ -175,6 +189,7 @@ TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
 	espDspFft2.init(roi, rowCoeffs.data(), colCoeffs.data());
 	espDspFft2.fft2(static_cast<void *>(signalWrapper.data()));
 	CHECK(!vecIsClose(kSignal4096f32, signalWrapper));  // FFT actually took place
+	CHECK(!vecHasNan(signalWrapper));
 	CHECK(vecIsClose(signalWrapper, signalDirect));
 }
 
