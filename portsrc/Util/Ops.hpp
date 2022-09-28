@@ -45,8 +45,8 @@ class Ops {
 #endif
 private:
 	struct Coeffs {
-		float eta;
-		float invEta;
+		Tp::NumVariant eta;
+		Tp::NumVariant invEta;
 	};
 public:
 	/// \brief Implementation MUST expect that it will be called multiple times during the tracking process and therefore
@@ -102,19 +102,19 @@ public:
 	}
 
 protected:
-	inline float eta() const
+	inline Tp::NumVariant eta() const
 	{
 		return coeffs.eta;
 	}
 
-	inline float invEta() const
+	inline Tp::NumVariant invEta() const
 	{
 		return coeffs.invEta;
 	}
 
-	inline void setEta(float eta)
+	inline void setEta(Tp::NumVariant aEta, Tp::NumVariant aInvEta)
 	{
-		coeffs = {eta, 1.0f - eta};
+		coeffs = {aEta, aInvEta};
 	}
 
 	inline bool isFirstInit() const
