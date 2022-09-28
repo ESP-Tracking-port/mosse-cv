@@ -7,3 +7,6 @@
 [submodule "lib/cnl/cnl"]
 	path = lib/cnl/cnl
 	url = git@github.com:ESP-Tracking-port/cnl.git
+[submodule "lib/fpm/fpm"]
+	path = lib/fpm/fpm
+	url = git@github.com:ESP-Tracking-port/fpm.git
