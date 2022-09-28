@@ -170,12 +170,15 @@ TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
 	for (auto row = 0; row < roi.size(0); ++row) {  // Row-wise
 		auto slice = getRowRe1Im1(ptrSignalDirect, roi, row);
 		dsps_fft2r_fc32_ansi_(slice.data(), slice.size() / 2, rowCoeffs.data());
+		dsps_bit_rev2r_fc32(slice.data(), slice.size() / 2);
 		setRowRe1Im1(ptrSignalDirect, roi, row, slice);
+		ohdebug(test, slice);
 	}
 
 	for (auto col = 0; col < roi.size(1); ++col) {  // Col-wise
 		auto slice = getColRe1Im1(ptrSignalDirect, roi, col);
 		dsps_fft2r_fc32_ansi_(slice.data(), slice.size() / 2, colCoeffs.data());
+		dsps_bit_rev2r_fc32(slice.data(), slice.size() / 2);
 		setColRe1Im1(ptrSignalDirect, roi, col, slice);
 	}
 
