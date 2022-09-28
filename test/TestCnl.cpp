@@ -17,8 +17,14 @@
 #include <iostream>
 #include <cnl/all.h>
 
-TEST_CASE("Cnl") {
-	auto x = cnl::scaled_integer<std::int16_t, cnl::power<-8>>{3.5123123};
+void demo()
+{
+	static constexpr float kNum = 3.53f;
+	auto x = cnl::scaled_integer<int, cnl::power<-3>>{kNum};
 
-	std::cout << "CNL" << x << std::endl;
+	ohdebug(cnl demo, kNum, to_rep(x), x, x / 2, x / 3);
+}
+
+TEST_CASE("Cnl") {
+	demo();
 }
