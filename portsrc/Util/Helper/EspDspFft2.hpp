@@ -100,7 +100,6 @@ public:
 
 	void init(const Tp::Roi &aRoi, const ReTp<F> *aRowsCoeffTable = nullptr, const ReTp<F> *aColsCoeffTable = nullptr)
 	{
-		ohdebug("EspDspFft2::init");
 		roi = aRoi;
 		rowsCoeffTable = aRowsCoeffTable;
 		colsCoeffTable = aColsCoeffTable;
@@ -109,14 +108,12 @@ public:
 			rowsCoeffTableBuf = std::unique_ptr<ReTp<F>[]>{new ReTp<F>[roi.size(0)]};
 			Impl::EspDspFftR2Callable<ReTp<F>>::init(rowsCoeffTableBuf.get(), roi.size(0));
 			rowsCoeffTable = rowsCoeffTableBuf.get();
-			ohdebug("EspDspFft2::init", "rowCoeffTable");
 		}
 
 		if (nullptr == colsCoeffTable) {
 			colsCoeffTableBuf = std::unique_ptr<ReTp<F>[]>{new ReTp<F>[roi.size(1)]};
 			Impl::EspDspFftR2Callable<ReTp<F>>::init(colsCoeffTableBuf.get(), roi.size(1));
 			colsCoeffTable = colsCoeffTableBuf.get();
-			ohdebug("EspDspFft2::init", "colsCoeffTable");
 		}
 	}
 
