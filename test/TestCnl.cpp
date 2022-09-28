@@ -17,10 +17,6 @@
 #include <iostream>
 #include <cnl/all.h>
 
-void accept(int)
-{
-}
-
 void demo()
 {
 	static constexpr float kNum = 3.53f;
@@ -28,11 +24,9 @@ void demo()
 	ohdebug(cnl demo, kNum, to_rep(x), x, x / 2, x / 3, x * x);
 	auto xraw = to_rep(x);
 	auto x2 = cnl::scaled_integer<int, cnl::power<-3>>{xraw};
-//	accept(x2);
 	ohdebug(cnl demo, x2);
 }
 
 TEST_CASE("Cnl") {
 	demo();
-	demoElasticScaled();
 }
