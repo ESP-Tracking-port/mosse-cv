@@ -25,7 +25,7 @@ using namespace Mosse;
 template <class T, std::size_t N>
 std::ostream &operator<<(std::ostream &aOut, const std::array<T, N> &aArr)
 {
-	std::copy_n(aArr.begin(), N, std::ostream_iterator<T>(aOut, "\n"));
+	std::copy_n(aArr.begin(), N, std::ostream_iterator<T>(aOut, ", "));
 
 	return aOut;
 }
@@ -136,6 +136,7 @@ bool vecIsClose(const T &aLhs, const T &aRhs)
 		[](float acc, float diff) {return acc + diff;},
 		[](float lhs, float rhs) {return abs(rhs - lhs); });
 	const bool res = (accAbsDiff < kEpsilon);
+	ohdebug(vecIsClose, accAbsDiff);
 
 	return res;
 }
@@ -164,12 +165,16 @@ TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
 	std::array<float, kCols> colCoeffs{{0.0f}};
 	dsps_fft2r_init_fc32(rowCoeffs.data(), rowCoeffs.size());
 	dsps_fft2r_init_fc32(colCoeffs.data(), colCoeffs.size());
+	ohdebug(test, rowCoeffs, colCoeffs);
 
 	// Direct FFT2
 	for (auto row = 0; row < roi.size(0); ++row) {  // Row-wise
 		auto slice = getRowRe1Im1(ptrSignalDirect, roi, row);
 		dsps_fft2r_fc32_ansi_(slice.data(), slice.size() / 2, rowCoeffs.data());
+		ohdebug(test, row, slice);
 		setRowRe1Im1(ptrSignalDirect, roi, row, slice);
+		slice = getRowRe1Im1(ptrSignalDirect, roi, row);
+		ohdebug(test, row, slice);
 	}
 
 	for (auto col = 0; col < roi.size(1); ++col) {  // Col-wise
