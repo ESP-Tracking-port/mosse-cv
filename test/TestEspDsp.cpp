@@ -136,7 +136,6 @@ bool vecIsClose(const T &aLhs, const T &aRhs)
 		[](float acc, float diff) {return acc + diff;},
 		[](float lhs, float rhs) {return abs(rhs - lhs); });
 	const bool res = (accAbsDiff < kEpsilon);
-	ohdebug(vecIsClose, accAbsDiff);
 
 	return res;
 }
@@ -172,7 +171,6 @@ TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
 		dsps_fft2r_fc32_ansi_(slice.data(), slice.size() / 2, rowCoeffs.data());
 		dsps_bit_rev2r_fc32(slice.data(), slice.size() / 2);
 		setRowRe1Im1(ptrSignalDirect, roi, row, slice);
-		ohdebug(test, slice);
 	}
 
 	for (auto col = 0; col < roi.size(1); ++col) {  // Col-wise
