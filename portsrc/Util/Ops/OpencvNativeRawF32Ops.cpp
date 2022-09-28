@@ -1,18 +1,21 @@
 // TODO CV stores multichannel matrices plane-by-plane
 
 #include "Port/MossePort.hpp"
+#include "Types/Tracking.hpp"
+#include "Types/Repr.hpp"
+#include "MosseApi.hpp"
+#include "OpencvNativeRawF32Ops.hpp"
+#include "Util/Helper/PrecompiledMatrixHelper.hpp"
 #include <assert.h>
 #include <stdlib.h>
 #include <time.h>
-#include <MosseApi.hpp>
-#include "OpencvNativeRawF32Ops.hpp"
-#include "Util/Helper/PrecompiledMatrixHelper.hpp"
 
 namespace Mosse {
 namespace Ut {
 
 static Ut::PrecompiledMatrixHelper<float> sPrecompiledMatrixHelper{Mosse::getGaussKernelFft3d,
 	Mosse::getHann};
+static constexpr float kEta = 0.125f;
 
 OpencvNativeRawF32Ops::OpencvNativeRawF32Ops() : Ops()
 {
@@ -158,7 +161,7 @@ void OpencvNativeRawF32Ops::initImpl()
 {
 #if MOSSE_USE_OPENCV
 	sPrecompiledMatrixHelper.update(roi());
-	setEta(0.125f);
+	setEta({kEta}, {1.0f - kEta});
 	_roi = roiCv();
 #else
 #endif
