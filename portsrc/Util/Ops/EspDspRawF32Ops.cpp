@@ -10,6 +10,9 @@
 #include "Port/MossePort.hpp"
 #include "EspDspRawF32Ops.hpp"
 
+ohdebuggroup(EspDspRawF32Ops::fft2)
+ohdebuggroup(EspDspRawF32Ops::ifft2)
+
 namespace Mosse {
 namespace Ut {
 
