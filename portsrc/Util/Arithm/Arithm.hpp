@@ -13,6 +13,8 @@
 #include "Util/Helper/ReTp.hpp"
 #include "Util/Arithm/Conv.hpp"
 #include "Port/MossePort.hpp"
+#include <cnl/scaled_integer.h>
+#include <cassert>
 
 namespace Mosse {
 namespace Ut {
@@ -35,6 +37,37 @@ struct MulCplxA3 {
 		auto bd = b * d;
 		aoRe = toRepr<O>(ac - bd);
 		aoIm = toRepr<O>((a + b) * (c + d) - ac - bd);
+	}
+};
+
+template <>
+struct MulCplxA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, Tp::Repr::StorageF32 | Tp::Repr::ReprRaw,
+	Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint>
+{
+	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint;
+	static constexpr Tp::Repr::Flags kF32 = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
+
+	static inline void call(ReTp<kF32> aRe1, ReTp<kF32> aIm1, ReTp<kF32> aRe2, ReTp<kF32> aIm2, ReTp<kI16> &aoRe,
+		ReTp<kI16> &aoIm)
+	{
+		float re;
+		float im;
+		MulCplxA3<kF32, kF32, kF32>::call(aRe1, aIm1, aRe2, aIm2, re, im);
+		// TODO
+	}
+};
+
+template <>
+struct MulCplxA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint,
+	Tp::Repr::StorageF32 | Tp::Repr::ReprRaw>
+{
+	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint;
+	static constexpr Tp::Repr::Flags kF32 = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
+
+	static inline void call(ReTp<kF32> aRe1, ReTp<kF32> aIm1, ReTp<kI16> aRe2, ReTp<kI16> aIm2, ReTp<kF32> &aoRe,
+		ReTp<kF32> &aoIm)
+	{
+		// TODO
 	}
 };
 
@@ -65,6 +98,19 @@ struct DivCplxA3 {
 		float oImf = (b * c - a * d) / (c * c + d * d);
 		aoRe = toRepr<O>(oRef);
 		aoIm = toRepr<O>(oImf);
+	}
+};
+
+template <>
+struct DivCplxA3<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint, Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint,
+	Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint>
+{
+	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint;
+
+	static inline void call(ReTp<kI16> aRe1, ReTp<kI16> aIm1, ReTp<kI16> aRe2, ReTp<kI16> aIm2, ReTp<kI16> &aoRe,
+		ReTp<kI16> &aoIm)
+	{
+		// TODO
 	}
 };
 
@@ -112,6 +158,18 @@ struct MulA3 {
 	}
 };
 
+template <>
+struct MulA3<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint, Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint,
+	Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint>
+{
+	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::ReprFixedPoint | Tp::Repr::StorageI16;
+
+	static inline void call(ReTp<kI16> a1, ReTp<kI16> a2, ReTp<kI16> &ao)
+	{
+		// TODO
+	}
+};
+
 }  // namespace Impl
 
 template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
@@ -133,6 +191,18 @@ struct SumA3 {
 		float a2f = fromRepr<float, R2>(a2);
 		float aOutf = a1f + a2f;
 		aOut = toRepr<O>(aOutf);
+	}
+};
+
+template <>
+struct SumA3<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint, Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint,
+	Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint>
+{
+	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::ReprFixedPoint | Tp::Repr::StorageI16;
+
+	static inline void call(ReTp<kI16> a1, ReTp<kI16> a2, ReTp<kI16> &ao)
+	{
+		// TODO
 	}
 };
 
