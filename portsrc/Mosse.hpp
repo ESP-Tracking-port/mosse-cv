@@ -19,6 +19,7 @@
 #include "Util/Ops/RawF32Ops.hpp"
 #include "Util/Ops/ParallelOps.hpp"
 #include "Util/Ops/EspDspRawF32Ops.hpp"
+#include "Util/Ops/FpI16AbRawF32Ops.hpp"
 #include "Util/Mem/DynRawF32Mem.hpp"
 #include "Tracker.hpp"
 #include "Port/MossePort.hpp"
