@@ -68,6 +68,7 @@ template <
 	Tp::Repr::Flags ReprAb,
 	Tp::Repr::Flags ReprAbHookIntermDiv,
 	Tp::Repr::Flags ReprGauss,
+	Tp::Repr::Flags ReprEta,
 	bool ScaledGauss = false>
 class CommonOps : public DecomposedOps {
 public:
@@ -81,14 +82,7 @@ public:
 	static_assert(Tp::Repr::isValid<ReprAb>(), "");
 	static_assert(Tp::Repr::isValid<ReprAbHookIntermDiv>(), "");
 	static_assert(Tp::Repr::isValid<ReprGauss>(), "");
-
-	/// \brief Initializes the buffer by splitting the image into its real and imaginary (zeroed) part Unlike the workflow
-	/// implied by the API, performs both buffer initialization and image preprocessing,
-	///
-	/// because there are certain points which can be optimized by sparing conversions.
-	///
-	/// \pre Hann matrix uses raw float representation
-	///
+	static_assert(Tp::Repr::isValid<ReprEta>(), "");
 
 	/// \brief Finds the max element
 	///
@@ -209,8 +203,8 @@ public:
 					mapA(row, col), mapAimag(row, col));
 
 				if (!aInitial) {
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aPrev, aPrev);
-					Ut::mulA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, ReprAb, ReprAb>(invEta(), aImPrev, aImPrev);
+					Ut::mulA3<ReprEta, ReprAb, ReprAb>(invEta(), aPrev, aPrev);
+					Ut::mulA3<ReprEta, ReprAb, ReprAb>(invEta(), aImPrev, aImPrev);
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapA(row, col), aPrev, mapA(row, col));
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapAimag(row, col), aImPrev, mapAimag(row, col));
 				}
@@ -237,13 +231,13 @@ public:
 
 				if (!aInitial) {
 					// B' = eta * complexMultiplication(fft(imageCrop), complexConjugate(fft(imageCrop)))
-					Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprAb, ReprAb>(eta(), mapB(row, col),
+					Ut::mulA3<ReprEta, ReprAb, ReprAb>(eta(), mapB(row, col),
 						mapB(row, col));
-					Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprAb, ReprAb>(eta(), mapBimag(row, col),
+					Ut::mulA3<ReprEta, ReprAb, ReprAb>(eta(), mapBimag(row, col),
 						mapBimag(row, col));
 					// B(t-1) * (1 - eta), both real and complex plane
-					Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprAb, ReprAb>(invEta(), bPrev, bPrev);
-					Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprAb, ReprAb>(invEta(), bImPrev, bImPrev);
+					Ut::mulA3<ReprEta, ReprAb, ReprAb>(invEta(), bPrev, bPrev);
+					Ut::mulA3<ReprEta, ReprAb, ReprAb>(invEta(), bImPrev, bImPrev);
 					// B(t) := B' + B(t-1) * (1 - eta), both real and complex plane
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapB(row, col), bPrev, mapB(row, col));
 					Ut::sumA3<ReprAb, ReprAb, ReprAb>(mapBimag(row, col), bImPrev, mapBimag(row, col));
