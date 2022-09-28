@@ -22,6 +22,7 @@ namespace Tp {
 ///
 struct Repr {
 	using Flags = std::uint64_t;
+
 	enum : Flags {
 		// Storage
 		BaseStorage = 0,
@@ -70,6 +71,12 @@ struct Repr {
 	using Storage = StorageImpl<T>;
 
 	template <Flags F>
+	struct FractionBitsImpl;
+
+	template <Flags F>
+	using FractionBits = FractionBitsImpl<F & MaskTraitScalar>;
+
+	template <Flags F>
 	static constexpr bool isValid()
 	{
 		return (F & MaskStorage) && (F & MaskRepr);
@@ -90,6 +97,11 @@ struct Repr::StorageImpl<float> : std::integral_constant<Tp::Repr::Flags, Tp::Re
 
 template <>
 struct Repr::StorageImpl<std::int16_t> : std::integral_constant<Tp::Repr::Flags, Tp::Repr::StorageI16> {
+};
+
+template <>
+struct Repr::FractionBitsImpl<Repr::StorageI16 | Repr::ReprFixedPoint> {
+	static constexpr std::size_t value = 8;
 };
 
 class Geometry {
