@@ -23,7 +23,7 @@ static_assert(kRawF32ReprBuffer & Tp::Repr::CplxRe1Im1, "");  // fft depends on 
 
 RawF32Ops::RawF32Ops() : pmHelper{kGetGauss, kGetHann}, fft{}
 {
-	setEta(kEta);
+	setEta({kEta}, {1.0f - kEta});
 }
 
 void RawF32Ops::fft2(void *aBufferComplex)
