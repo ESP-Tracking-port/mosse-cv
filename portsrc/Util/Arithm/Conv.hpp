@@ -26,10 +26,16 @@ struct FromRepr;
 template <>
 struct FromRepr<float> {
 
-	template <Tp::Repr::Flags F, class T>
-	static inline float call(T repr)
+	template <Tp::Repr::Flags F>
+	static inline float call(ReTp<F> a, En<F & (Tp::Repr::StorageF32 | Tp::Repr::ReprRaw)> = nullptr)
 	{
-		return static_cast<float>(repr);
+		return static_cast<float>(a);
+	}
+
+	template <Tp::Repr::Flags F>
+	static inline float call(ReTp<F> a, En<F & (Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint)> = nullptr)
+	{
+		return 0.0f;
 	}
 
 	template <Tp::Repr::Flags F>
@@ -52,11 +58,20 @@ inline T fromRepr(ReTp<From> num)
 namespace Impl {
 
 template <class T>
-struct ToRepr {
+struct ToRepr;
+
+template <>
+struct ToRepr<float> {
 	template <Tp::Repr::Flags F>
-	static inline ReTp<F> call(T a, En<F & (Tp::Repr::ReprRaw)> = nullptr)
+	static inline float call(float a, En<F & (Tp::Repr::ReprRaw)> = nullptr)
 	{
 		return static_cast<ReTp<F>>(a);
+	}
+
+	template <Tp::Repr::Flags F>
+	static inline int16_t call(float a, En<F & (Tp::Repr::ReprFixedPoint | Tp::Repr::StorageI16)> = nullptr)
+	{
+		return 0;
 	}
 };
 
