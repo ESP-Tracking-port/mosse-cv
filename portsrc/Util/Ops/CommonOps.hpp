@@ -196,7 +196,7 @@ public:
 				auto aImPrev = mapAimag(row, col);
 				auto frameFftImag = Ut::minus<ReprBuffer>(mapFftImag(row, col));  // Complex conjugate. See the mosse paper.
 
-				gaussScale(gauss);  // Multiplication by $\eta$ (if an already pre-multiplied filter is not used). See the mosse paper
+				gaussScale(gauss);  // Multiplication by $\eta$ (if a pre-multiplied filter is not used yet). See the mosse paper
 				gaussScale(gaussIm);
 
 				Ut::mulCplxA3<ReprGauss, ReprBuffer, ReprAb>(gauss, gaussIm, mapFft(row, col), frameFftImag,
