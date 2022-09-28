@@ -101,7 +101,7 @@ struct Repr::StorageImpl<std::int16_t> : std::integral_constant<Tp::Repr::Flags,
 
 template <>
 struct Repr::FractionBitsImpl<Repr::StorageI16 | Repr::ReprFixedPoint> {
-	static constexpr std::size_t value = 8;
+	static constexpr unsigned char value = 8;
 };
 
 class Geometry {
