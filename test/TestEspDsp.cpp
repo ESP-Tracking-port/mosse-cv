@@ -165,16 +165,12 @@ TEST_CASE("Test ESP DSP: Radix 2 F32 FFT2, wrapped, compare")
 	std::array<float, kCols> colCoeffs{{0.0f}};
 	dsps_fft2r_init_fc32(rowCoeffs.data(), rowCoeffs.size());
 	dsps_fft2r_init_fc32(colCoeffs.data(), colCoeffs.size());
-	ohdebug(test, rowCoeffs, colCoeffs);
 
 	// Direct FFT2
 	for (auto row = 0; row < roi.size(0); ++row) {  // Row-wise
 		auto slice = getRowRe1Im1(ptrSignalDirect, roi, row);
 		dsps_fft2r_fc32_ansi_(slice.data(), slice.size() / 2, rowCoeffs.data());
-		ohdebug(test, row, slice);
 		setRowRe1Im1(ptrSignalDirect, roi, row, slice);
-		slice = getRowRe1Im1(ptrSignalDirect, roi, row);
-		ohdebug(test, row, slice);
 	}
 
 	for (auto col = 0; col < roi.size(1); ++col) {  // Col-wise
@@ -229,11 +225,9 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare, atomics")
 			}
 
 			SUBCASE("Compare FFT, rows") {
-				ohdebug("Compare FFT, rows", "before", slice);
 				dsps_fft2r_init_fc32(sCoeffs, roi.size(1));
 				dsps_fft2r_fc32_ansi_(slice.data(), roi.size(1), sCoeffs);
 				dsps_fft2r_fc32_ansi_step(wrap, roi.size(1), sCoeffs);
-				ohdebug("Compare FFT, rows", "after", slice);
 
 				for (std::size_t i = 0; i < slice.size(); ++i) {
 					CHECK(abs(slice[i] - wrap[i]) < kEpsilon);
@@ -263,11 +257,9 @@ TEST_CASE("Test ESP DSP : Radix 2 F32 FFT, wrapped, compare, atomics")
 			}
 
 			SUBCASE("Compare FFT, columns") {
-				ohdebug("Compare FFT, columns", "before", slice);
 				dsps_fft2r_init_fc32(sCoeffs, roi.size(0));
 				dsps_fft2r_fc32_ansi_(slice.data(), roi.size(0), sCoeffs);
 				dsps_fft2r_fc32_ansi_step(wrap, roi.size(0), sCoeffs);
-				ohdebug("Compare FFT, columns", "after", slice);
 
 				for (std::size_t i = 0; i < slice.size(); ++i) {
 					CHECK((abs(slice[i] - wrap[i])) < kEpsilon);
