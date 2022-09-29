@@ -117,9 +117,9 @@ void Fft::transformDirect(float *pRe, float *pIm)
 
 	unsigned int N, Nd2;
 	float *ptrW2n_re, *ptrW2n_im;
-	unsigned int skew, k, m, mpNd2;
-	float wn_re, wn_im, w_re, w_im;
-	float *ptrWArray_re, *ptrWArray_im;
+	unsigned int skew = 0, k = 0, m = 0, mpNd2 = 0;
+	float wn_re = 0.0f, wn_im = 0.0f, w_re = 0.0f, w_im = 0.0f;
+	float *ptrWArray_re = nullptr, *ptrWArray_im = nullptr;
 	for (N = 2, Nd2 = 1, ptrW2n_re = g_w2n_re, ptrW2n_im = g_w2n_im, skew = m_nMax >> 1;
 	N <= m_nMax;
 		Nd2 = N, N += N, ptrW2n_re++, ptrW2n_im++, skew >>= 1)
@@ -198,10 +198,10 @@ void Fft::transformComplement(float *pRe, float *pIm)
 	// Main loop
 
 	unsigned int N, Nd2;
-	float *ptrW2n_re, *ptrW2n_im;
-	unsigned int skew, k, m, mpNd2;
-	float wn_re, wn_im, w_re, w_im;
-	float *ptrWArray_re, *ptrWArray_im;
+	float *ptrW2n_re = nullptr, *ptrW2n_im = nullptr;
+	unsigned int skew = 0, k = 0, m = 0, mpNd2 = 0;
+	float wn_re = 0.0f, wn_im = 0.0f, w_re = 0.0f, w_im = 0.0f;
+	float *ptrWArray_re = nullptr, *ptrWArray_im = nullptr;
 	for (N = 2, Nd2 = 1, ptrW2n_re = g_w2n_re, ptrW2n_im = g_w2n_im, skew = m_nMax >> 1;
 	N <= m_nMax;
 		Nd2 = N, N += N, ptrW2n_re++, ptrW2n_im++, skew >>= 1)
