@@ -1,7 +1,8 @@
+project(mosse)
 option(MOSSE_PORTABLE "Only include libraries that can be ported on an embedded platform" OFF)
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 cmake_minimum_required(VERSION 2.8)
-project(mosse)
 add_subdirectory(lib)
 add_subdirectory(portsrc)
 
