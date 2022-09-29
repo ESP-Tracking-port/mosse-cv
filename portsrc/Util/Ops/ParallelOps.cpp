@@ -78,7 +78,7 @@ void ParallelOps::initImpl()
 		{
 			const auto remainder = roi().size(0) - fragRows * ops.size();
 			frag.origin(0) -= static_cast<decltype(frag.origin(0))>(fragRows);  // It's been shifted over the ROI boundary in the loop above
-			frag.size(0) += remainder;
+			frag.size(0) += static_cast<decltype(frag.size(0))>(remainder);
 			ops[ops.size() - 1].get().setRoiFragment(frag);
 		}
 	}
