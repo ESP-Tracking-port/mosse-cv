@@ -15,6 +15,7 @@
 #include "Util/Arithm/Arithm.hpp"
 #include "Types/Tracking.hpp"
 #include <utility>
+#include <cmath>
 
 namespace Mosse {
 namespace Ut {
@@ -50,7 +51,7 @@ struct FloatSumVisitor {
 		sum = 0.0f;
 	}
 
-	inline void operator()(const ValueType &aValueType, unsigned row, unsigned col)
+	inline void operator()(const ValueType &aValueType, unsigned, unsigned)
 	{
 		sum += fromRepr<float, F>(aValueType);
 	}
@@ -70,11 +71,11 @@ struct FloatDevSumVisitor {
 
 	void call(const ValueType &aVal)
 	{
-		devsum += fabs(Ut::fromRepr<float, F>(aVal) - mean);
+		devsum += ::abs(Ut::fromRepr<float, F>(aVal) - mean);
 	}
 
 	template <bool C = Fmask>
-	inline typename std::enable_if<C>::type operator()(const ValueType &aValueType, unsigned row, unsigned col)
+	inline typename std::enable_if<C>::type operator()(const ValueType &aValueType, unsigned, unsigned)
 	{
 		call(aValueType);
 	}
