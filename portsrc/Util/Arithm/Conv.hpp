@@ -33,12 +33,6 @@ struct FromRepr<float> {
 	}
 
 	template <Tp::Repr::Flags F>
-	static inline float call(ReTp<F> a, En<F & (Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint)> = nullptr)
-	{
-		return 0.0f;
-	}
-
-	template <Tp::Repr::Flags F>
 	static inline float call(std::int16_t a, En<F & Tp::Repr::ReprLog2> = nullptr)
 	{
 		return pow(2.0f, a);
