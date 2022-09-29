@@ -10,25 +10,23 @@
 
 #include "Types/Repr.hpp"
 #include "Util/Helper/StoreType.hpp"
+#include "Util/Helper/ReTp.hpp"
 #include <fpm/fixed.hpp>
 
 namespace Mosse {
 namespace Ut {
-namespace Impl {
 
-template <Tp::Repr::Flags F>
-struct FpmFixed;
-
-template <>
-struct FpmFixed<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint> : Ut::StoreType<fpm::fixed<std::int16_t,
-	std::int32_t, Tp::Repr::FractionBits<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint>::value>
+template <Tp::Repr::Flags F, class T>
+inline fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value> makeFpmFixed(T aNumber)
 {
-};
-
-}  // namespace Impl
+	return fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value>{aNumber};
+}
 
 template <Tp::Repr::Flags F>
-using FpmFixed = typename Impl::FpmFixed<F & Tp::Repr::MaskTraitScalar>::Type;
+inline fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value> makeFpmFixedFromRaw(ReTp<F> aRaw)
+{
+	return fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value>::from_raw_value(aRaw);
+}
 
 }  // namespace Ut
 }  // namespace Mosse
