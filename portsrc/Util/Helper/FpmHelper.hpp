@@ -22,10 +22,24 @@ inline fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value> makeF
 	return fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value>{aNumber};
 }
 
+template <Tp::Repr::Flags F, class T>
+inline constexpr fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value> makeFpmFixedCxe(T aNumber)
+{
+	return fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value>{aNumber};
+}
+
 template <Tp::Repr::Flags F>
 inline fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value> makeFpmFixedFromRaw(ReTp<F> aRaw)
 {
 	return fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value>::from_raw_value(aRaw);
+}
+
+/// \brief Returns lowest-possible number for a given representation. Useful for preventing zero division.
+///
+template <Tp::Repr::Flags F>
+inline fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value> makeFpmFixedEpsilon()
+{
+	return std::numeric_limits<fpm::fixed<ReTp<F>, std::int32_t, Tp::Repr::FractionBits<F>::value>>::epsilon();
 }
 
 }  // namespace Ut
