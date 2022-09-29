@@ -1,1 +1,0 @@
-add_subdirectory(cnl EXCLUDE_FROM_ALL)
