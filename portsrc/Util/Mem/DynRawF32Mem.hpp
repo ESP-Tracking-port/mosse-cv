@@ -28,10 +28,10 @@ public:
 	virtual void *buffer() override;
 	virtual void init(Tp::Roi) override;
 private:
+	Tp::PointRowCol roiSizePrev;
 	std::vector<float> mata;
 	std::vector<float> matb;
 	std::vector<float> buf;
-	Tp::PointRowCol roiSizePrev;
 };
 
 }  // namespace Ut
