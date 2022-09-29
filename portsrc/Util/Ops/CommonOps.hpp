@@ -74,7 +74,8 @@ class CommonOps : public DecomposedOps {
 public:
 	static constexpr struct {
 		Tp::Repr::Flags buffer;
-	} reprFlags {ReprBuffer};
+		Tp::Repr::Flags matAb;
+	} reprFlags {ReprBuffer, ReprAb};
 
 	static_assert(ReprBuffer & (Tp::Repr::CplxRe1Im1 | Tp::Repr::CplxRenImn), "");
 	static_assert(Tp::Repr::isValid<ReprBuffer>(), "");
