@@ -90,17 +90,17 @@ Tp::NumVariant DecomposedOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVarian
 	return {devsum};
 }
 
-float DecomposedOps::bufferAtAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak)
+float DecomposedOps::bufferAtAsFloat(const void *, const Tp::PointRowCol &)
 {
 	assert(false);  // The inherited class either re-implements `calcPsr`, or reimplements each of its decomposed operations
 }
 
-float DecomposedOps::bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi)
+float DecomposedOps::bufferSum(const void *, const Tp::Roi &)
 {
 	assert(false);  // The inherited class either re-implements `calcPsr`, or reimplements each of its decomposed operations
 }
 
-float DecomposedOps::bufferAbsDevSum(const void *aComplexBuffer, const Tp::Roi &aRoi, float aMean)
+float DecomposedOps::bufferAbsDevSum(const void *, const Tp::Roi &, float)
 {
 	assert(false);  // The inherited class either re-implements `calcPsr`, or reimplements each of its decomposed operations
 }
