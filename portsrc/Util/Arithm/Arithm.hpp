@@ -118,6 +118,18 @@ struct MulA3 {
 	}
 };
 
+template <>
+struct MulA3<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint, Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint,
+	Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint>
+{
+	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint;
+
+	static inline void call(ReTp<kI16> a1, ReTp<kI16> a2, ReTp<kI16> &aOut)
+	{
+		aOut = (makeFpmFixedFromRaw<kI16>(a1) * makeFpmFixedFromRaw<kI16>(a2)).raw_value();
+	}
+};
+
 }  // namespace Impl
 
 template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
