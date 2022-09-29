@@ -91,7 +91,7 @@ public:
 	/// \pre (2) The array elements are expected to be unaligned
 	/// \pre (3) Row-major array is expected (elements are addressed as array[row][col])
 	///
-	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum)
+	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPos, float *sum) override
 	{
 		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
 		auto mapBlock = Ut::makeEigenBlock(map, roiFragment());
