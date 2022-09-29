@@ -128,7 +128,7 @@ struct CompositeVisitor {
 	auto get() -> decltype(std::get<N>(visitors))
 	{
 		static_assert(N < kN, "");
-		std::get<N>(visitors);
+		return std::get<N>(visitors);
 	}
 };
 
