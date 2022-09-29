@@ -118,7 +118,7 @@ struct DivCplxA3<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint, Tp::Repr::Stor
 		ReTp<kI16> &aoIm)
 	{
 		auto a = makeFpmFixedFromRaw<kI16>(aRe1);
-		auto b = makeFpmFixedFromRaw<kI16>(aIm2);
+		auto b = makeFpmFixedFromRaw<kI16>(aIm1);
 		auto c = makeFpmFixedFromRaw<kI16>(aRe2);
 		auto d = makeFpmFixedFromRaw<kI16>(aIm2);
 		aoRe = ((a * c + b * d) / (c * c + d * d + makeFpmFixedEpsilon<kI16>())).raw_value();
