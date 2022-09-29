@@ -72,8 +72,8 @@ struct MulCplxA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, Tp::Repr::StorageI16 
 	static inline void call(ReTp<kF32> aRe1, ReTp<kF32> aIm1, ReTp<kI16> aRe2, ReTp<kI16> aIm2, ReTp<kF32> &aoRe,
 		ReTp<kF32> &aoIm)
 	{
-		auto re2 = static_cast<ReTp<kF32>>(aRe2);
-		auto im2 = static_cast<ReTp<kF32>>(aIm2);
+		auto re2 = static_cast<ReTp<kF32>>(makeFpmFixedFromRaw<kI16>(aRe2));
+		auto im2 = static_cast<ReTp<kF32>>(makeFpmFixedFromRaw<kI16>(aIm2));
 		Ut::mulCplxA3<kF32, kF32, kF32>(aRe1, aIm1, re2, im2, aoRe, aoIm);
 	}
 };
@@ -114,11 +114,15 @@ struct DivCplxA3<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint, Tp::Repr::Stor
 {
 	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint;
 
-	static inline void call(ReTp<kI16> a, ReTp<kI16> b, ReTp<kI16> c, ReTp<kI16> d, ReTp<kI16> &aoRe,
+	static inline void call(ReTp<kI16> aRe1, ReTp<kI16> aIm1, ReTp<kI16> aRe2, ReTp<kI16> aIm2, ReTp<kI16> &aoRe,
 		ReTp<kI16> &aoIm)
 	{
-		aoRe = (a * c + b * d) / (c * c + d * d);
-		aoIm = (b * c - a * d) / (c * c + d * d);
+		auto a = makeFpmFixedFromRaw<kI16>(aRe1);
+		auto b = makeFpmFixedFromRaw<kI16>(aIm2);
+		auto c = makeFpmFixedFromRaw<kI16>(aRe2);
+		auto d = makeFpmFixedFromRaw<kI16>(aIm2);
+		aoRe = ((a * c + b * d) / (c * c + d * d)).raw_value();
+		aoIm = ((b * c - a * d) / (c * c + d * d)).raw_value();
 	}
 };
 
@@ -174,7 +178,7 @@ struct MulA3<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint, Tp::Repr::StorageI
 
 	static inline void call(ReTp<kI16> a1, ReTp<kI16> a2, ReTp<kI16> &ao)
 	{
-		ao = a1 * a2;
+		ao = (makeFpmFixedFromRaw<kI16>(a1) * makeFpmFixedFromRaw<kI16>(a2)).raw_value();
 	}
 };
 
@@ -210,7 +214,7 @@ struct SumA3<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint, Tp::Repr::StorageI
 
 	static inline void call(ReTp<kI16> a1, ReTp<kI16> a2, ReTp<kI16> &ao)
 	{
-		ao = a1 + a2;
+		ao = (makeFpmFixedFromRaw<kI16>(a1) + makeFpmFixedFromRaw<kI16>(a2)).raw_value();
 	}
 };
 
