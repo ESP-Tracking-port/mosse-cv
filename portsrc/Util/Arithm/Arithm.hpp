@@ -67,8 +67,9 @@ struct DivCplxA3 {
 		auto b = fromRepr<float, R1>(aIm1);
 		auto c = fromRepr<float, R2>(aRe2);
 		auto d = fromRepr<float, R2>(aIm2);
-		float oRef = (a * c + b * d) / (c * c + d * d);
-		float oImf = (b * c - a * d) / (c * c + d * d);
+		static constexpr float kEpsilon = 0.0001f;
+		float oRef = (a * c + b * d) / (c * c + d * d + kEpsilon);
+		float oImf = (b * c - a * d) / (c * c + d * d + kEpsilon);
 		aoRe = toRepr<O>(oRef);
 		aoIm = toRepr<O>(oImf);
 	}
