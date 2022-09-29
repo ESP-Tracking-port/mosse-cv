@@ -40,6 +40,8 @@ Tracker &getNaiveRadix2Fft();
 ///
 Tracker &getFp16AbRawF32BufDynAlloc();
 
+Tracker &getFp16AbRawF32BufDynAllocThreaded(Port::Thread &thread, unsigned nthreads);
+
 }  // namespace Mosse
 
 #endif // MOSSE_MOSSE_HPP_FWD_

@@ -76,4 +76,18 @@ Tracker &getFp16AbRawF32BufDynAlloc()
 	return tracker;
 }
 
+Tracker &getFp16AbRawF32BufDynAllocThreaded(Port::Thread &aThread, unsigned anThreads)
+{
+	static Ut::Arithm<Ut::FpI16AbRawF32Ops::reprFlags.buffer> bufferArithmOps;
+	static Ut::MemLayout<Ut::FpI16AbRawF32Ops::reprFlags.buffer> bufferMemLayoutOps;
+	static std::vector<Mosse::Ut::FpI16AbRawF32Ops> workerOps{anThreads};
+	static Mosse::Ut::ParallelOps ops{makeRefs(workerOps), aThread, bufferArithmOps, bufferMemLayoutOps};
+	static Mosse::Ut::DynRawMem<Mosse::Ut::FpI16AbRawF32Ops::reprFlags.buffer,
+		Mosse::Ut::FpI16AbRawF32Ops::reprFlags.matAb> mem;
+	static Mosse::Ut::Port port{ops, mem};
+	static Mosse::Tracker tracker{port};
+
+	return tracker;
+}
+
 }  // namespace Mosse
