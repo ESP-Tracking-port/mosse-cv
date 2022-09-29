@@ -48,8 +48,8 @@ void EspDspRawF32Ops::fft2(void *aBufferComplex)
 void EspDspRawF32Ops::ifft2(void *aBufferComplex)
 {
 	ohdebugsect(EspDspRawF32Ops::ifft2, {
-		for (std::size_t row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
-			for (std::size_t col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
+		for (Eigen::Index row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
+			for (Eigen::Index col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
 				assert(!std::isnan(atAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
 				assert(!std::isnan(atImagAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
 			}
@@ -74,8 +74,8 @@ void EspDspRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
 	RawF32Ops::imageCropInto(aImageReal, aBufferComplex);
 
 	ohdebugsect(EspDspRawF32Ops::imageCropInto, {
-		for (std::size_t row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
-			for (std::size_t col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
+		for (Eigen::Index row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
+			for (Eigen::Index col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
 				assert(!std::isnan(atAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
 				assert(!std::isnan(atImagAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
 			}

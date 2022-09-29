@@ -38,7 +38,7 @@ struct EspDspFft2BufferWrap {
 	static_assert(D == 0 || D == 1, "");
 	Tp::Roi roi;
 	void *buffer;
-	std::size_t rowcol;
+	Eigen::Index rowcol;
 
 	inline void advance()
 	{
