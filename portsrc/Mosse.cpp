@@ -68,7 +68,8 @@ Tracker &getNaiveRadix2Fft()
 Tracker &getFp16AbRawF32BufDynAlloc()
 {
 	static Mosse::Ut::FpI16AbRawF32Ops ops;
-	static Mosse::Ut::DynRawF32Mem mem;
+	static Mosse::Ut::DynRawMem<Mosse::Ut::FpI16AbRawF32Ops::reprFlags.buffer,
+		Mosse::Ut::FpI16AbRawF32Ops::reprFlags.matAb> mem;
 	static Mosse::Ut::Port port{ops, mem};
 	static Mosse::Tracker tracker{port};
 

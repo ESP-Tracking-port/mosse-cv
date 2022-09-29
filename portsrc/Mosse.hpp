@@ -21,6 +21,7 @@
 #include "Util/Ops/EspDspRawF32Ops.hpp"
 #include "Util/Ops/FpI16AbRawF32Ops.hpp"
 #include "Util/Mem/DynRawF32Mem.hpp"
+#include "Util/Mem/DynRawMem.hpp"
 #include "Tracker.hpp"
 #include "Port/MossePort.hpp"
 #include "Util/Ops/OpencvNativeRawF32Ops.hpp"
