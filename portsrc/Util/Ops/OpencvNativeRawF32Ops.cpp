@@ -219,6 +219,7 @@ cv::Mat OpencvNativeRawF32Ops::imcrop(cv::Rect roi, const cv::Mat& image)
 #else
 	(void)roi;
 	(void)image;
+	return {};
 #endif
 }
 
@@ -274,6 +275,7 @@ cv::Mat OpencvNativeRawF32Ops::createHanningMats(int rows, int cols)
 #else
 	(void)rows;
 	(void)cols;
+	return {};
 #endif
 }
 
