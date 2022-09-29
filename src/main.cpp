@@ -142,8 +142,9 @@ int main()
 	//img2avi((char*)"img");
 //	sTracker = &Mosse::getDebugStub();
 //	sTracker = &Mosse::getNaive();
-	sTracker = &Mosse::getNaiveMultithreaded(pthreadThread, 2);
+//	sTracker = &Mosse::getNaiveMultithreaded(pthreadThread, 2);
 //	sTracker = &Mosse::getNaiveRadix2Fft();
+	sTracker = &Mosse::getFp16AbRawF32BufDynAlloc();
 	runPort();
 //	run();
 	debug(MallocCounter::getPeakCount());
