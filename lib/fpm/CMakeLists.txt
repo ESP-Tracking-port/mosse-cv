@@ -1,1 +1,6 @@
-add_subdirectory(fpm EXCLUDE_FROM_ALL)
+if (NOT MOSSE_PORTABLE)
+	add_subdirectory(fpm EXCLUDE_FROM_ALL)
+else()
+	add_library(fpm INTERFACE)
+	target_include_directories(fpm INTERFACE "fpm/include")
+endif()
