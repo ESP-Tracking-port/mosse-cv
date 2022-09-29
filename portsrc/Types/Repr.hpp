@@ -128,12 +128,12 @@ union NumVariant {
 		return f32;
 	}
 
-	inline operator std::int16_t() const
+	inline operator std::int16_t const &() const
 	{
 		return i16;
 	}
 
-	inline operator float() const
+	inline operator float const &() const
 	{
 		return f32;
 	}
