@@ -10,6 +10,7 @@
 
 #include "Types/Repr.hpp"
 #include "Util/Helper/ReTp.hpp"
+#include "Util/Helper/FpmHelper.hpp"
 #include <cmath>
 #include <type_traits>
 
@@ -30,6 +31,12 @@ struct FromRepr<float> {
 	static inline float call(ReTp<F> a, En<F & (Tp::Repr::StorageF32 | Tp::Repr::ReprRaw)> = nullptr)
 	{
 		return static_cast<float>(a);
+	}
+
+	template <Tp::Repr::Flags F>
+	static inline float call(ReTp<F> a, En<F & (Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint)> = nullptr)
+	{
+		return static_cast<float>(makeFpmFixedFromRaw<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint>(a));
 	}
 
 	template <Tp::Repr::Flags F>
@@ -65,7 +72,7 @@ struct ToRepr<float> {
 	template <Tp::Repr::Flags F>
 	static inline int16_t call(float a, En<F & (Tp::Repr::ReprFixedPoint | Tp::Repr::StorageI16)> = nullptr)
 	{
-		return 0;
+		return makeFpmFixed<Tp::Repr::ReprFixedPoint | Tp::Repr::StorageI16>(a).raw_value();
 	}
 };
 
