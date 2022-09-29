@@ -142,7 +142,7 @@ public:
 		}
 	}
 
-	void ifft2(void *aBuffer)
+	void ifft2(void *aBuffer) override
 	{
 		fft2(aBuffer);
 		auto arg = static_cast<ReTp<F> *>(aBuffer);
