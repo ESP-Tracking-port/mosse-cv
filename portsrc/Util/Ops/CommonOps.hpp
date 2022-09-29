@@ -167,7 +167,7 @@ public:
 	template <bool S = ScaledGauss>
 	inline typename std::enable_if<!S>::type gaussScale(ReTp<ReprGauss> &aGauss)
 	{
-		Ut::mulA3<Tp::Repr::ReprRaw | Tp::Repr::StorageF32, ReprGauss, ReprGauss>(eta(), aGauss, aGauss);
+		Ut::mulA3<ReprEta, ReprGauss, ReprGauss>(eta(), aGauss, aGauss);
 	}
 
 	template <bool S = ScaledGauss>
