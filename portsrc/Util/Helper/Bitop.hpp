@@ -32,9 +32,6 @@ constexpr BitBase bitb(std::size_t base, Ts ...ts)
 	return bit(ts...) << base;
 }
 
-static_assert(bit(0, 2) == 0b101, "");
-static_assert(bitb(1, 2, 3) == 0b11000, "");
-
 template <class B, class N>
 constexpr inline BitBase mask(B base, N n)
 {
