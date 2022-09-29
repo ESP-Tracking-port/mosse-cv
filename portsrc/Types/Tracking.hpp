@@ -28,7 +28,7 @@ struct Roi {
 	PointRowCol origin;
 	PointRowCol size;
 
-	std::size_t area() const;
+	int area() const;
 	bool isInside(const PointRowCol &) const;
 
 	inline auto rows() const -> decltype(size(0))

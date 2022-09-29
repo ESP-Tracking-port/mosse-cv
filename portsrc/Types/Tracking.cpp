@@ -12,7 +12,7 @@
 namespace Mosse {
 namespace Tp {
 
-std::size_t Roi::area() const
+int Roi::area() const
 {
 	return size(0) * size(1);
 }
