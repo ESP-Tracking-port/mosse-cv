@@ -239,7 +239,7 @@ float ParallelOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aP
 			return accumulated + ops.result().f32;
 		});
 	devsum -= ops[0].get().bufferAbsDevSum(aComplexBuffer, roiMask, mean);
-	float stddev = devsum / sqrt(sizeMasked);
+	float stddev = devsum / sqrtf(sizeMasked);
 	float maxValue = bufferAtAsFloat(aComplexBuffer, aPeak);
 	float psr = (maxValue - mean) / stddev;
 
