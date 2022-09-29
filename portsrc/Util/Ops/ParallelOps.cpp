@@ -234,9 +234,9 @@ float ParallelOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aP
 
 	threading.waitDone();
 	float devsum = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), 0.0f,
-		[](float accumulated, const ThreadedOps &ops)
+		[](float aAccumulated, const ThreadedOps &aOps)
 		{
-			return accumulated + ops.result().f32;
+			return aAccumulated + aOps.result().f32;
 		});
 	devsum -= ops[0].get().bufferAbsDevSum(aComplexBuffer, roiMask, mean);
 	float stddev = devsum / sqrtf(sizeMasked);
