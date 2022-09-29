@@ -80,10 +80,14 @@ struct EspDspFftR2Callable<float> {
 	static constexpr auto mulc = dsps_mulc_f32;
 
 	template <class T>
-	static constexpr auto bitrev = dsps_bit_rev_fc32_ansi_step<T>;
+	struct Bitrev {
+		static constexpr auto bitrev = dsps_bit_rev_fc32_ansi_step<T>;
+	};
 
 	template <class T>
-	static constexpr auto fft = dsps_fft2r_fc32_ansi_step<T>;
+	struct Fft {
+		static constexpr auto fft = dsps_fft2r_fc32_ansi_step<T>;
+	};
 };
 
 }  // namespace Impl
@@ -125,8 +129,8 @@ public:
 			Wrap wrap{roi, aBuffer, 0};
 
 			for (; !wrap.isEnd(); wrap.advance()) {
-				Impl::EspDspFftR2Callable<ReTp<F>>::template fft<Wrap>(wrap, roi.size(1), rowsCoeffTable);
-				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(1));
+				Impl::EspDspFftR2Callable<ReTp<F>>::template Fft<Wrap>::fft(wrap, roi.size(1), rowsCoeffTable);
+				Impl::EspDspFftR2Callable<ReTp<F>>::template Bitrev<Wrap>::bitrev(wrap, roi.size(1));
 			}
 		}
 
@@ -136,8 +140,8 @@ public:
 			Wrap wrap{roi, aBuffer, 0};
 
 			for (; !wrap.isEnd(); wrap.advance()) {
-				Impl::EspDspFftR2Callable<ReTp<F>>::template fft<Wrap>(wrap, roi.size(0), colsCoeffTable);
-				Impl::EspDspFftR2Callable<ReTp<F>>::template bitrev<Wrap>(wrap, roi.size(0));
+				Impl::EspDspFftR2Callable<ReTp<F>>::template Fft<Wrap>::fft(wrap, roi.size(0), colsCoeffTable);
+				Impl::EspDspFftR2Callable<ReTp<F>>::template Bitrev<Wrap>::bitrev(wrap, roi.size(0));
 			}
 		}
 	}
