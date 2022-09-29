@@ -24,13 +24,13 @@ template <Tp::Repr::Flags R>
 struct MaxVisitor {
 	using ValueType = ReTp<R>;
 
-	inline void init(const ValueType &aValueType, int row, int col)
+	inline void init(const ValueType &aValueType, Eigen::Index row, Eigen::Index col)
 	{
 		max = aValueType;
 		pos = {row, col};
 	}
 
-	inline void operator()(const ValueType &aValueType, int row, int col)
+	inline void operator()(const ValueType &aValueType, Eigen::Index row, Eigen::Index col)
 	{
 		if (Ut::gt<R, R>(aValueType, max)) {
 			max = aValueType;
@@ -46,12 +46,12 @@ template <Tp::Repr::Flags F>
 struct FloatSumVisitor {
 	using ValueType = ReTp<F>;
 
-	inline void init(const ValueType &, int, int)
+	inline void init(const ValueType &, Eigen::Index, Eigen::Index)
 	{
 		sum = 0.0f;
 	}
 
-	inline void operator()(const ValueType &aValueType, int, int)
+	inline void operator()(const ValueType &aValueType, Eigen::Index, Eigen::Index)
 	{
 		sum += fromRepr<float, F>(aValueType);
 	}
@@ -64,7 +64,7 @@ struct FloatSumVisitor {
 template <Tp::Repr::Flags F, bool Fmask = true>
 struct FloatDevSumVisitor {
 	using ValueType = ReTp<F>;
-	inline void init(const ValueType &, int, int)
+	inline void init(const ValueType &, Eigen::Index, Eigen::Index)
 	{
 		devsum = 0.0f;
 	}
@@ -75,13 +75,13 @@ struct FloatDevSumVisitor {
 	}
 
 	template <bool C = Fmask>
-	inline typename std::enable_if<C>::type operator()(const ValueType &aValueType, int, int)
+	inline typename std::enable_if<C>::type operator()(const ValueType &aValueType, Eigen::Index, Eigen::Index)
 	{
 		call(aValueType);
 	}
 
 	template <bool C = Fmask>
-	inline typename std::enable_if<!C>::type operator()(const ValueType &aValueType, int row, int col)
+	inline typename std::enable_if<!C>::type operator()(const ValueType &aValueType, Eigen::Index row, Eigen::Index col)
 	{
 		if (!mask.isInside({row, col})) {
 			call(aValueType);
@@ -101,25 +101,25 @@ struct CompositeVisitor {
 	std::tuple<Vs...> visitors;
 
 	template <unsigned ...Is>
-	inline void initAll(const ValueType &aValue, int row, int col, IndexSequence<Is...>)
+	inline void initAll(const ValueType &aValue, Eigen::Index row, Eigen::Index col, IndexSequence<Is...>)
 	{
-		using List = int[];
+		using List = Eigen::Index[];
 		(void)List{(void(std::get<Is>(visitors).init(aValue, row, col)), 0)...};
 	}
 
 	template <unsigned ...Is>
-	inline void invokeAll(const ValueType &aValue, int row, int col, IndexSequence<Is...>)
+	inline void invokeAll(const ValueType &aValue, Eigen::Index row, Eigen::Index col, IndexSequence<Is...>)
 	{
-		using List = int[];
+		using List = Eigen::Index[];
 		(void)List{(void(std::get<Is>(visitors)(aValue, row, col)), 0)...};
 	}
 
-	inline void init(const ValueType &val, int row, int col)
+	inline void init(const ValueType &val, Eigen::Index row, Eigen::Index col)
 	{
 		initAll(val, row, col, makeIndexSequence<kN>());
 	}
 
-	inline void operator()(const ValueType &val, int row, int col)
+	inline void operator()(const ValueType &val, Eigen::Index row, Eigen::Index col)
 	{
 		invokeAll(val, row, col, makeIndexSequence<kN>());
 	}
@@ -138,12 +138,12 @@ struct OffsetAdapterVisitor {
 	Tp::PointRowCol offset;
 	W wrapped;
 
-	inline void init(const ValueType &aValue, int row, int col)
+	inline void init(const ValueType &aValue, Eigen::Index row, Eigen::Index col)
 	{
 		wrapped.init(aValue, row + offset(0), col + offset(1));
 	}
 
-	inline void operator()(const ValueType &aValue, int row, int col)
+	inline void operator()(const ValueType &aValue, Eigen::Index row, Eigen::Index col)
 	{
 		wrapped(aValue, row + offset(0), col + offset(1));
 	}
