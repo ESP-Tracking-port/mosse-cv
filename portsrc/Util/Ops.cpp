@@ -29,7 +29,7 @@ void DecomposedOps::imageCropInto(Tp::Image aImage, void *aBufferCplx)
 	float sum = imageLog2Sum(aImage).f32;  // Calculating sum
 	const float mean = sum / static_cast<float>(roi().area());
 	float devsum = imageAbsDevLog2Sum(aImage, {mean}).f32;
-	const float stddev = devsum / sqrt(static_cast<float>(roi().area()));
+	const float stddev = devsum / sqrtf(static_cast<float>(roi().area()));
 	imageCropPreprocessImpl(aImage, aBufferCplx, {mean}, {stddev});
 }
 
@@ -83,7 +83,7 @@ Tp::NumVariant DecomposedOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVarian
 
 	for (unsigned row = 0; row < blockFragment.rows(); ++row) {
 		for (unsigned col = 0; col < blockFragment.cols(); ++col) {
-			devsum += fabs(mean.f32 - logTable[blockFragment(row, col)]);
+			devsum += ::abs(mean.f32 - logTable[blockFragment(row, col)]);
 		}
 	}
 
@@ -117,7 +117,7 @@ float DecomposedOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &
 	const float sizeMasked = static_cast<float>(roi().area() - roiMask.area());
 	float mean = (aSumHint - bufferSum(aComplexBuffer, roiMask)) / sizeMasked;
 	float devsum = bufferAbsDevSum(aComplexBuffer, roiFragment(), mean) - bufferAbsDevSum(aComplexBuffer, roiMask, mean);
-	float stddev = devsum / sqrt(sizeMasked);
+	float stddev = devsum / sqrtf(sizeMasked);
 	float maxValue = bufferAtAsFloat(aComplexBuffer, aPeak);
 	float psr = (maxValue - mean) / stddev;
 
