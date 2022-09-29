@@ -143,7 +143,7 @@ public:
 		return ret;
 	}
 
-	float bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi)
+	float bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi) override
 	{
 		auto r = aRoi;
 		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
@@ -213,7 +213,7 @@ public:
 		}
 	}
 
-	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial)
+	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial) override
 	{
 		auto mapB = Ut::makeEigenMap<ReprAb>(aMatBcomplex, roi());
 		auto mapBimag = Ut::makeEigenMapImag<ReprAb>(aMatBcomplex, roi());
