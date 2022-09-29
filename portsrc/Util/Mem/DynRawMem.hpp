@@ -38,7 +38,7 @@ public:
 	{
 		return ptrBuf.get();
 	}
-	virtual void init(Tp::Roi aRoi)
+	void init(Tp::Roi aRoi) override
 	{
 		initImpl(aRoi);
 	}
