@@ -257,7 +257,7 @@ public:
 
 		for (auto row = roiFragment().origin(0); row < roiFragment().origin(0) + roiFragment().size(0); ++row) {
 			for (auto col = roiFragment().origin(1); col < roiFragment().origin(1) + roiFragment().size(1); ++col) {
-				constexpr float kEps = 1e-5;  // Small fraction to prevent zero division
+				constexpr float kEps = 1e-5f;  // Small fraction to prevent zero division
 				mapImag(row, col) = toRepr<ReprBuffer>(0.0f);
 				float pixel = (logTable[blockImage(row, col)] - mean.f32) / (stddev.f32 + kEps)
 					* fromRepr<float, ReprHann>(mapHann(row, col));  // Log table is an optimization shortcut. The log(0) issue is already taken care of during the table compilation stage.
