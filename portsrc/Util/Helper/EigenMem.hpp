@@ -23,8 +23,8 @@ inline typename Tp::template EigenMapType<F>::Type makeEigenMap(void *bufferComp
 	const auto strideOuter = Ut::strideInner<F>() * roi.cols();
 
 	return typename Tp::EigenMapType<F>::Type{static_cast<ReTp<F> *>(Ut::at<F>(Ut::offsetFirstReal<F>(roi),
-		bufferComplexOrReal)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{strideOuter,
-		Ut::strideInner<F>()}};
+		bufferComplexOrReal)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{
+		static_cast<Eigen::Index>(strideOuter), static_cast<Eigen::Index>(Ut::strideInner<F>())}};
 }
 
 template <Tp::Repr::Flags F>
@@ -35,8 +35,8 @@ inline typename Tp::template ConstEigenMapType<F>::Type makeEigenMap(const void 
 	const auto strideOuter = Ut::strideInner<F>() * roi.cols();
 
 	return typename Tp::ConstEigenMapType<F>::Type{static_cast<ValueType>(Ut::at<F>(Ut::offsetFirstReal<F>(roi),
-		bufferComplexOrReal)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{strideOuter,
-		Ut::strideInner<F>()}};
+		bufferComplexOrReal)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{
+		static_cast<Eigen::Index>(strideOuter), static_cast<Eigen::Index>(Ut::strideInner<F>())}};
 }
 
 template <Tp::Repr::Flags F>
@@ -46,8 +46,8 @@ inline typename Tp::EigenMapType<F>::Type makeEigenMapImag(void *bufferComplex, 
 	const auto strideOuter = Ut::strideInner<F>() * roi.cols();
 
 	return typename Tp::EigenMapType<F>::Type{static_cast<ReTp<F> *>(Ut::at<F>(Ut::offsetFirstImag<F>(roi),
-		bufferComplex)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{strideOuter,
-		Ut::strideInner<F>()}};
+		bufferComplex)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{
+		static_cast<Eigen::Index>(strideOuter), static_cast<Eigen::Index>(Ut::strideInner<F>())}};
 }
 
 template <Tp::Repr::Flags F>
@@ -58,8 +58,8 @@ inline typename Tp::ConstEigenMapType<F>::Type makeEigenMapImag(const void *buff
 	const auto strideOuter = Ut::strideInner<F>() * roi.cols();
 
 	return typename Tp::ConstEigenMapType<F>::Type{static_cast<ValueType>(Ut::at<F>(Ut::offsetFirstImag<F>(roi),
-		bufferComplex)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{strideOuter,
-		Ut::strideInner<F>()}};
+		bufferComplex)), roi.rows(), roi.cols(), typename Tp::EigenMapType<F>::StrideType{
+		static_cast<Eigen::Index>(strideOuter), static_cast<Eigen::Index>(Ut::strideInner<F>())}};
 }
 
 template <class T>
