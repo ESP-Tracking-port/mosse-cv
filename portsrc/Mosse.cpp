@@ -65,4 +65,14 @@ Tracker &getNaiveRadix2Fft()
 	return tracker;
 }
 
+Tracker &getFp16AbRawF32BufDynAlloc()
+{
+	static Mosse::Ut::FpI16AbRawF32Ops ops;
+	static Mosse::Ut::DynRawF32Mem mem;
+	static Mosse::Ut::Port port{ops, mem};
+	static Mosse::Tracker tracker{port};
+
+	return tracker;
+}
+
 }  // namespace Mosse
