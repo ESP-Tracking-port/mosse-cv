@@ -9,6 +9,7 @@
 #include "Mosse.hpp"
 #include "MosseApi.hpp"
 #include "Util/Arithm/MemLayout.hpp"
+#include "Util/Helper/FpmHelper.hpp"
 #include "Port/MossePort.hpp"
 
 static constexpr auto kEta = 0.125f;
@@ -22,7 +23,15 @@ static_assert(kFpI16AbRawF32ReprBuffer & Tp::Repr::CplxRe1Im1, "");  // fft depe
 
 FpI16AbRawF32Ops::FpI16AbRawF32Ops() : pmHelper{kGetGauss, kGetHann}, fft{}
 {
-	setEta({kEta}, {1.0f - kEta});
+	auto eta = makeFpmFixed<kFpI16AbRawF32ReprEta>(kEta).raw_value();
+	auto invEta = makeFpmFixed<kFpI16AbRawF32ReprEta>(1 - kEta).raw_value();
+	{
+		Tp::NumVariant etaVariant;
+		etaVariant.i16 = eta;
+		Tp::NumVariant invEtaVariant;
+		invEtaVariant.i16 = invEta;
+		setEta(etaVariant, invEtaVariant);
+	}
 }
 
 void FpI16AbRawF32Ops::fft2(void *aBufferComplex)
@@ -50,7 +59,10 @@ void FpI16AbRawF32Ops::ifft2(void *aBufferComplex)
 void FpI16AbRawF32Ops::initImpl()
 {
 	CommonOps::initImpl();
-	pmHelper.update(roi());
+
+	if (isFirstInit()) {
+		pmHelper.update(roi());
+	}
 }
 
 const void *FpI16AbRawF32Ops::hannMatrix()

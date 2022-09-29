@@ -21,7 +21,7 @@ constexpr auto kFpI16AbRawF32ReprHannMatrix = Tp::Repr::StorageF32 | Tp::Repr::R
 constexpr auto kFpI16AbRawF32ReprAb = Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint | Tp::Repr::CplxRe1Im1;
 constexpr auto kFpI16AbRawF32ReprAbDivIntermediary = Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint;
 constexpr auto kFpI16AbRawF32ReprGauss = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw | Tp::Repr::CplxRe1Im1;
-constexpr auto kFpI16AbRawF32ReprEta = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
+constexpr auto kFpI16AbRawF32ReprEta = Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint;
 
 using FpI16RawF32OpsBase = CommonOps<
 	kFpI16AbRawF32ReprBuffer,
