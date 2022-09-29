@@ -44,40 +44,6 @@ struct MulCplxA3 {
 	}
 };
 
-template <>
-struct MulCplxA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, Tp::Repr::StorageF32 | Tp::Repr::ReprRaw,
-	Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint>
-{
-	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint;
-	static constexpr Tp::Repr::Flags kF32 = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
-
-	static inline void call(ReTp<kF32> aRe1, ReTp<kF32> aIm1, ReTp<kF32> aRe2, ReTp<kF32> aIm2, ReTp<kI16> &aoRe,
-		ReTp<kI16> &aoIm)
-	{
-		float re;
-		float im;
-		mulCplxA3<kF32, kF32, kF32>(aRe1, aIm1, aRe2, aIm2, re, im);
-		aoRe = Ut::makeFpmFixed<kI16>(re).raw_value();
-		aoIm = Ut::makeFpmFixed<kI16>(im).raw_value();
-	}
-};
-
-template <>
-struct MulCplxA3<Tp::Repr::StorageF32 | Tp::Repr::ReprRaw, Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint,
-	Tp::Repr::StorageF32 | Tp::Repr::ReprRaw>
-{
-	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint;
-	static constexpr Tp::Repr::Flags kF32 = Tp::Repr::StorageF32 | Tp::Repr::ReprRaw;
-
-	static inline void call(ReTp<kF32> aRe1, ReTp<kF32> aIm1, ReTp<kI16> aRe2, ReTp<kI16> aIm2, ReTp<kF32> &aoRe,
-		ReTp<kF32> &aoIm)
-	{
-		auto re2 = static_cast<ReTp<kF32>>(makeFpmFixedFromRaw<kI16>(aRe2));
-		auto im2 = static_cast<ReTp<kF32>>(makeFpmFixedFromRaw<kI16>(aIm2));
-		Ut::mulCplxA3<kF32, kF32, kF32>(aRe1, aIm1, re2, im2, aoRe, aoIm);
-	}
-};
-
 }  // namespace Impl
 
 template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
@@ -105,24 +71,6 @@ struct DivCplxA3 {
 		float oImf = (b * c - a * d) / (c * c + d * d);
 		aoRe = toRepr<O>(oRef);
 		aoIm = toRepr<O>(oImf);
-	}
-};
-
-template <>
-struct DivCplxA3<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint, Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint,
-	Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint>
-{
-	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint;
-
-	static inline void call(ReTp<kI16> aRe1, ReTp<kI16> aIm1, ReTp<kI16> aRe2, ReTp<kI16> aIm2, ReTp<kI16> &aoRe,
-		ReTp<kI16> &aoIm)
-	{
-		auto a = makeFpmFixedFromRaw<kI16>(aRe1);
-		auto b = makeFpmFixedFromRaw<kI16>(aIm1);
-		auto c = makeFpmFixedFromRaw<kI16>(aRe2);
-		auto d = makeFpmFixedFromRaw<kI16>(aIm2);
-		aoRe = ((a * c + b * d) / (c * c + d * d + makeFpmFixedEpsilon<kI16>())).raw_value();
-		aoIm = ((b * c - a * d) / (c * c + d * d + makeFpmFixedEpsilon<kI16>())).raw_value();
 	}
 };
 
@@ -170,18 +118,6 @@ struct MulA3 {
 	}
 };
 
-template <>
-struct MulA3<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint, Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint,
-	Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint>
-{
-	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::ReprFixedPoint | Tp::Repr::StorageI16;
-
-	static inline void call(ReTp<kI16> a1, ReTp<kI16> a2, ReTp<kI16> &ao)
-	{
-		ao = (makeFpmFixedFromRaw<kI16>(a1) * makeFpmFixedFromRaw<kI16>(a2)).raw_value();
-	}
-};
-
 }  // namespace Impl
 
 template <Tp::Repr::Flags R1, Tp::Repr::Flags R2, Tp::Repr::Flags O>
@@ -203,18 +139,6 @@ struct SumA3 {
 		float a2f = fromRepr<float, R2>(a2);
 		float aOutf = a1f + a2f;
 		aOut = toRepr<O>(aOutf);
-	}
-};
-
-template <>
-struct SumA3<Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint, Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint,
-	Tp::Repr::StorageI16 | Tp::Repr::ReprFixedPoint>
-{
-	static constexpr Tp::Repr::Flags kI16 = Tp::Repr::ReprFixedPoint | Tp::Repr::StorageI16;
-
-	static inline void call(ReTp<kI16> a1, ReTp<kI16> a2, ReTp<kI16> &ao)
-	{
-		ao = (makeFpmFixedFromRaw<kI16>(a1) + makeFpmFixedFromRaw<kI16>(a2)).raw_value();
 	}
 };
 
