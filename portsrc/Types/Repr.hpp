@@ -21,7 +21,7 @@ namespace Tp {
 /// not satisfactory. \see CommonOps for use examples.
 ///
 struct Repr {
-	using Flags = std::uint64_t;
+	using Flags = Ut::BitBase;
 
 	enum : Flags {
 		// Storage
