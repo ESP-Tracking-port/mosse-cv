@@ -3,7 +3,7 @@
 	url = https://github.com/ESP-Tracking-port/doctest
 [submodule "lib/espdsp/espdsp"]
 	path = lib/espdsp/espdsp
-	url = git@github.com:ESP-Tracking-port/esp-dsp.git
+	url = https://github.com/ESP-Tracking-port/esp-dsp.git
 [submodule "lib/fpm/fpm"]
 	path = lib/fpm/fpm
-	url = git@github.com:ESP-Tracking-port/fpm.git
+	url = https://github.com/ESP-Tracking-port/fpm.git
