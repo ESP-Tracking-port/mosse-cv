@@ -13,10 +13,12 @@
 #include "Util/Arithm/MemLayout.hpp"
 #include "Util/Helper/ReTp.hpp"
 #include "Port/MossePort.hpp"
-#include <dsps_fft2r.hpp>
-#include <esp_dsp.h>
 #include <type_traits>
 #include <memory>
+#if !MOSSE_PORTABLE
+# include <dsps_fft2r.hpp>
+# include <esp_dsp.h>
+#endif  // !MOSSE_PORTABLE
 
 ohdebuggroup("")
 
@@ -76,6 +78,7 @@ struct EspDspFftR2Callable;
 
 template <>
 struct EspDspFftR2Callable<float> {
+#if !MOSSE_PORTABLE
 	static constexpr auto init = dsps_fft2r_init_fc32;
 	static constexpr auto mulc = dsps_mulc_f32;
 
@@ -88,6 +91,7 @@ struct EspDspFftR2Callable<float> {
 	struct Fft {
 		static constexpr auto fft = dsps_fft2r_fc32_ansi_step<T>;
 	};
+#endif // MOSSE_PORTABLE
 };
 
 }  // namespace Impl
@@ -104,6 +108,7 @@ public:
 
 	void init(const Tp::Roi &aRoi, const ReTp<F> *aRowsCoeffTable = nullptr, const ReTp<F> *aColsCoeffTable = nullptr)
 	{
+#if !MOSSE_PORTABLE
 		roi = aRoi;
 		rowsCoeffTable = aRowsCoeffTable;
 		colsCoeffTable = aColsCoeffTable;
@@ -119,10 +124,16 @@ public:
 			Impl::EspDspFftR2Callable<ReTp<F>>::init(colsCoeffTableBuf.get(), roi.size(1));
 			colsCoeffTable = colsCoeffTableBuf.get();
 		}
+#else
+		(void)aRoi;
+		(void)aRowsCoeffTable;
+		(void)aColsCoeffTable;
+#endif
 	}
 
 	void fft2(void *aBuffer) override
 	{
+#if !MOSSE_PORTABLE
 		// Row-wise
 		{
 			using Wrap = Impl::EspDspFft2BufferWrap<F, 0>;
@@ -144,13 +155,20 @@ public:
 				Impl::EspDspFftR2Callable<ReTp<F>>::template Bitrev<Wrap>::bitrev(wrap, roi.size(0));
 			}
 		}
+#else
+		(void)aBuffer;
+#endif
 	}
 
 	void ifft2(void *aBuffer) override
 	{
+#if !MOSSE_PORTABLE
 		fft2(aBuffer);
 		auto arg = static_cast<ReTp<F> *>(aBuffer);
 		Impl::EspDspFftR2Callable<ReTp<F>>::mulc(arg, arg, roi.area() * 2, 1.0f / static_cast<float>(roi.area()), 1, 1); // TODO XXX
+#else
+		(void)aBuffer;
+#endif
 	}
 private:
 	Tp::Roi roi = {};
