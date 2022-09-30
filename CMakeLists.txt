@@ -7,6 +7,7 @@ add_subdirectory(lib)
 add_subdirectory(portsrc)
 
 if (NOT MOSSE_PORTABLE)
+	message(STATUS "Building non portable version of embmosse")
 	# Executable
 	find_package(OpenCV REQUIRED PATHS /home/dmurashov/bin/libopencv/lib/cmake NO_DEFAULT_PATH)
 	include_directories(src)
