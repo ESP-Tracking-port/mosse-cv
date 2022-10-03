@@ -6,7 +6,6 @@
 #include "MosseApi.hpp"
 #include "OpencvNativeRawF32Ops.hpp"
 #include "Util/Helper/PrecompiledMatrixHelper.hpp"
-#include <assert.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -31,7 +30,7 @@ void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferCom
 
 	cv::Mat planes[] = {cv::Mat_<float>(image), cv::Mat_<float>::zeros(image.size())};
 	cv::merge(planes, 2, image);
-	assert(image.type() == CV_32FC2);
+	mosse_assert(image.type() == CV_32FC2);
 	matCvCopyInto(image, aBufferComplex);
 # endif  // # if 1
 #else
@@ -245,7 +244,7 @@ cv::Mat OpencvNativeRawF32Ops::fft(cv::Mat image, bool backwards)
 cv::Mat OpencvNativeRawF32Ops::conj(const cv::Mat& image)
 {
 #if MOSSE_USE_OPENCV
-	assert(image.channels() == 2);
+	mosse_assert(image.channels() == 2);
 	cv::Mat mat[2];
 	cv::split(image, mat);
 	mat[1] *= -1;
@@ -391,7 +390,7 @@ void OpencvNativeRawF32Ops::init(cv::Rect roi, const cv::Mat& gray)
 	cv::Mat gray_crop = imcrop(roi, gray);
 	const int sizes[3] = {static_cast<int>(rows), static_cast<int>(cols), 2};
 	void *gauss_fft_raw_3d = const_cast<void *>(static_cast<const void *>(Mosse::getGaussKernelFft3d(rows, cols)));
-	assert(gauss_fft_raw_3d != nullptr);
+	mosse_assert(gauss_fft_raw_3d != nullptr);
 	gauss_fft = cv::Mat(2, sizes, CV_32FC2, gauss_fft_raw_3d);
 	init_sz.width = gauss_fft.cols;
 	init_sz.height = gauss_fft.rows;
