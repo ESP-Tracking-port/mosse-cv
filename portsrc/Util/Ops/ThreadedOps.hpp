@@ -12,7 +12,7 @@
 #include "Util/Helper/En.h"
 #include "Util/Helper/Apply.hpp"
 #include <tuple>
-#include <cassert>
+#include "Port/MossePort.hpp"
 
 namespace Mosse {
 namespace Tp {
@@ -125,7 +125,7 @@ public:
 	template <class C, class ...Args>
 	void setExec(C c, Args &&...aArgs)
 	{
-		assert(isDone());
+		mosse_assert(isDone());
 		using ReturnType = decltype((ops.*c)(std::forward<Args>(aArgs)...));
 		new (storage.args) std::tuple<typename Impl::CustomDecay<Args>::Type...>(std::forward<Args>(aArgs)...);
 		new (storage.method) MethodWrapper<C>{c};
