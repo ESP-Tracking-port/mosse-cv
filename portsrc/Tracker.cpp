@@ -24,6 +24,7 @@ Tracker::Tracker(Ut::Port aPort) : tracking{{}, 0.0f}, port{aPort}
 void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 {
 	MallocCounter mc{};
+	(void)mc;
 	// A set of precompiled gaussian matrices is used, so the window's size will be changed to the closest one
 	tracking.roi = aRoi;
 	port.ops.roiResize(tracking.roi);
@@ -46,6 +47,7 @@ void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
 {
 	MallocCounter mc{};
+	(void)mc;
 	// Calculate convolution in the frequency domain
 	port.ops.imageCropInto(aImage, port.mem.buffer());
 	port.ops.imagePreprocess(port.mem.buffer());
