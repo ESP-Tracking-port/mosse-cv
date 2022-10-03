@@ -39,7 +39,7 @@ void Roi::setCenter(const PointRowCol &aCenter)
 void Roi::fitShift(const PointRowCol &aOuterBoundSize)
 {
 	for (auto c : {0, 1}) {
-		assert(size(c) <= aOuterBoundSize(c));  ///< The ROI must fit
+		mosse_assert(size(c) <= aOuterBoundSize(c));  ///< The ROI must fit
 		Ut::clamp(origin(c), 0, aOuterBoundSize(c) - size(c) - 1);
 	}
 }
@@ -47,7 +47,7 @@ void Roi::fitShift(const PointRowCol &aOuterBoundSize)
 void Roi::fitCrop(const PointRowCol &aOuterBoundSize)
 {
 	for (auto c : {0, 1}) {
-		assert(origin(c) < aOuterBoundSize(c) - 2 && origin(c) >= 0);
+		mosse_assert(origin(c) < aOuterBoundSize(c) - 2 && origin(c) >= 0);
 		Ut::clamp(size(c), aOuterBoundSize(c) - origin(c));
 	}
 }
