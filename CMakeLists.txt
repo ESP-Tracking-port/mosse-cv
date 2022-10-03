@@ -1,5 +1,6 @@
 project(mosse)
 option(MOSSE_PORTABLE "Only include libraries that can be ported on an embedded platform" OFF)
+option(MOSSE_PORT_USE_CASSERT "Use <cassert> from the standard library" ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 cmake_minimum_required(VERSION 2.8)
