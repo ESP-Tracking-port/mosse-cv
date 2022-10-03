@@ -7,7 +7,6 @@
 
 #include "StlThread.hpp"
 #include "Port/MossePort.hpp"
-#include <cassert>
 
 namespace Mosse {
 namespace Port {
@@ -19,7 +18,7 @@ std::unique_ptr<Thread> StlThread::makeFromTask(Task &aTask)
 
 void StlThread::start()
 {
-	assert(nullptr != task());
+	mosse_assert(nullptr != task());
 	thread = std::thread(&Task::run, task());
 	ohdebug(StlThread::start, "starting task");
 }
