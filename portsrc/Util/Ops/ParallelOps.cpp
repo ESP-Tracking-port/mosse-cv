@@ -33,6 +33,8 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> aOps
 	lowLevelAtomics{{aArithmBase, aMemLayoutBase}}
 {
 	mosse_assert(ops.size() > 0);
+	mosse_assert(threading.threadedOpWrappers.size() == 0);
+	mosse_assert(threading.opThreads.size() == 0);
 	threading.threadedOpWrappers.reserve(ops.size());
 	threading.opThreads.reserve(ops.size());
 
