@@ -14,7 +14,6 @@
 #include "Util/Arithm/Conv.hpp"
 #include "Util/Helper/FpmHelper.hpp"
 #include "Port/MossePort.hpp"
-#include <cassert>
 
 namespace Mosse {
 namespace Ut {
