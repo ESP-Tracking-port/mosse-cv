@@ -2,7 +2,6 @@
 #include "Fft.h"
 #include <cmath>
 #include "Fft_arrays.h"
-#include <OhDebug.hpp>
 
 inline void mulComplex(float &re1, float &im1, float re2, float im2)
 {
@@ -36,7 +35,6 @@ void Fft::init2(std::size_t aRows, std::size_t aCols, std::size_t aStep)
 ///
 void Fft::transformDirect2(float *pRe, float *pIm)
 {
-	ohdebugonce(Fft::transformDirect2, 0, rows, cols, step, outerStride);
 	// Fft row-wise
 	init(cols, innerStride);
 	float *re = pRe;
@@ -60,7 +58,6 @@ void Fft::transformDirect2(float *pRe, float *pIm)
 ///
 void Fft::transformComplement2(float *pRe, float *pIm)
 {
-	ohdebugonce(Fft::transformDirect2, 0, rows, cols, step, outerStride);
 	// IFFT row-wise
 	float *re = pRe;
 	float *im = pIm;
