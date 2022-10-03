@@ -32,8 +32,6 @@
 # define mosse_assert(...)
 #endif
 
-// Disable certain output groups
-
 #if !MOSSE_PORTABLE
 
 namespace std {
