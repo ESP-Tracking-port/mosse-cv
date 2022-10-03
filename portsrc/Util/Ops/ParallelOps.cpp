@@ -12,7 +12,6 @@
 #include "Util/Ops/ThreadedOps.hpp"
 #include "Util/Arithm/Arithm.hpp"
 #include "Util/Arithm/MemLayout.hpp"
-#include <cassert>
 #include <numeric>
 #include <algorithm>
 #include "ParallelOps.hpp"
@@ -33,7 +32,7 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> aOps
 	threading{{}, {}},
 	lowLevelAtomics{{aArithmBase, aMemLayoutBase}}
 {
-	assert(ops.size() > 0);
+	mosse_assert(ops.size() > 0);
 	threading.threadedOpWrappers.reserve(ops.size());
 	threading.opThreads.reserve(ops.size());
 
@@ -61,7 +60,7 @@ void ParallelOps::initImpl()
 
 	if (isFirstInit()) {
 		const auto fragRows = roi().size(0) / ops.size();
-		assert(fragRows > 0);
+		mosse_assert(fragRows > 0);
 		// Set each `Ops` instance its ROI fragment so it can be processed in parallel fashion
 		Tp::Roi frag = {{0, 0}, {fragRows, roi().size(1)}};
 		{
