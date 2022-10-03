@@ -89,6 +89,7 @@ Tracker &getFp16AbRawF32BufDynAllocThreaded(Port::Thread &aThread, unsigned anTh
 		Mosse::Ut::FpI16AbRawF32Ops::reprFlags.matAb> mem;
 	static Mosse::Ut::Port port{ops, mem};
 	static Mosse::Tracker tracker{port};
+	mosse_assert(workerOps.size() == anThreads);
 
 	return tracker;
 }
