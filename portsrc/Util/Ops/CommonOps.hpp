@@ -22,7 +22,6 @@
 #include "MosseApi.hpp"
 #include <Eigen/Core>
 #include <type_traits>
-#include <cassert>
 #include <cmath>
 
 namespace Mosse {
