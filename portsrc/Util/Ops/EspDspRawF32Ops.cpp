@@ -28,7 +28,7 @@ void EspDspRawF32Ops::fft2(void *aBufferComplex)
 
 		for (std::size_t i = 0; i < bufferLength; ++i) {
 			ohdebug(EspDspRawF32Ops::fft2, i, *(ptrBuf + i), ptrBuf + i);
-			assert(!std::isnan(*(ptrBuf + i)));
+			mosse_assert(!std::isnan(*(ptrBuf + i)));
 		}
 	});
 
@@ -40,7 +40,7 @@ void EspDspRawF32Ops::fft2(void *aBufferComplex)
 
 		for (std::size_t i = 0; i < bufferLength; ++i) {
 			ohdebug(EspDspRawF32Ops::fft2, i, *(ptrBuf + i), ptrBuf + i);
-			assert(!std::isnan(*(ptrBuf + i)));
+			mosse_assert(!std::isnan(*(ptrBuf + i)));
 		}
 	});
 }
@@ -50,8 +50,8 @@ void EspDspRawF32Ops::ifft2(void *aBufferComplex)
 	ohdebugsect(EspDspRawF32Ops::ifft2, {
 		for (Eigen::Index row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
 			for (Eigen::Index col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
-				assert(!std::isnan(atAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
-				assert(!std::isnan(atImagAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
+				mosse_assert(!std::isnan(atAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
+				mosse_assert(!std::isnan(atImagAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
 			}
 		}
 	});
@@ -76,8 +76,8 @@ void EspDspRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
 	ohdebugsect(EspDspRawF32Ops::imageCropInto, {
 		for (Eigen::Index row = roiFragment().origin(0); row < roiFragment().size(0); ++row) {
 			for (Eigen::Index col = roiFragment().origin(1); col < roiFragment().size(1); ++col) {
-				assert(!std::isnan(atAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
-				assert(!std::isnan(atImagAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
+				mosse_assert(!std::isnan(atAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
+				mosse_assert(!std::isnan(atImagAsVariant<reprFlags.buffer>({row, col}, roi(), aBufferComplex).f32));
 			}
 		}
 	});
