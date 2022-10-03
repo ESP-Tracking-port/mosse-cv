@@ -13,6 +13,7 @@
 #include "Util/Ops.hpp"
 #include "Tracker.hpp"
 #include "Port/MossePort.hpp"
+#include <cassert>
 
 namespace Mosse {
 
@@ -28,6 +29,9 @@ void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 	port.ops.roiResize(tracking.roi);
 	tracking.roi.fitShift({aImage.rows(), aImage.cols()});
 	port.mem.init(tracking.roi);
+	assert(nullptr != port.mem.buffer());
+	assert(nullptr != port.mem.matA());
+	assert(nullptr != port.mem.matB());
 	port.ops.tearDown();  // Abrupt previous tracking flow
 	ohdebugstr(Tracker::init, port.ops.init(tracking.roi));
 	port.ops.imageCropInto(aImage, port.mem.buffer());
