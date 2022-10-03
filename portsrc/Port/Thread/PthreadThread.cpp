@@ -7,9 +7,6 @@
 
 #include "Port/Task.hpp"
 #include "Port/MossePort.hpp"
-#if !MOSSE_PORTABLE
-# include <cassert>
-#endif
 #include "PthreadThread.hpp"
 
 namespace Mosse {
@@ -35,21 +32,21 @@ void PthreadThread::start()
 	static std::size_t currentCore = 0;
 	int s = 0;
 	s = pthread_attr_init(&attr);
-	assert(0 == s);
+	mosse_assert(0 == s);
 	CPU_ZERO(&cpuSet);
 	CPU_SET(currentCore, &cpuSet);
 	s = pthread_attr_setaffinity_np(&attr, sizeof(cpuSet), &cpuSet);
-	assert(0 == s);
+	mosse_assert(0 == s);
 	ohdebug(PthreadThread::start);
 	void *threadArg = static_cast<void *>(this);
 	s = pthread_create(&threadId, &attr, threadTask, threadArg);
-	assert(0 == s);
+	mosse_assert(0 == s);
 	s = pthread_setaffinity_np(threadId, sizeof(cpuSet), &cpuSet);
-	assert(0 == s);
+	mosse_assert(0 == s);
 	{
 		cpu_set_t cpuSetReference;
-		assert(0 == pthread_getaffinity_np(threadId, sizeof(cpuSetReference), &cpuSetReference));
-		assert(CPU_EQUAL(&cpuSetReference, &cpuSet));
+		mosse_assert(0 == pthread_getaffinity_np(threadId, sizeof(cpuSetReference), &cpuSetReference));
+		mosse_assert(CPU_EQUAL(&cpuSetReference, &cpuSet));
 	}
 	currentCore = (currentCore + 1) % knCores;
 #endif
