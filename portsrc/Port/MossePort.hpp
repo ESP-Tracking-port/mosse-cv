@@ -18,13 +18,19 @@
 
 #if !MOSSE_PORTABLE
 # include "Types/Tracking.hpp"
-# include <cassert>
 # include <cmath>
 # include <opencv2/opencv.hpp>
 # include <MallocCounter.hpp>
 #endif  // MOSSE_PORTABLE
 #include "Types/Tracking.hpp"
 #include <OhDebug.hpp>
+
+#if MOSSE_PORT_USE_CASSERT
+# include <cassert>
+# define mosse_assert(...) assert(__VA_ARGS__)
+#else
+# define mosse_assert(...)
+#endif
 
 // Disable certain output groups
 
