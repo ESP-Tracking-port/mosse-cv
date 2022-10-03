@@ -45,6 +45,9 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> aOps
 
 void ParallelOps::imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex)
 {
+	mosse_assert(nullptr != aioCropFft2Complex);
+	mosse_assert(nullptr != aMatrixAcomlex);
+	mosse_assert(nullptr != aMatrixBcomplex);
 	setExec(&DecomposedOps::imageConvFftDomain, aioCropFft2Complex, aMatrixAcomlex, aMatrixBcomplex);
 }
 
@@ -85,21 +88,27 @@ void ParallelOps::initImpl()
 
 void ParallelOps::fft2(void *aBufferComplex)
 {
+	mosse_assert(nullptr != aBufferComplex);
 	ops[0].get().fft2(aBufferComplex);
 }
 
 void ParallelOps::ifft2(void *aBufferComplex)
 {
+	mosse_assert(nullptr != aBufferComplex);
 	ops[0].get().ifft2(aBufferComplex);
 }
 
 void ParallelOps::mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
+	mosse_assert(nullptr != aMatAcomplex);
+	mosse_assert(nullptr != aImageCropFftComplex);
 	setExec(&DecomposedOps::mataUpdate, aMatAcomplex, aImageCropFftComplex, aInitial);
 }
 
 void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial)
 {
+	mosse_assert(nullptr != aMatBcomplex);
+	mosse_assert(nullptr != aImageCropFftComplex);
 	setExec(&DecomposedOps::matbUpdate, aMatBcomplex, aImageCropFftComplex, aInitial);
 }
 
@@ -161,6 +170,7 @@ Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant 
 void ParallelOps::imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
 	Tp::NumVariant aAbsDevLog2Sum)
 {
+	mosse_assert(nullptr != aBufferComplex);
 #if 0
 	// Debug. Decomposition.
 	{
@@ -177,6 +187,7 @@ void ParallelOps::imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferCom
 
 void ParallelOps::maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *aSum)
 {
+	mosse_assert(nullptr != aComplexBuffer);
 	std::vector<Tp::PointRowCol> peakPos;
 	std::vector<float> sum;
 	peakPos.resize(ops.size());
@@ -221,6 +232,7 @@ void ParallelOps::maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos,
 float ParallelOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak,
 	float aSumHint, Tp::PointRowCol aMask)
 {
+	mosse_assert(nullptr != aComplexBuffer);
 	Tp::Roi roiMask{aPeak - (aMask / 2), aMask};
 	roiMask.fitShift(roi().size);
 	const float sizeMasked = static_cast<float>(roi().area() - roiMask.area());
@@ -247,11 +259,13 @@ float ParallelOps::calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aP
 
 float ParallelOps::bufferAtAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak)
 {
+	mosse_assert(nullptr != aComplexBuffer);
 	return ops[0].get().bufferAtAsFloat(aComplexBuffer, aPeak);
 }
 
 float ParallelOps::bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi)
 {
+	mosse_assert(nullptr != aComplexBuffer);
 	setExec(&DecomposedOps::bufferSum, aComplexBuffer, aRoi);
 	float res = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), 0.0f,
 		[](float accumulated, const ThreadedOps &aOps)
@@ -264,6 +278,7 @@ float ParallelOps::bufferSum(const void *aComplexBuffer, const Tp::Roi &aRoi)
 
 float ParallelOps::bufferAbsDevSum(const void *aComplexBuffer, const Tp::Roi &aRoi, float aMean)
 {
+	mosse_assert(nullptr != aComplexBuffer);
 	setExec(&DecomposedOps::bufferAbsDevSum, aComplexBuffer, aRoi, aMean);
 	float res = std::accumulate(threading.threadedOpWrappers.begin(), threading.threadedOpWrappers.end(), 0.0f,
 		[](float accumulated, const ThreadedOps &aOps)
