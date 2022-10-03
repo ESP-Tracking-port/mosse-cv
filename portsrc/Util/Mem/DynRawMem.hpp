@@ -46,7 +46,7 @@ private:
 	template <std::size_t S = RoiSz>
 	typename std::enable_if<(S > 0)>::type initImpl(const Tp::Roi &aRoi)
 	{
-		assert(aRoi.area() <= S);
+		mosse_assert(aRoi.area() <= S);
 
 		if (!static_cast<bool>(ptrBuf)) {
 			ptrBuf = {new ReTp<ReprBuf>[S * 2]};
