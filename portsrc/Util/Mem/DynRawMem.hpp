@@ -8,10 +8,10 @@
 #if !defined(MOSSE_UTIL_MEM_DYNRAWMEM_HPP_)
 #define MOSSE_UTIL_MEM_DYNRAWMEM_HPP_
 
-#include "Types/Repr.hpp"
-#include "Types/Tracking.hpp"
-#include "Util/Helper/ReTp.hpp"
-#include "Util/Mem.hpp"
+#include "portsrc/Types/Repr.hpp"
+#include "portsrc/Types/Tracking.hpp"
+#include "portsrc/Util/Helper/ReTp.hpp"
+#include "portsrc/Util/Mem.hpp"
 #include <memory>
 #include <type_traits>
 

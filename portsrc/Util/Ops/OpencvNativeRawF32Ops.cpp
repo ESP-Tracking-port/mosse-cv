@@ -1,11 +1,11 @@
 // TODO CV stores multichannel matrices plane-by-plane
 
-#include "Port/MossePort.hpp"
-#include "Types/Tracking.hpp"
-#include "Types/Repr.hpp"
+#include "portsrc/Port/MossePort.hpp"
+#include "portsrc/Types/Tracking.hpp"
+#include "portsrc/Types/Repr.hpp"
 #include "MosseApi.hpp"
 #include "OpencvNativeRawF32Ops.hpp"
-#include "Util/Helper/PrecompiledMatrixHelper.hpp"
+#include "portsrc/Util/Helper/PrecompiledMatrixHelper.hpp"
 #include <stdlib.h>
 #include <time.h>
 

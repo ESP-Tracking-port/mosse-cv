@@ -8,10 +8,10 @@
 #if !defined(MOSSE_UTIL_MEMLAYOUT_HPP_)
 #define MOSSE_UTIL_MEMLAYOUT_HPP_
 
-#include "Types/Repr.hpp"
-#include "Types/Tracking.hpp"
-#include "Util/Helper/En.h"
-#include "Util/Helper/ReTp.hpp"
+#include "portsrc/Types/Repr.hpp"
+#include "portsrc/Types/Tracking.hpp"
+#include "portsrc/Util/Helper/En.h"
+#include "portsrc/Util/Helper/ReTp.hpp"
 #include <type_traits>
 
 namespace Mosse {

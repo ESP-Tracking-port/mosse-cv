@@ -8,7 +8,7 @@
 #if !defined(MOSSE_UTIL_OPS_DEBUGRAWF32OPS_HPP_)
 #define MOSSE_UTIL_OPS_DEBUGRAWF32OPS_HPP_
 
-#include "Util/Ops.hpp"
+#include "portsrc/Util/Ops.hpp"
 #include <memory>
 
 namespace Mosse {

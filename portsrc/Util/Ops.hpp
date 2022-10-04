@@ -10,9 +10,9 @@
 
 #include <utility>
 #if !MOSSE_PORTABLE
-# include "Port/MossePort.hpp"
+# include "portsrc/Port/MossePort.hpp"
 # if defined(OHDEBUG)
-#  include "Util/Helper/InstanceCounter.hpp"
+#  include "portsrc/Util/Helper/InstanceCounter.hpp"
 # endif
 #endif
 

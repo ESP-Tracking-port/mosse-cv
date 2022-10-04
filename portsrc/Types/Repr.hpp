@@ -8,8 +8,8 @@
 #if !defined(MOSSE_TYPES_REPR_HPP_)
 #define MOSSE_TYPES_REPR_HPP_
 
-#include "Util/Helper/Bitop.hpp"
-#include "Util/Helper/StoreType.hpp"
+#include "portsrc/Util/Helper/Bitop.hpp"
+#include "portsrc/Util/Helper/StoreType.hpp"
 #include <cstdint>
 #include <type_traits>
 

@@ -8,9 +8,9 @@
 #if !defined(MOSSE_TYPES_EIGENAUX_HPP_)
 #define MOSSE_TYPES_EIGENAUX_HPP_
 
-#include "Types/Repr.hpp"
-#include "Util/Arithm/Conv.hpp"
-#include "Util/Arithm/MemLayout.hpp"
+#include "portsrc/Types/Repr.hpp"
+#include "portsrc/Util/Arithm/Conv.hpp"
+#include "portsrc/Util/Arithm/MemLayout.hpp"
 #include <Eigen/Core>
 
 namespace Mosse {

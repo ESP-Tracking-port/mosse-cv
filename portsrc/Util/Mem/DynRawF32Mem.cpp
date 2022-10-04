@@ -5,10 +5,10 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
-#include "Types/Repr.hpp"
-#include "Types/Tracking.hpp"
+#include "portsrc/Types/Repr.hpp"
+#include "portsrc/Types/Tracking.hpp"
 #include "DynRawF32Mem.hpp"
-#include "Port/MossePort.hpp"
+#include "portsrc/Port/MossePort.hpp"
 
 namespace Mosse {
 namespace Ut {

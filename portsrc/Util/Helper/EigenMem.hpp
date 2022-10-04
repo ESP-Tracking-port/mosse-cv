@@ -8,11 +8,11 @@
 #if !defined(MOSSE_UTIL_HELPER_EIGENMEM_HPP_)
 #define MOSSE_UTIL_HELPER_EIGENMEM_HPP_
 
-#include "Types/EigenAux.hpp"
-#include "Types/Repr.hpp"
-#include "Types/Tracking.hpp"
-#include "Util/Arithm/MemLayout.hpp"
-#include "Util/Helper/En.h"
+#include "portsrc/Types/EigenAux.hpp"
+#include "portsrc/Types/Repr.hpp"
+#include "portsrc/Types/Tracking.hpp"
+#include "portsrc/Util/Arithm/MemLayout.hpp"
+#include "portsrc/Util/Helper/En.h"
 
 namespace Mosse {
 namespace Ut {

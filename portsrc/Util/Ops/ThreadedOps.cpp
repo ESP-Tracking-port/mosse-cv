@@ -5,10 +5,10 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
-#include "Types/Tracking.hpp"
-#include "Types/Repr.hpp"
+#include "portsrc/Types/Tracking.hpp"
+#include "portsrc/Types/Repr.hpp"
 #include "ThreadedOps.hpp"
-#include "Port/OsApi.hpp"
+#include "portsrc/Port/OsApi.hpp"
 
 namespace Mosse {
 namespace Ut {

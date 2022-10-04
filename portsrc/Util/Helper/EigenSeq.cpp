@@ -5,8 +5,8 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
-#include "Types/Tracking.hpp"
-#include "Util/Arithm/Algo.hpp"
+#include "portsrc/Types/Tracking.hpp"
+#include "portsrc/Util/Arithm/Algo.hpp"
 #include "EigenSeq.hpp"
 
 namespace Mosse {

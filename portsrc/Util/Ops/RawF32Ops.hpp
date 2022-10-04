@@ -8,8 +8,8 @@
 #if !defined(MOSSE_OPS_RAWF32OPS_HPP_)
 #define MOSSE_OPS_RAWF32OPS_HPP_
 
-#include "Util/Helper/PrecompiledMatrixHelper.hpp"
-#include "Util/Ops/CommonOps.hpp"
+#include "portsrc/Util/Helper/PrecompiledMatrixHelper.hpp"
+#include "portsrc/Util/Ops/CommonOps.hpp"
 
 class Fft;
 

@@ -1,8 +1,8 @@
 #if !defined(MOSSE_UTIL_OPS_OPENCVNATIVERAWF32OPS_HPP_)
 #define MOSSE_UTIL_OPS_OPENCVNATIVERAWF32OPS_HPP_
 
-#include "Port/MossePort.hpp"
-#include "Util/Ops.hpp"
+#include "portsrc/Port/MossePort.hpp"
+#include "portsrc/Util/Ops.hpp"
 
 # if !MOSSE_USE_OPENCV
 

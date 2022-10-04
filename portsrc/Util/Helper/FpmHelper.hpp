@@ -8,9 +8,9 @@
 #if !defined(MOSSE_UTIL_HELPER_FPMHELPER_HPP_)
 #define MOSSE_UTIL_HELPER_FPMHELPER_HPP_
 
-#include "Types/Repr.hpp"
-#include "Util/Helper/StoreType.hpp"
-#include "Util/Helper/ReTp.hpp"
+#include "portsrc/Types/Repr.hpp"
+#include "portsrc/Util/Helper/StoreType.hpp"
+#include "portsrc/Util/Helper/ReTp.hpp"
 #include <fpm/fixed.hpp>
 
 namespace Mosse {

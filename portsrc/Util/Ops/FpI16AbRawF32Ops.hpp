@@ -8,8 +8,8 @@
 #if !defined(MOSSE_UTIL_OPS_FPI16ABRAWF32OPS_HPP_)
 #define MOSSE_UTIL_OPS_FPI16ABRAWF32OPS_HPP_
 
-#include "Util/Helper/PrecompiledMatrixHelper.hpp"
-#include "Util/Ops/CommonOps.hpp"
+#include "portsrc/Util/Helper/PrecompiledMatrixHelper.hpp"
+#include "portsrc/Util/Ops/CommonOps.hpp"
 
 class Fft;
 

@@ -8,11 +8,11 @@
 #if !defined(MOSSE_UTIL_OPS_THREADEDOPS_HPP_)
 #define MOSSE_UTIL_OPS_THREADEDOPS_HPP_
 
-#include "Port/Task.hpp"
-#include "Util/Helper/En.h"
-#include "Util/Helper/Apply.hpp"
+#include "portsrc/Port/Task.hpp"
+#include "portsrc/Util/Helper/En.h"
+#include "portsrc/Util/Helper/Apply.hpp"
 #include <tuple>
-#include "Port/MossePort.hpp"
+#include "portsrc/Port/MossePort.hpp"
 
 namespace Mosse {
 namespace Tp {

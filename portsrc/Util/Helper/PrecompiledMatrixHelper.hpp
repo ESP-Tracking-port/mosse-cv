@@ -8,7 +8,7 @@
 #if !defined(MOSSE_UTIL_HELPER_PRECOMPILEDMATRIXHELPER_HPP_)
 #define MOSSE_UTIL_HELPER_PRECOMPILEDMATRIXHELPER_HPP_
 
-#include "Types/Tracking.hpp"
+#include "portsrc/Types/Tracking.hpp"
 
 namespace Mosse {
 namespace Ut {

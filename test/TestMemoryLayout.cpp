@@ -5,9 +5,9 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
-#include <Types/Repr.hpp>
-#include <Util/Arithm/MemLayout.hpp>
-#include <Mosse.hpp>
+#include <portsrc/Types/Repr.hpp>
+#include <portsrc/Util/Arithm/MemLayout.hpp>
+#include <portsrc/Mosse.hpp>
 #include <doctest/doctest.h>
 #include <cstdint>
 #include <array>

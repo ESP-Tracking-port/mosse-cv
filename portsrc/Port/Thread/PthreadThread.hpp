@@ -8,7 +8,7 @@
 #if !defined(MOSSE_PORT_THREAD_PTHREADTHREAD_HPP_)
 #define MOSSE_PORT_THREAD_PTHREADTHREAD_HPP_
 
-#include "Port/Thread.hpp"
+#include "portsrc/Port/Thread.hpp"
 #if !MOSSE_PORTABLE
 # include <pthread.h>
 #endif

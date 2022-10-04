@@ -8,8 +8,8 @@
 #if !defined(MOSSE_PORT_THREAD_STLTHREAD_HPP_)
 #define MOSSE_PORT_THREAD_STLTHREAD_HPP_
 
-#include "Port/Task.hpp"
-#include "Port/Thread.hpp"
+#include "portsrc/Port/Task.hpp"
+#include "portsrc/Port/Thread.hpp"
 #if !MOSSE_PORTABLE
 # include <thread>
 #else

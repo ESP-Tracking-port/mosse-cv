@@ -8,9 +8,9 @@
 #include <Fft.h>
 #include "Mosse.hpp"
 #include "MosseApi.hpp"
-#include "Util/Arithm/MemLayout.hpp"
-#include "Util/Helper/FpmHelper.hpp"
-#include "Port/MossePort.hpp"
+#include "portsrc/Util/Arithm/MemLayout.hpp"
+#include "portsrc/Util/Helper/FpmHelper.hpp"
+#include "portsrc/Port/MossePort.hpp"
 
 static constexpr auto kEta = 0.125f;
 static constexpr auto kGetGauss = Mosse::getGaussKernelFft3dScaled125;

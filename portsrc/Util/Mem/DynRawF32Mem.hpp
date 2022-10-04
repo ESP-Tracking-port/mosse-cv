@@ -8,7 +8,7 @@
 #if !defined(MOSSE_UTIL_MEM_DYNRAWF32MEM_HPP_)
 #define MOSSE_UTIL_MEM_DYNRAWF32MEM_HPP_
 
-#include "Util/Mem.hpp"
+#include "portsrc/Util/Mem.hpp"
 #include <vector>
 
 namespace Mosse {

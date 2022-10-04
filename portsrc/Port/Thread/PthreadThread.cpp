@@ -5,8 +5,8 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
-#include "Port/Task.hpp"
-#include "Port/MossePort.hpp"
+#include "portsrc/Port/Task.hpp"
+#include "portsrc/Port/MossePort.hpp"
 #include "PthreadThread.hpp"
 
 namespace Mosse {

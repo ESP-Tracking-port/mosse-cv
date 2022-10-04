@@ -8,8 +8,8 @@
 #if !defined(MOSSE_OPS_PARALLELOPS_HPP_)
 #define MOSSE_OPS_PARALLELOPS_HPP_
 
-#include "Util/Ops.hpp"
-#include "Util/Ops/ThreadedOps.hpp"
+#include "portsrc/Util/Ops.hpp"
+#include "portsrc/Util/Ops/ThreadedOps.hpp"
 #include <vector>
 #include <functional>
 #include <memory>

@@ -5,11 +5,11 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
-#include "Types/Tracking.hpp"
-#include "Types/Repr.hpp"
-#include "Util/Arithm/Conv.hpp"
-#include "Util/Helper/EigenMem.hpp"
-#include "Port/MossePort.hpp"
+#include "portsrc/Types/Tracking.hpp"
+#include "portsrc/Types/Repr.hpp"
+#include "portsrc/Util/Arithm/Conv.hpp"
+#include "portsrc/Util/Helper/EigenMem.hpp"
+#include "portsrc/Port/MossePort.hpp"
 #include "Ops.hpp"
 #include "MosseApi.hpp"
 #include <cmath>
