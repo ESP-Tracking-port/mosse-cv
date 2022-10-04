@@ -8,17 +8,21 @@
 #include "Types/Tracking.hpp"
 #include "Types/Repr.hpp"
 #include "ThreadedOps.hpp"
+#include "Port/OsApi.hpp"
 
 namespace Mosse {
 namespace Ut {
 
 void ThreadedOps::run()
 {
+	mosse_assert(Port::OsApi::instance() != nullptr);
 	shouldRun = true;
 
 	while (shouldRun) {
 		if (!isDone()) {
 			(this->*executorCb)();
+		} else {
+			Port::OsApi::instance()->taskYieldMinDelay();
 		}
 	}
 }
