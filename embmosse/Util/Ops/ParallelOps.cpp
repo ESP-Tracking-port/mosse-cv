@@ -59,7 +59,7 @@ void ParallelOps::imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcom
 ///
 void ParallelOps::initImpl()
 {
-	DecomposedOps::initImpl();  // TODO (XXX): Any unintended effects?
+	DecomposedOps::initImpl();
 
 	for (auto op : ops) {
 		op.get().init(roi());
