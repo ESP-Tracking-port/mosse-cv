@@ -5,8 +5,8 @@
 //     Author: Dmitry Murashov (d.murashov@geoscan.aero)
 //
 
-#include <portsrc/Types/Repr.hpp>
-#include <portsrc/Mosse.hpp>
+#include <embmosse/Types/Repr.hpp>
+#include <embmosse/Mosse.hpp>
 #include <doctest/doctest.h>
 #include <cstdint>
 #include <array>
