@@ -37,6 +37,8 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> aOps
 	mosse_assert(threading.threadedOpWrappers.size() == 0);
 	mosse_assert(threading.opThreads.size() == 0);
 	mosse_assert(Port::OsApi::instance() != nullptr);
+	mosse_assert(std::accumulate(threading.split.begin(), threading.split.end(), 0.0f) <= 1);
+	mosse_assert(aSplit.size() == 0 || aSplit.size() == ops.size());
 	threading.threadedOpWrappers.reserve(ops.size());
 	threading.opThreads.reserve(ops.size());
 
@@ -66,7 +68,7 @@ void ParallelOps::initImpl()
 	}
 
 	if (isFirstInit()) {
-		if (threading.split.size() == 0) {  // Split load between threads equally
+		if (threading.split.size() != ops.size()) {  // Split load between threads equally
 			const auto fragRows = roi().size(0) / ops.size();
 			mosse_assert(fragRows > 0);
 			// Set each `Ops` instance its ROI fragment so it can be processed in parallel fashion
@@ -87,6 +89,25 @@ void ParallelOps::initImpl()
 				frag.origin(0) -= static_cast<int>(fragRows);  // It's been shifted over the ROI boundary in the loop above
 				frag.size(0) += static_cast<int>(remainder);
 				ops[ops.size() - 1].get().setRoiFragment(frag);
+			}
+		} else {
+			std::vector<int> roiFragmentHeights;
+			const auto height = static_cast<float>(roi().size(0));
+			roiFragmentHeights.reserve(threading.split.size());
+			std::transform(threading.split.begin(), threading.split.end(), std::back_inserter(roiFragmentHeights),
+				[height](float aSpl) {return static_cast<int>(aSpl * height); });
+			roiFragmentHeights.back() += (roi().size(0) - std::accumulate(roiFragmentHeights.begin(),
+				roiFragmentHeights.end(), 0));  // Handle uneven split
+			int base = 0;
+
+			for (int i = 0; i < ops.size(); ++i) {
+				int height = roiFragmentHeights[i];
+				ops[i].get().setRoiFragment({{base, 0}, {height, roi().size(1)}});
+				base += height;
+			}
+
+			for (auto &op : ops) {
+				ohdebug(split, op.get().roiFragment());
 			}
 		}
 	}
