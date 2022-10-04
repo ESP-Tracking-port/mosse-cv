@@ -4,6 +4,7 @@
 #include <Mosse.hpp>
 #include <Port/Thread/StlThread.hpp>
 #include <Port/Thread/PthreadThread.hpp>
+#include <Port/OsApi.hpp>
 #include <Port/MossePort.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/videoio/legacy/constants_c.h>
@@ -139,6 +140,8 @@ int main()
 {
 //	Mosse::Port::StlThread stlThread;
 	Mosse::Port::PthreadThread pthreadThread;
+	Mosse::Port::StubOsApi stub{};
+	(void)stub;
 	//img2avi((char*)"img");
 //	sTracker = &Mosse::getDebugStub();
 //	sTracker = &Mosse::getNaive();
