@@ -140,7 +140,7 @@ int main()
 {
 //	Mosse::Port::StlThread stlThread;
 	Mosse::Port::PthreadThread pthreadThread;
-	Mosse::Port::StubOsApi stub{};
+	static Mosse::Port::StubOsApi stub{};
 	(void)stub;
 	//img2avi((char*)"img");
 //	sTracker = &Mosse::getDebugStub();
