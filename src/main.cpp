@@ -148,7 +148,8 @@ int main()
 //	sTracker = &Mosse::getNaiveMultithreaded(pthreadThread, 2);
 //	sTracker = &Mosse::getNaiveRadix2Fft();
 //	sTracker = &Mosse::getFp16AbRawF32BufDynAlloc();
-	sTracker = &Mosse::getFp16AbRawF32BufDynAllocThreaded(pthreadThread, 2);
+//	sTracker = &Mosse::getFp16AbRawF32BufDynAllocThreaded(pthreadThread, 2);
+	sTracker = &Mosse::getFp16AbRawF32BufDynAllocThreadedSplit(pthreadThread, {{0.6, 0.4}});
 	runPort();
 //	run();
 	debug(MallocCounter::getPeakCount());
