@@ -31,6 +31,7 @@ private:
 	struct Threading {
 		std::vector<ThreadedOps> threadedOpWrappers;
 		std::vector<std::unique_ptr<Mosse::Port::Thread>> opThreads;
+		std::vector<float> split;  ///< Enables to split ROI unevenly between threads. Useful, when cores are loaded unevenly
 		void waitDone();
 	};
 
@@ -46,7 +47,7 @@ private:
 public:
 	void requestStop();
 	ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> ops, Mosse::Port::Thread &thread,
-		ArithmBase &aArithmBaseBuffer, MemLayoutBase &aMemLayoutBaseBuffer);
+		ArithmBase &aArithmBaseBuffer, MemLayoutBase &aMemLayoutBaseBuffer, const std::vector<float> &aSplit = {});
 	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) override;
 	void initImpl() override;
 	void fft2(void *aBufferComplex) override;

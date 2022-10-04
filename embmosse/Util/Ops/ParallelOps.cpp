@@ -28,9 +28,9 @@ void ParallelOps::requestStop()
 }
 
 ParallelOps::ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> aOps, Port::Thread &aThread,
-	ArithmBase &aArithmBase, MemLayoutBase &aMemLayoutBase) :
+	ArithmBase &aArithmBase, MemLayoutBase &aMemLayoutBase, const std::vector<float> &aSplit) :
 	ops{aOps},
-	threading{{}, {}},
+	threading{{}, {}, aSplit},
 	lowLevelAtomics{{aArithmBase, aMemLayoutBase}}
 {
 	mosse_assert(ops.size() > 0);
@@ -66,26 +66,28 @@ void ParallelOps::initImpl()
 	}
 
 	if (isFirstInit()) {
-		const auto fragRows = roi().size(0) / ops.size();
-		mosse_assert(fragRows > 0);
-		// Set each `Ops` instance its ROI fragment so it can be processed in parallel fashion
-		Tp::Roi frag = {{0, 0}, {fragRows, roi().size(1)}};
-		{
-			Tp::PointRowCol fragShift = {fragRows, 0};
+		if (threading.split.size() == 0) {  // Split load between threads equally
+			const auto fragRows = roi().size(0) / ops.size();
+			mosse_assert(fragRows > 0);
+			// Set each `Ops` instance its ROI fragment so it can be processed in parallel fashion
+			Tp::Roi frag = {{0, 0}, {fragRows, roi().size(1)}};
+			{
+				Tp::PointRowCol fragShift = {fragRows, 0};
 
-			for (auto op : ops) {
-				op.get().setRoiFragment(frag);
-				ohdebug(parallel, "setting ROI fragment", frag);
-				frag.origin += fragShift;
+				for (auto op : ops) {
+					op.get().setRoiFragment(frag);
+					ohdebug(parallel, "setting ROI fragment", frag);
+					frag.origin += fragShift;
+				}
 			}
-		}
 
-		// Handle uneven split
-		{
-			const auto remainder = roi().size(0) - fragRows * ops.size();
-			frag.origin(0) -= static_cast<int>(fragRows);  // It's been shifted over the ROI boundary in the loop above
-			frag.size(0) += static_cast<int>(remainder);
-			ops[ops.size() - 1].get().setRoiFragment(frag);
+			// Handle uneven split
+			{
+				const auto remainder = roi().size(0) - fragRows * ops.size();
+				frag.origin(0) -= static_cast<int>(fragRows);  // It's been shifted over the ROI boundary in the loop above
+				frag.size(0) += static_cast<int>(remainder);
+				ops[ops.size() - 1].get().setRoiFragment(frag);
+			}
 		}
 	}
 }
