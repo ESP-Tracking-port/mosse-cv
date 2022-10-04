@@ -12,6 +12,7 @@
 #include "embmosse/Util/Ops/ThreadedOps.hpp"
 #include "embmosse/Util/Arithm/Arithm.hpp"
 #include "embmosse/Util/Arithm/MemLayout.hpp"
+#include "embmosse/Port/OsApi.hpp"
 #include <numeric>
 #include <algorithm>
 #include "ParallelOps.hpp"
@@ -35,6 +36,7 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> aOps
 	mosse_assert(ops.size() > 0);
 	mosse_assert(threading.threadedOpWrappers.size() == 0);
 	mosse_assert(threading.opThreads.size() == 0);
+	mosse_assert(Port::OsApi::instance() != nullptr);
 	threading.threadedOpWrappers.reserve(ops.size());
 	threading.opThreads.reserve(ops.size());
 
@@ -295,6 +297,7 @@ void ParallelOps::Threading::waitDone()
 {
 	for (auto &op : threadedOpWrappers) {
 		while (!op.isDone()) {
+			Port::OsApi::instance()->taskYieldMinDelay();
 		}
 	}
 }
