@@ -10,6 +10,8 @@
 #if !defined(MOSSE_MOSSE_HPP_FWD_)
 #define MOSSE_MOSSE_HPP_FWD_
 
+#include <vector>
+
 namespace Mosse {
 
 class Tracker;
@@ -41,6 +43,8 @@ Tracker &getNaiveRadix2Fft();
 Tracker &getFp16AbRawF32BufDynAlloc();
 
 Tracker &getFp16AbRawF32BufDynAllocThreaded(Port::Thread &thread, unsigned nthreads);
+
+Tracker &getFp16AbRawF32BufDynAllocThreadedSplit(Port::Thread &thread, const std::vector<float> &);
 
 }  // namespace Mosse
 
