@@ -320,7 +320,7 @@ void ParallelOps::Threading::waitDone()
 {
 	for (auto &op : threadedOpWrappers) {
 		while (!op.isDone()) {
-			Port::OsApi::instance()->taskYieldMinDelay();
+			Port::OsApi::instance()->taskYieldMinDelayWrap();
 		}
 	}
 }
