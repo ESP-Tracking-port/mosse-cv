@@ -24,10 +24,7 @@ public:
 
 	/// \brief Enables / Disables yield
 	///
-	inline void setTaskYieldMinDelayFlag(bool aShouldYield)
-	{
-		taskYield.enable = aShouldYield;
-	}
+	void setTaskYieldMinDelayFlag(bool aShouldYield);
 
 	/// \brief Yield the control to another task for the shortest possible period of time, when a current task has nothing
 	/// useful to do apart from waiting for certain conditions to be met.

@@ -16,9 +16,14 @@ static OsApi *sOsApiInstance = nullptr;
 void OsApi::taskYieldMinDelayWrap()
 {
 	if (taskYield.enable) {
-		ohdebug(OsApi::taskYieldMinDelayWrap, "delay");
 		taskYieldMinDelay();
 	}
+}
+
+void OsApi::setTaskYieldMinDelayFlag(bool aShouldYield)
+{
+	ohdebug(OsApi::setTaskYieldMinDelayFlag, aShouldYield);
+	taskYield.enable = aShouldYield;
 }
 
 OsApi *OsApi::instance()
