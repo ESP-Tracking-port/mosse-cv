@@ -27,6 +27,12 @@ void ParallelOps::requestStop()
 	}
 }
 
+void ParallelOps::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
+{
+	Port::OsApi::instance()->setTaskYieldMinDelayFlag(false);  // Disable control yielding, parallel ops will be of high demand now
+	DecomposedOps::imageCropInto(aImageReal, aBufferComplex);
+}
+
 ParallelOps::ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> aOps, Port::Thread &aThread,
 	ArithmBase &aArithmBase, MemLayoutBase &aMemLayoutBase, const std::vector<float> &aSplit) :
 	ops{aOps},
@@ -137,6 +143,7 @@ void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComple
 	mosse_assert(nullptr != aMatBcomplex);
 	mosse_assert(nullptr != aImageCropFftComplex);
 	setExec(&DecomposedOps::matbUpdate, aMatBcomplex, aImageCropFftComplex, aInitial);
+	Port::OsApi::instance()->setTaskYieldMinDelayFlag(true);  // Restore control yielding
 }
 
 // TODO Generalize the approach beyond floats (WONTBEDONE: probably, won't be needed)

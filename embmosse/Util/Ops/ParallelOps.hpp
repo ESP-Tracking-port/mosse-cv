@@ -46,6 +46,7 @@ private:
 
 public:
 	void requestStop();
+	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override;
 	ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> ops, Mosse::Port::Thread &thread,
 		ArithmBase &aArithmBaseBuffer, MemLayoutBase &aMemLayoutBaseBuffer, const std::vector<float> &aSplit = {});
 	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) override;
