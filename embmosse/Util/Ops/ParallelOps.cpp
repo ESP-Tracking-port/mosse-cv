@@ -33,10 +33,14 @@ void ParallelOps::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
 	DecomposedOps::imageCropInto(aImageReal, aBufferComplex);
 }
 
+/// \arg aManagedThreadId Managed thread operations will be performed in the current thread to spare context switching
+/// expenses. Set it to any number higher than the index of any operation in the list, if managed thread is not needed.
+///
 ParallelOps::ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> aOps, Port::Thread &aThread,
-	ArithmBase &aArithmBase, MemLayoutBase &aMemLayoutBase, const std::vector<float> &aSplit) :
+	ArithmBase &aArithmBase, MemLayoutBase &aMemLayoutBase, const std::vector<float> &aSplit,
+	std::size_t aManagedThreadId) :
 	ops{aOps},
-	threading{{}, {}, aSplit},
+	threading{{}, {}, aSplit, aManagedThreadId},
 	lowLevelAtomics{{aArithmBase, aMemLayoutBase}}
 {
 	mosse_assert(ops.size() > 0);
@@ -47,11 +51,18 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> aOps
 	mosse_assert(aSplit.size() == 0 || aSplit.size() == ops.size());
 	threading.threadedOpWrappers.reserve(ops.size());
 	threading.opThreads.reserve(ops.size());
+	std::size_t threadId = 0;
 
 	for (auto op : ops) {
 		threading.threadedOpWrappers.emplace_back(op);
 		threading.opThreads.emplace_back(aThread.makeFromTask(threading.threadedOpWrappers.back()));
-		threading.opThreads.back()->start();
+
+		// Start a thread, only if this is not the managed one
+		if (threadId != aManagedThreadId) {
+			threading.opThreads.back()->start();
+		}
+
+		++threadId;
 	}
 }
 
@@ -326,6 +337,11 @@ float ParallelOps::bufferAbsDevSum(const void *aComplexBuffer, const Tp::Roi &aR
 
 void ParallelOps::Threading::waitDone()
 {
+	// Execute managed op, if there is one. Set its "done" flag to `true`
+	if (managedThreadId < threadedOpWrappers.size()) {
+		threadedOpWrappers[managedThreadId].tryIter();
+	}
+
 	for (auto &op : threadedOpWrappers) {
 		while (!op.isDone()) {
 			Port::OsApi::instance()->taskYieldMinDelayWrap();

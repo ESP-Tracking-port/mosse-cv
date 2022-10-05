@@ -13,6 +13,7 @@
 #include <vector>
 #include <functional>
 #include <memory>
+#include <limits>
 
 namespace Mosse {
 namespace Port {
@@ -32,6 +33,7 @@ private:
 		std::vector<ThreadedOps> threadedOpWrappers;
 		std::vector<std::unique_ptr<Mosse::Port::Thread>> opThreads;
 		std::vector<float> split;  ///< Enables to split ROI unevenly between threads. Useful, when cores are loaded unevenly
+		std::size_t managedThreadId;
 		void waitDone();
 	};
 
@@ -43,12 +45,12 @@ private:
 			MemLayoutBase &memLayout;
 		} buffer;
 	};
-
 public:
 	void requestStop();
 	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override;
 	ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> ops, Mosse::Port::Thread &thread,
-		ArithmBase &aArithmBaseBuffer, MemLayoutBase &aMemLayoutBaseBuffer, const std::vector<float> &aSplit = {});
+		ArithmBase &aArithmBaseBuffer, MemLayoutBase &aMemLayoutBaseBuffer, const std::vector<float> &aSplit = {},
+		std::size_t aManagedThreadId = std::numeric_limits<std::size_t>::max());
 	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) override;
 	void initImpl() override;
 	void fft2(void *aBufferComplex) override;
