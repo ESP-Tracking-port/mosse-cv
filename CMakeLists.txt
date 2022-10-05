@@ -1,11 +1,11 @@
 project(mosse)
 option(MOSSE_PORTABLE "Only include libraries that can be ported on an embedded platform" OFF)
 option(MOSSE_PORT_USE_CASSERT "Use <cassert> from the standard library" ON)
-set(MOSSE_ARROGANT_HOLD_FRAMES 0 CACHE STRING
+set(MOSSE_PORT_ARROGANT_HOLD_FRAMES 0 CACHE STRING
 	"Expenses on context switching may exceed the benefits from using multiple
 	cores. Set this option to anything different from 0. When enabled, a
 	threaded SIMD matrix ops. thread will not release control for
-	`MOSSE_ARROGANT_HOLD_FRAMES` number of frames. Establish the optimal value
+	`MOSSE_PORT_ARROGANT_HOLD_FRAMES` number of frames. Establish the optimal value
 	experimentally, but do not set it too high, as it may cause priority
 	inversion-like situation and trigger a watchdog timer.")
 set(CMAKE_CXX_STANDARD 11)
