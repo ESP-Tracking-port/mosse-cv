@@ -156,7 +156,7 @@ void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComple
 	mosse_assert(nullptr != aImageCropFftComplex);
 	setExec(&DecomposedOps::matbUpdate, aMatBcomplex, aImageCropFftComplex, aInitial);
 
-#if MOSSE_ARROGANT_HOLD_FRAMES > 0
+#if MOSSE_PORT_ARROGANT_HOLD_FRAMES > 0
 	static int sYieldCounter = 0;
 
 	if (sYieldCounter == 0) {
