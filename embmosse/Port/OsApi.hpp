@@ -20,12 +20,7 @@ public:
 	/// \brief More fine-tuned (conditional) approach to whether the control should be yielded. Enables to retain the
 	/// control for the duration of frame processing
 	///
-	inline void taskYieldMinDelayWrap()
-	{
-		if (taskYield.enable) {
-			taskYieldMinDelay();
-		}
-	}
+	void taskYieldMinDelayWrap();
 
 	/// \brief Enables / Disables yield
 	///

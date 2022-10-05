@@ -13,6 +13,14 @@ namespace Port {
 
 static OsApi *sOsApiInstance = nullptr;
 
+void OsApi::taskYieldMinDelayWrap()
+{
+	if (taskYield.enable) {
+		ohdebug(OsApi::taskYieldMinDelayWrap, "delay");
+		taskYieldMinDelay();
+	}
+}
+
 OsApi *OsApi::instance()
 {
 	return sOsApiInstance;
