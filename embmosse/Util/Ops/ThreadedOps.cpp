@@ -19,12 +19,24 @@ void ThreadedOps::run()
 	shouldRun = true;
 
 	while (shouldRun) {
-		if (!isDone()) {
-			(this->*executorCb)();
-		} else {
+		if (!tryIter()) {
 			Port::OsApi::instance()->taskYieldMinDelayWrap();
 		}
 	}
+}
+
+/// \brief Executed a currently assigned callback. Returns false, if unable to perform (i.e. no callback has been
+/// assigned)
+///
+bool ThreadedOps::tryIter()
+{
+	bool ret = !isDone();
+
+	if (ret) {
+		(this->*executorCb)();
+	}
+
+	return ret;
 }
 
 ThreadedOps::ThreadedOps(DecomposedOps &aOps) : storage{{0}, {0}, {0}}, ops{aOps}, executorCb{nullptr}

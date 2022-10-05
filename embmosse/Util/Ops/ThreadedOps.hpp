@@ -114,6 +114,7 @@ public:
 	}
 
 	void run() override;
+	bool tryIter();
 	ThreadedOps(DecomposedOps &);
 
 	/// \brief Shortcut for creating compile time wrappers over the methods of `Ops`. It saves method pointer,
