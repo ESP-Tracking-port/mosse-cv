@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
+# Enforce stringent code checking policy
 include(ExtractValidFlags)
 project(embmosse)
 FILE(GLOB_RECURSE SOURCEFILES "*.cpp")
@@ -10,3 +11,4 @@ endif()
 target_include_directories(embmosse PRIVATE ".")
 target_include_directories(embmosse PUBLIC "..")
 target_compile_options(embmosse PRIVATE ${MOSSE_COMPILER_FLAGS})
+target_compile_options(embmosse PRIVATE -DMOSSE_ARROGANT_HOLD_FRAMES=${MOSSE_ARROGANT_HOLD_FRAMES})
