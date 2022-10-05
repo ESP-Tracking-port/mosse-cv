@@ -144,6 +144,7 @@ void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComple
 	mosse_assert(nullptr != aImageCropFftComplex);
 	setExec(&DecomposedOps::matbUpdate, aMatBcomplex, aImageCropFftComplex, aInitial);
 	Port::OsApi::instance()->setTaskYieldMinDelayFlag(true);  // Restore control yielding
+	Port::OsApi::instance()->taskYieldMinDelayWrap();
 }
 
 // TODO Generalize the approach beyond floats (WONTBEDONE: probably, won't be needed)
