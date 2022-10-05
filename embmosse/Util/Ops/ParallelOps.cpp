@@ -59,6 +59,7 @@ ParallelOps::ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> aOps
 
 		// Start a thread, only if this is not the managed one
 		if (threadId != aManagedThreadId) {
+			ohdebug("ParallelOps", "starting thread", threadId);
 			threading.opThreads.back()->start();
 		}
 
