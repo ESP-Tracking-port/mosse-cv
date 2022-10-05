@@ -164,7 +164,7 @@ void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComple
 		Port::OsApi::instance()->taskYieldMinDelayWrap();
 	}
 
-	sYieldCounter = (sYieldCounter + 1) % 7;
+	sYieldCounter = (sYieldCounter + 1) % MOSSE_PORT_ARROGANT_HOLD_FRAMES;
 #else
 	Port::OsApi::instance()->setTaskYieldMinDelayFlag(true);  // Restore control yielding
 #endif
