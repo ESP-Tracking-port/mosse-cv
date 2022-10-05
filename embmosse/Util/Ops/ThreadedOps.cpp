@@ -22,7 +22,7 @@ void ThreadedOps::run()
 		if (!isDone()) {
 			(this->*executorCb)();
 		} else {
-			Port::OsApi::instance()->taskYieldMinDelay();
+			Port::OsApi::instance()->taskYieldMinDelayWrap();
 		}
 	}
 }
