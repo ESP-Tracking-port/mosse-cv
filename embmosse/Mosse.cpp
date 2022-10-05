@@ -94,13 +94,16 @@ Tracker &getFp16AbRawF32BufDynAllocThreaded(Port::Thread &aThread, unsigned anTh
 	return tracker;
 }
 
-Tracker &getFp16AbRawF32BufDynAllocThreadedSplit(Port::Thread &aThread, const std::vector<float> &aSplit) {
+Tracker &getFp16AbRawF32BufDynAllocThreadedSplit(Port::Thread &aThread, const std::vector<float> &aSplit,
+	std::size_t aManagedThreadId)
+{
 	mosse_assert(aSplit.size() > 0);
 	const std::size_t nThreads = aSplit.size();
 	static Ut::Arithm<Ut::FpI16AbRawF32Ops::reprFlags.buffer> bufferArithmOps;
 	static Ut::MemLayout<Ut::FpI16AbRawF32Ops::reprFlags.buffer> bufferMemLayoutOps;
 	static std::vector<Mosse::Ut::FpI16AbRawF32Ops> workerOps{nThreads};
-	static Mosse::Ut::ParallelOps ops{makeRefs(workerOps), aThread, bufferArithmOps, bufferMemLayoutOps, aSplit};
+	static Mosse::Ut::ParallelOps ops{makeRefs(workerOps), aThread, bufferArithmOps, bufferMemLayoutOps, aSplit,
+		aManagedThreadId};
 	static Mosse::Ut::DynRawMem<Mosse::Ut::FpI16AbRawF32Ops::reprFlags.buffer,
 		Mosse::Ut::FpI16AbRawF32Ops::reprFlags.matAb> mem;
 	static Mosse::Ut::Port port{ops, mem};

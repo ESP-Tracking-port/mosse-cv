@@ -11,6 +11,7 @@
 #define MOSSE_MOSSE_HPP_FWD_
 
 #include <vector>
+#include <limits>
 
 namespace Mosse {
 
@@ -44,7 +45,8 @@ Tracker &getFp16AbRawF32BufDynAlloc();
 
 Tracker &getFp16AbRawF32BufDynAllocThreaded(Port::Thread &thread, unsigned nthreads);
 
-Tracker &getFp16AbRawF32BufDynAllocThreadedSplit(Port::Thread &thread, const std::vector<float> &);
+Tracker &getFp16AbRawF32BufDynAllocThreadedSplit(Port::Thread &thread, const std::vector<float> &,
+	std::size_t aManagedThreadId = std::numeric_limits<std::size_t>::max());
 
 }  // namespace Mosse
 
