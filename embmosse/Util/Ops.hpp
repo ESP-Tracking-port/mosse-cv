@@ -93,8 +93,6 @@ public:
 	virtual void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial) = 0;
 	virtual void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial) = 0;
 
-	// Parallelizeable parts of `imageCropInto` (which includes the preprocessing stage the following method pertain to)
-
 	inline void tearDown()
 	{
 		tearDownImpl();
