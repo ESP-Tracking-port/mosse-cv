@@ -83,6 +83,8 @@ private:
 public:
 	using Image::Image;
 	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol)) override;
+	auto block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
+		-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const override;
 };
 
 }  // namespace Tp

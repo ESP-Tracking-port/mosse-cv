@@ -85,5 +85,13 @@ auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(i
 	return imageBase(aRow - offset(0), aCol - offset(1));
 }
 
+auto OffsetImage::block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
+	-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const
+{
+	mosse_assert(aRow >= offset(0));
+	mosse_assert(aCol >= offset(1));
+	return imageBase.block(aRow - offset(0), aCol - offset(1), anRows, anCols);
+}
+
 }  // namespace Tp
 }  // namespace Mosse
