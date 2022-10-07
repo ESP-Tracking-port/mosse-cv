@@ -17,33 +17,24 @@ namespace Tp {
 using ImageBase = Eigen::Map<Eigen::Matrix<std::uint8_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>;
 
 class Image {
-public:
+private:
 	ImageBase imageBase;
-
-	Image(std::uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) : imageBase{aData, aHeight, aWidth}
-	{
-	}
+public:
+	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol));
+	Image(std::uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth);
 
 	inline auto data() -> decltype(imageBase.data())
 	{
 		return imageBase.data();
 	}
-
 	inline auto rows() const -> decltype(imageBase.rows())
 	{
 		return imageBase.rows();
 	}
-
 	inline auto cols() const -> decltype(imageBase.cols())
 	{
 		return imageBase.cols();
 	}
-
-	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol))
-	{
-		return imageBase(aRow, aCol);
-	}
-
 	template <class ...Ts>
 	inline auto block(Ts &&...aArgs) -> decltype(imageBase.block(std::forward<Ts>(aArgs)...))
 	{

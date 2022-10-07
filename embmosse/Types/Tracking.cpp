@@ -62,5 +62,14 @@ bool operator!=(const Roi &aLhs, const Roi &aRhs)
 	return !(aLhs.origin == aRhs.origin && aLhs.size == aRhs.size);
 }
 
+auto Image::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol))
+{
+	return imageBase(aRow, aCol);
+}
+
+Image::Image(uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) : imageBase{aData, aHeight, aWidth}
+{
+}
+
 }  // namespace Tp
 }  // namespace Mosse
