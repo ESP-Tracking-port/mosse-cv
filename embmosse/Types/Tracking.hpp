@@ -14,16 +14,17 @@
 namespace Mosse {
 namespace Tp {
 
+/// \brief 2D point
+///
 struct PointRowCol : Eigen::Vector2i {
 	using Eigen::Vector2i::Vector2i;
 };
 
+/// \brief Region of interest encapsulation. ((ORIGIN_ROW, ORIGIN_COL), (N_ROWS, N_COLS))
+///
 struct Roi {
 	PointRowCol origin;
 	PointRowCol size;
-
-	int area() const;
-	bool isInside(const PointRowCol &) const;
 
 	inline auto rows() const -> decltype(size(0))
 	{
@@ -38,10 +39,11 @@ struct Roi {
 	/// \brief Adjust the ROI geometry for the new size preserving the ROI's center coordinates
 	///
 	void readjust(const PointRowCol &aSize);
+	int area() const;
+	bool isInside(const PointRowCol &) const;
 	void setCenter(const PointRowCol &aCenter);  ///< Update the ROI's center preserving its size
 	void fitShift(const PointRowCol &aOuterBoundSize);  ///< Fit ROI in the bounding box preserving its size
 	void fitCrop(const PointRowCol &aOuterBoundSize);  ///< Fit ROI in the bounding box preserving its position
-
 	friend bool operator==(const Roi &, const Roi&);
 	friend bool operator!=(const Roi &, const Roi&);
 };
@@ -87,9 +89,6 @@ private:
 public:
 	using Image::Image;
 	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol)) override;
-};
-
-struct TrackingInfo {
 };
 
 }  // namespace Tp
