@@ -67,6 +67,12 @@ auto Image::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBa
 	return imageBase(aRow, aCol);
 }
 
+auto Image::block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
+	-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const
+{
+	return imageBase.block(aRow, aCol, anRows, anCols);
+}
+
 Image::Image(uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) : imageBase{aData, aHeight, aWidth}
 {
 }

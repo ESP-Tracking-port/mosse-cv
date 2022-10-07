@@ -58,6 +58,8 @@ protected:
 public:
 	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol));
 	Image(std::uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth);
+	virtual auto block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
+		-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const;
 
 	inline auto data() -> decltype(imageBase.data())
 	{
@@ -70,11 +72,6 @@ public:
 	inline auto cols() const -> decltype(imageBase.cols())
 	{
 		return imageBase.cols();
-	}
-	template <class ...Ts>
-	inline auto block(Ts &&...aArgs) -> decltype(imageBase.block(std::forward<Ts>(aArgs)...))
-	{
-		return imageBase.block(std::forward<Ts>(aArgs)...);
 	}
 };
 
