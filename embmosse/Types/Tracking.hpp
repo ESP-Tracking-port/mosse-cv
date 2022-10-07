@@ -79,8 +79,6 @@ public:
 	}
 };
 
-class Roi;
-
 /// \brief Maps a chunk of an image
 ///
 class OffsetImage : public Image {
