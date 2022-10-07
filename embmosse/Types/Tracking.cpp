@@ -71,5 +71,13 @@ Image::Image(uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) : imageB
 {
 }
 
+auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol))
+{
+	mosse_assert(aRow >= offset(0));
+	mosse_assert(aCol >= offset(1));
+
+	return imageBase(aRow - offset(0), aCol - offset(1));
+}
+
 }  // namespace Tp
 }  // namespace Mosse

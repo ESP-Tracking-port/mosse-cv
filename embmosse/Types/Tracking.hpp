@@ -14,36 +14,6 @@
 namespace Mosse {
 namespace Tp {
 
-using ImageBase = Eigen::Map<Eigen::Matrix<std::uint8_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>;
-
-class Image {
-private:
-	ImageBase imageBase;
-public:
-	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol));
-	Image(std::uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth);
-
-	inline auto data() -> decltype(imageBase.data())
-	{
-		return imageBase.data();
-	}
-	inline auto rows() const -> decltype(imageBase.rows())
-	{
-		return imageBase.rows();
-	}
-	inline auto cols() const -> decltype(imageBase.cols())
-	{
-		return imageBase.cols();
-	}
-	template <class ...Ts>
-	inline auto block(Ts &&...aArgs) -> decltype(imageBase.block(std::forward<Ts>(aArgs)...))
-	{
-		return imageBase.block(std::forward<Ts>(aArgs)...);
-	}
-};
-
-class PointRowCol;
-
 struct PointRowCol : Eigen::Vector2i {
 	using Eigen::Vector2i::Vector2i;
 };
@@ -74,6 +44,49 @@ struct Roi {
 
 	friend bool operator==(const Roi &, const Roi&);
 	friend bool operator!=(const Roi &, const Roi&);
+};
+
+using ImageBase = Eigen::Map<Eigen::Matrix<std::uint8_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>;
+
+/// \brief Wrapper that translates calls to the underlying wrapped instance of `ImageBase`. It is used due to
+/// necessity to swap `ImageBase` with an offsetting wrapper.
+///
+class Image {
+protected:
+	ImageBase imageBase;
+public:
+	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol));
+	Image(std::uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth);
+
+	inline auto data() -> decltype(imageBase.data())
+	{
+		return imageBase.data();
+	}
+	inline auto rows() const -> decltype(imageBase.rows())
+	{
+		return imageBase.rows();
+	}
+	inline auto cols() const -> decltype(imageBase.cols())
+	{
+		return imageBase.cols();
+	}
+	template <class ...Ts>
+	inline auto block(Ts &&...aArgs) -> decltype(imageBase.block(std::forward<Ts>(aArgs)...))
+	{
+		return imageBase.block(std::forward<Ts>(aArgs)...);
+	}
+};
+
+class Roi;
+
+/// \brief Maps a chunk of an image
+///
+class OffsetImage : public Image {
+private:
+	PointRowCol offset{0, 0};
+public:
+	using Image::Image;
+	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol)) override;
 };
 
 struct TrackingInfo {
