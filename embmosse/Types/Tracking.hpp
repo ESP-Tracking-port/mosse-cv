@@ -30,7 +30,6 @@ struct Roi {
 	{
 		return size(0);
 	}
-
 	inline auto cols() const -> decltype(size(1))
 	{
 		return size(1);
