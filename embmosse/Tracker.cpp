@@ -49,8 +49,7 @@ Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage, Tp::Roi &
 
 	return offsetImage;
 #else
-	mosse_assert(false);
-	return {aRoi.origin, nullptr, 0, 0};
+	return {{0, 0}, aImage.data(), aImage.rows(), aImage.cols()};
 #endif
 }
 
