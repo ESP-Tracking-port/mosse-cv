@@ -65,6 +65,7 @@ public:
 		-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const;
 	virtual Eigen::Index rows() const;
 	virtual Eigen::Index cols() const;
+	virtual Tp::Roi asRoi() const;
 
 	inline auto data() -> decltype(imageBase.data())
 	{
@@ -91,6 +92,7 @@ public:
 	Eigen::Index cols() const override;
 	auto block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
 		-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const override;
+	Tp::Roi asRoi() const override;
 };
 
 }  // namespace Tp

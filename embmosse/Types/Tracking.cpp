@@ -96,6 +96,11 @@ Eigen::Index Image::cols() const
 	return imageBase.cols();
 }
 
+Roi Image::asRoi() const
+{
+	return {{0, 0}, {rows(), cols()}};
+}
+
 Image::Image(uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) : imageBase{aData, aHeight, aWidth}
 {
 }
@@ -132,9 +137,15 @@ Eigen::Index OffsetImage::cols() const
 auto OffsetImage::block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
 	-> decltype(imageBase.block(0, 0, 0, 0)) const
 {
+	ohdebug("OffsetImage::Block const", roi, aRow, aCol, anRows, anCols);
 	mosse_assert(roi.isInside({aRow, aCol}));
 
 	return imageBase.block(aRow - roi.origin(0), aCol - roi.origin(1), anRows, anCols);
+}
+
+Roi OffsetImage::asRoi() const
+{
+	return roi;
 }
 
 }  // namespace Tp
