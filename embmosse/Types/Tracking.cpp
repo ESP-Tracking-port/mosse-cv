@@ -52,6 +52,14 @@ void Roi::fitCrop(const PointRowCol &aOuterBoundSize)
 	}
 }
 
+void Roi::fitShiftRoi(const Roi &aRoi)
+{
+	for (auto c : {0, 1}) {
+		mosse_assert(size(c) <= aRoi.size(c));
+		Ut::clamp(origin(c), aRoi.origin(c), aRoi.origin(c) + aRoi.size(c) - size(c));
+	}
+}
+
 bool operator==(const Roi &aLhs, const Roi &aRhs)
 {
 	return aLhs.origin == aRhs.origin && aLhs.size == aRhs.size;
