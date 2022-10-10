@@ -39,6 +39,9 @@ Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage, Tp::Roi &
 		port.ops.roiResize(aRoi);
 	}
 
+	aRoi.size(0) += aRoi.size(0) / 2;
+	aRoi.size(1) += aRoi.size(1) / 2;
+	aRoi.fitShift({aImage.rows(), aImage.cols()});
 	port.mem.initImageWorkingArea(aImage, aRoi);
 	mosse_assert(port.mem.imageWorkingArea() != nullptr);
 	Tp::OffsetImage offsetImage{aRoi.origin, static_cast<std::uint8_t *>(port.mem.imageWorkingArea()), aRoi.size(0),
