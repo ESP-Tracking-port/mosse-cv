@@ -92,7 +92,7 @@ Image::Image(uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) : imageB
 {
 }
 
-OffsetImage::OffsetImage(const Roi &aRoi, uint8_t *aData) : roi{aRoi}, virtSize{roi.origin + roi.size + PointRowCol{1, 1}},
+OffsetImage::OffsetImage(const Roi &aRoi, uint8_t *aData) : roi{aRoi}, virtSize{roi.origin + roi.size},
 	Image{aData, aRoi.size(0), aRoi.size(1)}
 {
 }
