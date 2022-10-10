@@ -20,11 +20,12 @@ OpencvNativeRawF32Ops::OpencvNativeRawF32Ops() : Ops()
 {
 }
 
-void OpencvNativeRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
+void OpencvNativeRawF32Ops::imageCropInto(const Tp::Image &aImageReal, void *aBufferComplex)
 {
 #if MOSSE_USE_OPENCV
 # if 1
-	auto image = bufferToMat<CV_8UC1>(aImageReal.data(), aImageReal.rows(), aImageReal.cols());
+	auto image = bufferToMat<CV_8UC1>(aImageReal.data(), aImageReal.rows(),
+		aImageReal.cols());
 	image = imcrop(_roi, image);
 	image = preprocess(image);
 

@@ -32,7 +32,7 @@ public:
 	using Ops::init;
 	// Ops API
 	OpencvNativeRawF32Ops();
-	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override;
+	void imageCropInto(const Tp::Image &aImageReal, void *aBufferComplex) override;
 	void imagePreprocess(void *aCropComplex) override;
 	void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomplex, void *aMatrixBcomplex) override;
 	void fft2(void *aBufferComplex) override;
