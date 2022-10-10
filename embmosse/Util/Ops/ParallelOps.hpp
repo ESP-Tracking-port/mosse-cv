@@ -47,7 +47,7 @@ private:
 	};
 public:
 	void requestStop();
-	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override;
+	void imageCropInto(const Tp::Image &aImageReal, void *aBufferComplex) override;
 	ParallelOps(std::vector<std::reference_wrapper<DecomposedOps>> ops, Mosse::Port::Thread &thread,
 		ArithmBase &aArithmBaseBuffer, MemLayoutBase &aMemLayoutBaseBuffer, const std::vector<float> &aSplit = {},
 		std::size_t aManagedThreadId = std::numeric_limits<std::size_t>::max());
@@ -57,9 +57,9 @@ public:
 	void ifft2(void *aBufferComplex) override;
 	void mataUpdate(void *aMatAcomplex, const void *aImageCropFftComplex, bool aInitial) override;
 	void matbUpdate(void *aMatBcomplex, const void *aImageCropFftComplex, bool aInitial) override;
-	Tp::NumVariant imageLog2Sum(Tp::Image aImage) override;
-	Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean) override;
-	void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
+	Tp::NumVariant imageLog2Sum(const Tp::Image &aImage) override;
+	Tp::NumVariant imageAbsDevLog2Sum(const Tp::Image &aImage, Tp::NumVariant aMean) override;
+	void imageCropPreprocessImpl(const Tp::Image &aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
 		Tp::NumVariant aAbsDevLog2Sum) override;
 	void maxReal(const void *aComplexBuffer, Tp::PointRowCol &aPeakPos, float *aSum) override;
 	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,

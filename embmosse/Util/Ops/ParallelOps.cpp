@@ -27,7 +27,7 @@ void ParallelOps::requestStop()
 	}
 }
 
-void ParallelOps::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
+void ParallelOps::imageCropInto(const Tp::Image &aImageReal, void *aBufferComplex)
 {
 	Port::OsApi::instance()->setTaskYieldMinDelayFlag(false);  // Disable control yielding, parallel ops will be of high demand now
 	DecomposedOps::imageCropInto(aImageReal, aBufferComplex);
@@ -175,7 +175,7 @@ void ParallelOps::matbUpdate(void *aMatBcomplex, const void *aImageCropFftComple
 /// \warning While the architectural approach implies use of arbitrary types, this implementation expects FLOATS in
 /// Tp::NumVariant
 ///
-Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
+Tp::NumVariant ParallelOps::imageLog2Sum(const Tp::Image &aImage)
 {
 #if 0
 	// Debug. Decomposition.
@@ -200,7 +200,7 @@ Tp::NumVariant ParallelOps::imageLog2Sum(Tp::Image aImage)
 	return ret;
 }
 
-Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean)
+Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(const Tp::Image &aImage, Tp::NumVariant aMean)
 {
 #if 0
 	// Debug. Decomposition.
@@ -225,7 +225,7 @@ Tp::NumVariant ParallelOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant 
 	return ret;
 }
 
-void ParallelOps::imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
+void ParallelOps::imageCropPreprocessImpl(const Tp::Image &aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
 	Tp::NumVariant aAbsDevLog2Sum)
 {
 	mosse_assert(nullptr != aBufferComplex);
