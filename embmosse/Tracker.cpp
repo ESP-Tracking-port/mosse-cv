@@ -62,6 +62,7 @@ Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage)
 
 void Tracker::init(const Mosse::Tp::Image &aImage, Mosse::Tp::Roi aRoi)
 {
+	ohdebug("Tracker::init");
 	MallocCounter mc{};
 	(void)mc;
 	// A set of precompiled gaussian matrices is used, so the window's size will be changed to the closest one
@@ -83,6 +84,7 @@ void Tracker::init(const Mosse::Tp::Image &aImage, Mosse::Tp::Roi aRoi)
 
 void Tracker::update(const Tp::Image &aImage, bool aUpdatePsr)
 {
+	ohdebug("Tracker::update");
 	MallocCounter mc{};
 	(void)mc;
 	// Calculate convolution in the frequency domain
