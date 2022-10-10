@@ -99,7 +99,7 @@ OffsetImage::OffsetImage(const Roi &aRoi, uint8_t *aData) : roi{aRoi}, virtSize{
 
 auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol))
 {
-	ohdebug("roi.originImage::operator()", aRow, aCol, roi);
+	ohdebug("OffsetImage::operator()", aRow, aCol, roi);
 	mosse_assert(roi.isInside({aRow, aCol}));
 
 	return imageBase(aRow - roi.origin(0), aCol - roi.origin(1));
@@ -107,7 +107,7 @@ auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(i
 
 auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) const -> decltype(imageBase(aRow, aCol))
 {
-	ohdebug("roi.originImage::operator() const", aRow, aCol, roi);
+	ohdebug("OffsetImage::operator() const", aRow, aCol, roi);
 	mosse_assert(roi.isInside({aRow, aCol}));
 
 	return imageBase(aRow - roi.origin(0), aCol - roi.origin(1));
