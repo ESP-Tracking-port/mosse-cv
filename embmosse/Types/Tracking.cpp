@@ -67,6 +67,11 @@ auto Image::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBa
 	return imageBase(aRow, aCol);
 }
 
+auto Image::operator()(Eigen::Index aRow, Eigen::Index aCol) const -> decltype(imageBase(aRow, aCol))
+{
+	return imageBase(aRow, aCol);
+}
+
 auto Image::block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
 	-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const
 {
@@ -88,6 +93,14 @@ void OffsetImage::setOffset(const PointRowCol &aOffset)
 }
 
 auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol))
+{
+	mosse_assert(aRow >= offset(0));
+	mosse_assert(aCol >= offset(1));
+
+	return imageBase(aRow - offset(0), aCol - offset(1));
+}
+
+auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) const -> decltype(imageBase(aRow, aCol))
 {
 	mosse_assert(aRow >= offset(0));
 	mosse_assert(aCol >= offset(1));
