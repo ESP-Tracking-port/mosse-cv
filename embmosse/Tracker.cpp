@@ -44,10 +44,10 @@ Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage)
 		return stub;
 	}
 
-	roi.origin(0) -= roi.size(0) / 2;
-	roi.origin(1) -= roi.size(1) / 2;
-	roi.size(0) += roi.size(0);
-	roi.size(1) += roi.size(1);
+	roi.origin(0) -= roi.size(0) / MOSSE_MEM_CLONE_IMAGE_WORKING_AREA_SIDE_FRACTION / 2;
+	roi.origin(1) -= roi.size(1) / MOSSE_MEM_CLONE_IMAGE_WORKING_AREA_SIDE_FRACTION / 2;
+	roi.size(0) += roi.size(0) / MOSSE_MEM_CLONE_IMAGE_WORKING_AREA_SIDE_FRACTION;
+	roi.size(1) += roi.size(1) / MOSSE_MEM_CLONE_IMAGE_WORKING_AREA_SIDE_FRACTION;
 	roi.fitShift({aImage.rows(), aImage.cols()});
 	port.mem.initImageWorkingArea(aImage, roi);
 	mosse_assert(port.mem.imageWorkingArea() != nullptr);
