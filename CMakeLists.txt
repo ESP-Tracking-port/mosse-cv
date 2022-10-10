@@ -10,6 +10,11 @@ option(MOSSE_MEM_CLONE_IMAGE_WORKING_AREA
 	while the tracker processes the previous one.
 	"
 	ON)
+set(MOSSE_MEM_CLONE_IMAGE_WORKING_AREA_SIDE_FRACTION 4 CACHE STRING
+	"The working area's size will exceed that of the ROI by a value equal to
+	ROI side divided by this parameter. E.g. when the \"Fraction\" is 4, and
+	the ROI side length is 64, a (64 + 64 / 4, 64 + 64 / 4) image chunk will be
+	copied")
 option(MOSSE_PORTABLE "Only include libraries that can be ported on an embedded platform" OFF)
 option(MOSSE_PORT_USE_CASSERT "Use <cassert> from the standard library" ON)
 set(MOSSE_PORT_ARROGANT_HOLD_FRAMES 0 CACHE STRING
