@@ -24,7 +24,7 @@ void Ops::init(Tp::Roi aRoi)
 	firstInit = false;
 }
 
-void DecomposedOps::imageCropInto(Tp::Image aImage, void *aBufferCplx)
+void DecomposedOps::imageCropInto(const Tp::Image &aImage, void *aBufferCplx)
 {
 	float sum = imageLog2Sum(aImage).f32;  // Calculating sum
 	const float mean = sum / static_cast<float>(roi().area());
@@ -58,7 +58,7 @@ void Ops::roiResize(Mosse::Tp::Roi &aRoi)
 	aRoi.readjust({rows, cols});
 }
 
-Tp::NumVariant DecomposedOps::imageLog2Sum(Tp::Image aImage)
+Tp::NumVariant DecomposedOps::imageLog2Sum(const Tp::Image &aImage)
 {
 	float sum = 0.0f;
 	auto blockImage = Ut::makeEigenBlock(aImage, roi());
@@ -74,7 +74,7 @@ Tp::NumVariant DecomposedOps::imageLog2Sum(Tp::Image aImage)
 	return {sum};
 }
 
-Tp::NumVariant DecomposedOps::imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant mean)
+Tp::NumVariant DecomposedOps::imageAbsDevLog2Sum(const Tp::Image &aImage, Tp::NumVariant mean)
 {
 	float devsum = 0.0f;
 	auto blockImage = Ut::makeEigenBlock(aImage, roi());
@@ -105,7 +105,7 @@ float DecomposedOps::bufferAbsDevSum(const void *, const Tp::Roi &, float)
 	mosse_assert(false);  // The inherited class either re-implements `calcPsr`, or reimplements each of its decomposed operations
 }
 
-void DecomposedOps::imageCropPreprocessImpl(Tp::Image, void *, Tp::NumVariant, Tp::NumVariant)
+void DecomposedOps::imageCropPreprocessImpl(const Tp::Image &, void *, Tp::NumVariant, Tp::NumVariant)
 {
 }
 

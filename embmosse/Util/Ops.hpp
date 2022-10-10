@@ -61,7 +61,7 @@ public:
 	/// \brief Crop the image into buffer and perform preprocessing. The output buffer is expected to contain both real
 	/// and imaginary channels
 	///
-	virtual void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) = 0;
+	virtual void imageCropInto(const Tp::Image &aImageReal, void *aBufferComplex) = 0;
 	virtual void imagePreprocess(void *aCropComplex) = 0;  ///< Some implementations may implement preprocessing right inside `imageCropInto`, because both of these functions are guaranteed to use in this exact sequence, one after another.
 	virtual void imageConvFftDomain(void *aioCropFft2Complex, void *aMatrixAcomlex, void *aMatrixBcomplex) = 0;
 	virtual void fft2(void *aBufferComplex) = 0;
@@ -131,14 +131,14 @@ private:
 
 class DecomposedOps : public Ops {
 public:
-	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override;
+	void imageCropInto(const Tp::Image &aImageReal, void *aBufferComplex) override;
 	void imagePreprocess(void *) override;
 	float calcPsr(const void *aComplexBuffer, const Tp::PointRowCol &aPeak, float sumHint,
 		Tp::PointRowCol aMask = {11, 11}) override;
 
 	// Parallelizeable parts of `imageCropInto` (which includes the preprocessing stage the following method pertain to)
-	virtual Tp::NumVariant imageLog2Sum(Tp::Image aImage);
-	virtual Tp::NumVariant imageAbsDevLog2Sum(Tp::Image aImage, Tp::NumVariant aMean);
+	virtual Tp::NumVariant imageLog2Sum(const Tp::Image &aImage);
+	virtual Tp::NumVariant imageAbsDevLog2Sum(const Tp::Image &aImage, Tp::NumVariant aMean);
 
 	// Parallelizeable parts of `calcPsr` (decomposition of `calcPsr`)
 	virtual float bufferAtAsFloat(const void *aComplexBuffer, const Tp::PointRowCol &aPeak);  ///< Represents the peak value as a floating-point number
@@ -149,7 +149,7 @@ public:
 	/// \arg aLog2Sum - expects to be storing float
 	/// \arg aAbsDevLog2Sum - expects to be storing float
 	///
-	virtual void imageCropPreprocessImpl(Tp::Image aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
+	virtual void imageCropPreprocessImpl(const Tp::Image &aImageReal, void *aBufferComplex, Tp::NumVariant aLog2Sum,
 		Tp::NumVariant aAbsDevLog2Sum);
 
 	inline void setRoiFragment(const Tp::Roi &aRoiFrag)  ///< The Ops instance is aware of the ROI. However, it operates on its part called "ROI fragment" (ROI is a part of an image, ROI fragment is a part of a ROI). This decomposition enables parallelization.
