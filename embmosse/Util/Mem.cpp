@@ -12,6 +12,15 @@
 namespace Mosse {
 namespace Ut {
 
+void Mem::initImageWorkingArea(const Tp::Image &, const Tp::Roi &)
+{
+}
+
+void *Mem::imageWorkingArea()
+{
+	return nullptr;
+}
+
 void Mem::init(Tp::Roi)
 {
 }
