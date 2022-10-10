@@ -1,4 +1,15 @@
 project(mosse)
+option(MOSSE_MEM_CLONE_IMAGE_WORKING_AREA
+	"Since frames prepared by a camera driver, and those processed by the
+	tracking thread may reside in the same memory, copying a chunk of image
+	into a separate memory chunk will resolve the resource management problem.
+
+	If the tracker and the frame producing-thread reside on a separate physical
+	cores, this will improve performance, since the latter does not have to
+	wait for the buffer to get released, and may proceed with the next frame,
+	while the tracker processes the previous one.
+	"
+	ON)
 option(MOSSE_PORTABLE "Only include libraries that can be ported on an embedded platform" OFF)
 option(MOSSE_PORT_USE_CASSERT "Use <cassert> from the standard library" ON)
 set(MOSSE_PORT_ARROGANT_HOLD_FRAMES 0 CACHE STRING
