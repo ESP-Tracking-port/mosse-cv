@@ -51,7 +51,7 @@ public:
 		if (!static_cast<bool>(ptrImageWorkingArea)) {
 			const std::size_t imageWorkingAreaSize = sizeof(std::uint8_t) * aRoi.area();
 			ptrImageWorkingArea = std::unique_ptr<std::uint8_t[]>(new std::uint8_t[imageWorkingAreaSize]);
-			Tp::OffsetImage imageWorkingArea{aRoi, ptrImageWorkingArea.get(), aRoi.size(0), aRoi.size(1)};
+			Tp::OffsetImage imageWorkingArea{aRoi, ptrImageWorkingArea.get()};
 
 			for (Eigen::Index row = aRoi.origin(0); row < aRoi.size(0); ++row) {
 				for (Eigen::Index col = aRoi.origin(1); col < aRoi.size(1); ++col) {
