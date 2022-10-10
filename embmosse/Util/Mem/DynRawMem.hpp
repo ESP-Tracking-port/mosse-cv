@@ -42,6 +42,28 @@ public:
 	{
 		initImpl(aRoi);
 	}
+	void initImageWorkingArea(const Tp::Image &aImage, const Tp::Roi &aRoi) override
+	{
+		if (aRoi.area() > roiPrev.area()) {
+			ptrImageWorkingArea.reset();
+		}
+
+		if (!static_cast<bool>(ptrImageWorkingArea)) {
+			const std::size_t imageWorkingAreaSize = sizeof(std::uint8_t) * aRoi.area();
+			ptrImageWorkingArea = std::unique_ptr<std::uint8_t[]>(new std::uint8_t[imageWorkingAreaSize]);
+			Tp::OffsetImage imageWorkingArea{aRoi.origin, ptrImageWorkingArea.get(), aRoi.size(0), aRoi.size(1)};
+
+			for (Eigen::Index row = aRoi.origin(0); row < aRoi.size(0); ++row) {
+				for (Eigen::Index col = aRoi.origin(1); col < aRoi.size(1); ++col) {
+					imageWorkingArea(row, col) = aImage(row, col);
+				}
+			}
+		}
+	}
+	void *imageWorkingArea() override
+	{
+		return static_cast<void *>(ptrImageWorkingArea.get());
+	}
 private:
 	template <std::size_t S = RoiSz>
 	typename std::enable_if<(S > 0)>::type initImpl(const Tp::Roi &aRoi)
@@ -68,6 +90,7 @@ private:
 	std::unique_ptr<ReTp<ReprBuf>[]> ptrBuf;
 	std::unique_ptr<ReTp<ReprAb>[]> ptrMatA;
 	std::unique_ptr<ReTp<ReprAb>[]> ptrMatB;
+	std::unique_ptr<std::uint8_t[]> ptrImageWorkingArea;
 	Tp::Roi roiPrev;
 };
 
