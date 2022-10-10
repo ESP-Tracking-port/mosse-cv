@@ -54,8 +54,8 @@ public:
 			ptrImageWorkingArea = std::unique_ptr<std::uint8_t[]>(new std::uint8_t[imageWorkingAreaSize]);
 			Tp::OffsetImage imageWorkingArea{aRoi, ptrImageWorkingArea.get()};
 
-			for (Eigen::Index row = aRoi.origin(0); row < aRoi.size(0); ++row) {
-				for (Eigen::Index col = aRoi.origin(1); col < aRoi.size(1); ++col) {
+			for (Eigen::Index row = aRoi.origin(0); row < aRoi.origin(0) + aRoi.size(0); ++row) {
+				for (Eigen::Index col = aRoi.origin(1); col < aRoi.origin(1) + aRoi.size(1); ++col) {
 					imageWorkingArea(row, col) = aImage(row, col);
 				}
 			}
