@@ -89,6 +89,7 @@ OffsetImage::OffsetImage(const Roi &aRoi, uint8_t *aData, Eigen::Index aHeight, 
 
 auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol))
 {
+	ohdebug("roi.originImage::operator()", aRow, aCol, roi);
 	mosse_assert(roi.isInside({aRow, aCol}));
 
 	return imageBase(aRow - roi.origin(0), aCol - roi.origin(1));
@@ -96,17 +97,17 @@ auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(i
 
 auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) const -> decltype(imageBase(aRow, aCol))
 {
+	ohdebug("roi.originImage::operator() const", aRow, aCol, roi);
 	mosse_assert(roi.isInside({aRow, aCol}));
-	ohdebug("roi.originImage::operator()", aRow, aCol, roi.origin);
 
 	return imageBase(aRow - roi.origin(0), aCol - roi.origin(1));
 }
 
 auto OffsetImage::block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
-	-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const
+	-> decltype(imageBase.block(0, 0, 0, 0)) const
 {
+	ohdebug("roi.originImage::block() const", aRow, aCol, roi);
 	mosse_assert(roi.isInside({aRow, aCol}));
-	ohdebug("roi.originImage::operator() const", aRow, aCol, roi.origin);
 
 	return imageBase.block(aRow - roi.origin(0), aCol - roi.origin(1), anRows, anCols);
 }
