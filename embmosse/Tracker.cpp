@@ -32,24 +32,31 @@ Tracker::Tracker(Ut::Port aPort) : tracking{{}, 0.0f}, port{aPort}
 /// \post If the tracker uses windows from a set of predefined shapes (sizes), `aRoi` will be resized to the closest
 /// shape.
 ///
-Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage, Tp::Roi &aRoi)
+/// \pre ROI must be initialized
+///
+Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage)
 {
+	Tp::OffsetImage stub{tracking.roi, const_cast<std::uint8_t *>(aImage.data()), aImage.rows(), aImage.cols()};
 #if MOSSE_MEM_CLONE_IMAGE_WORKING_AREA
-	if (aRoi.size != tracking.roi.size) {
-		port.ops.roiResize(aRoi);
+	auto roi = tracking.roi;
+
+	if (roi.area() == 0) {
+		return stub;
 	}
 
-	aRoi.size(0) += aRoi.size(0) / 2;
-	aRoi.size(1) += aRoi.size(1) / 2;
-	aRoi.fitShift({aImage.rows(), aImage.cols()});
-	port.mem.initImageWorkingArea(aImage, aRoi);
+	roi.origin(0) -= roi.size(0) / 4 - 1;
+	roi.origin(1) -= roi.size(1) / 4 - 1;
+	roi.size(0) += roi.size(0) / 2;
+	roi.size(1) += roi.size(1) / 2;
+	roi.fitShift({aImage.rows(), aImage.cols()});
+	port.mem.initImageWorkingArea(aImage, roi);
 	mosse_assert(port.mem.imageWorkingArea() != nullptr);
-	Tp::OffsetImage offsetImage{aRoi.origin, static_cast<std::uint8_t *>(port.mem.imageWorkingArea()), aRoi.size(0),
-		aRoi.size(1)};
+	Tp::OffsetImage offsetImage{roi, static_cast<std::uint8_t *>(port.mem.imageWorkingArea()), roi.size(0),
+		roi.size(1)};
 
 	return offsetImage;
 #else
-	return {{0, 0}, aImage.data(), aImage.rows(), aImage.cols()};
+	return stub;
 #endif
 }
 
