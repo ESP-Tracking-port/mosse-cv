@@ -85,10 +85,9 @@ public:
 ///
 class OffsetImage : public Image {
 private:
-	PointRowCol offset{0, 0};
+	Roi roi;
 public:
-	OffsetImage(const PointRowCol &aOffset, std::uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth);
-	void setOffset(const PointRowCol &aOffset);
+	OffsetImage(const Roi &aRoi, std::uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth);
 	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol)) override;
 	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) const -> decltype(imageBase(aRow, aCol)) override;
 	auto block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)

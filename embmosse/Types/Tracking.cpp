@@ -82,38 +82,36 @@ Image::Image(uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) : imageB
 {
 }
 
-OffsetImage::OffsetImage(const PointRowCol &aOffset, uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) :
-	offset{aOffset}, Image{aData, aHeight, aWidth}
+OffsetImage::OffsetImage(const Roi &aRoi, uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) :
+	roi{aRoi}, Image{aData, aHeight, aWidth}
 {
-}
-
-void OffsetImage::setOffset(const PointRowCol &aOffset)
-{
-	offset = aOffset;
 }
 
 auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol))
 {
-	mosse_assert(aRow >= offset(0));
-	mosse_assert(aCol >= offset(1));
+	mosse_assert(aRow >= roi.origin(0));
+	mosse_assert(aCol >= roi.origin(1));
 
-	return imageBase(aRow - offset(0), aCol - offset(1));
+	return imageBase(aRow - roi.origin(0), aCol - roi.origin(1));
 }
 
 auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) const -> decltype(imageBase(aRow, aCol))
 {
-	mosse_assert(aRow >= offset(0));
-	mosse_assert(aCol >= offset(1));
+	mosse_assert(aRow >= roi.origin(0));
+	mosse_assert(aCol >= roi.origin(1));
+	ohdebug("roi.originImage::operator()", aRow, aCol, roi.origin);
 
-	return imageBase(aRow - offset(0), aCol - offset(1));
+	return imageBase(aRow - roi.origin(0), aCol - roi.origin(1));
 }
 
 auto OffsetImage::block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
 	-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const
 {
-	mosse_assert(aRow >= offset(0));
-	mosse_assert(aCol >= offset(1));
-	return imageBase.block(aRow - offset(0), aCol - offset(1), anRows, anCols);
+	mosse_assert(aRow >= roi.origin(0));
+	mosse_assert(aCol >= roi.origin(1));
+	ohdebug("roi.originImage::operator() const", aRow, aCol, roi.origin);
+
+	return imageBase.block(aRow - roi.origin(0), aCol - roi.origin(1), anRows, anCols);
 }
 
 }  // namespace Tp
