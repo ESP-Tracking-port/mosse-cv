@@ -65,6 +65,10 @@ public:
 	{
 		return imageBase.data();
 	}
+	inline auto data() const -> decltype(imageBase.data())
+	{
+		return imageBase.data();
+	}
 	inline auto rows() const -> decltype(imageBase.rows())
 	{
 		return imageBase.rows();
