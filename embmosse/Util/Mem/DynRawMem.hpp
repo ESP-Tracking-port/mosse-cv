@@ -23,7 +23,7 @@ namespace Ut {
 template <Tp::Repr::Flags ReprBuf, Tp::Repr::Flags ReprAb, std::size_t RoiSz = 0>
 class DynRawMem : public Mem {
 public:
-	DynRawMem() : Mem(), roiPrev{{0, 0}, {0, 0}}
+	DynRawMem() : Mem(), roiPrev{{0, 0}, {0, 0}}, workingAreaRoiPrev{{0, 0}, {0, 0}}
 	{
 	}
 	void *matA() override
@@ -45,19 +45,24 @@ public:
 	void initImageWorkingArea(const Tp::Image &aImage, const Tp::Roi &aRoi) override
 	{
 		// TODO: Using roiPrev for comparison will always cause reallocations
-		if (aRoi.area() > roiPrev.area()) {
+		if (aRoi.area() > workingAreaRoiPrev.area()) {
+			ohdebug(initImageWorkingArea, "resetting");
 			ptrImageWorkingArea.reset();
 		}
 
+		workingAreaRoiPrev = aRoi;
+
 		if (!static_cast<bool>(ptrImageWorkingArea)) {
+			ohdebug(initImageWorkingArea, "reallocating");
 			const std::size_t imageWorkingAreaSize = sizeof(std::uint8_t) * aRoi.area();
 			ptrImageWorkingArea = std::unique_ptr<std::uint8_t[]>(new std::uint8_t[imageWorkingAreaSize]);
-			Tp::OffsetImage imageWorkingArea{aRoi, ptrImageWorkingArea.get()};
+		}
 
-			for (Eigen::Index row = aRoi.origin(0); row < aRoi.origin(0) + aRoi.size(0); ++row) {
-				for (Eigen::Index col = aRoi.origin(1); col < aRoi.origin(1) + aRoi.size(1); ++col) {
-					imageWorkingArea(row, col) = aImage(row, col);
-				}
+		Tp::OffsetImage imageWorkingArea{aRoi, ptrImageWorkingArea.get()};
+
+		for (Eigen::Index row = aRoi.origin(0); row < aRoi.origin(0) + aRoi.size(0); ++row) {
+			for (Eigen::Index col = aRoi.origin(1); col < aRoi.origin(1) + aRoi.size(1); ++col) {
+				imageWorkingArea(row, col) = aImage(row, col);
 			}
 		}
 	}
@@ -93,6 +98,7 @@ private:
 	std::unique_ptr<ReTp<ReprAb>[]> ptrMatB;
 	std::unique_ptr<std::uint8_t[]> ptrImageWorkingArea;
 	Tp::Roi roiPrev;
+	Tp::Roi workingAreaRoiPrev;
 };
 
 }  // namespace Ut
