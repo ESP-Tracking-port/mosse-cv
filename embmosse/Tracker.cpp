@@ -20,7 +20,7 @@ Tracker::Tracker(Ut::Port aPort) : tracking{{}, 0.0f}, port{aPort}
 {
 }
 
-void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
+void Tracker::init(const Mosse::Tp::Image &aImage, Mosse::Tp::Roi aRoi)
 {
 	MallocCounter mc{};
 	(void)mc;
@@ -43,7 +43,7 @@ void Tracker::init(Mosse::Tp::Image aImage, Mosse::Tp::Roi aRoi)
 	// TODO: rand warp-based pretraining XXX: It seems to work without
 }
 
-void Tracker::update(Tp::Image aImage, bool aUpdatePsr)
+void Tracker::update(const Tp::Image &aImage, bool aUpdatePsr)
 {
 	MallocCounter mc{};
 	(void)mc;

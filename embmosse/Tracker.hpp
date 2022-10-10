@@ -35,8 +35,8 @@ private:
 public:
 	Tracker(Ut::Port port);
 	virtual ~Tracker() = default;
-	void init(Tp::Image, Tp::Roi);
-	void update(Tp::Image, bool updatePsr);
+	void init(const Tp::Image &, Tp::Roi);
+	void update(const Tp::Image &, bool updatePsr);
 	const Tp::Roi &roi() const;
 	float lastPsr() const;
 protected:
