@@ -61,13 +61,12 @@ Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage)
 
 void Tracker::init(const Mosse::Tp::Image &aImage, Mosse::Tp::Roi aRoi)
 {
-	ohdebug("Tracker::init");
 	MallocCounter mc{};
 	(void)mc;
 	// A set of precompiled gaussian matrices is used, so the window's size will be changed to the closest one
 	tracking.roi = aRoi;
 	port.ops.roiResize(tracking.roi);
-	tracking.roi.fitShift({aImage.rows(), aImage.cols()});
+	tracking.roi.fitShiftRoi(aImage.asRoi());
 	port.mem.init(tracking.roi);
 	mosse_assert(nullptr != port.mem.buffer());
 	mosse_assert(nullptr != port.mem.matA());
@@ -106,7 +105,7 @@ void Tracker::update(const Tp::Image &aImage, bool aUpdatePsr)
 
 	// Update ROI
 	tracking.roi.setCenter(maxResponsePos + roi().origin);  // Shift the window
-	tracking.roi.fitShift({aImage.rows(), aImage.cols()});  // Make sure the window fits the image. Adjust its coordinates while preserving the size
+	tracking.roi.fitShiftRoi(aImage.asRoi());  // Make sure the window fits the image. Adjust its coordinates while preserving the size
 	port.ops.init(tracking.roi);
 	port.mem.init(tracking.roi);
 	// Retrain w/ the new ROI
