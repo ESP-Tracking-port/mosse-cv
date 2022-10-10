@@ -44,6 +44,7 @@ public:
 	}
 	void initImageWorkingArea(const Tp::Image &aImage, const Tp::Roi &aRoi) override
 	{
+		// TODO: Using roiPrev for comparison will always cause reallocations
 		if (aRoi.area() > roiPrev.area()) {
 			ptrImageWorkingArea.reset();
 		}
