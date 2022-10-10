@@ -57,7 +57,7 @@ protected:
 	ImageBase imageBase;
 public:
 	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol));
-	Image(std::uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth);
+	virtual Image(std::uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth);
 	virtual auto block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
 		-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const;
 
