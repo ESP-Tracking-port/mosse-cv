@@ -31,7 +31,7 @@ DebugRawF32Ops::DebugRawF32Ops() : wrapped{{}, {}, {{}, {}, {}}}
 		std::ref<DecomposedOps>(wrapped.parallelOps.th2)}, stlThread, arithmOpsBuffer, memLayoutOpsBuffer}};
 }
 
-void DebugRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
+void DebugRawF32Ops::imageCropInto(const Tp::Image &aImageReal, void *aBufferComplex)
 {
 #if 0
 	wrapped.opencvNativeRawF32Ops.imageCropInto(aImageReal, aBufferComplex);
