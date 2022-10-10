@@ -137,7 +137,7 @@ Eigen::Index OffsetImage::cols() const
 auto OffsetImage::block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
 	-> decltype(imageBase.block(0, 0, 0, 0)) const
 {
-	ohdebug("OffsetImage::Block const", roi, aRow, aCol, anRows, anCols);
+	ohdebugonce("OffsetImage::Block const", 0);
 	mosse_assert(roi.isInside({aRow, aCol}));
 
 	return imageBase.block(aRow - roi.origin(0), aCol - roi.origin(1), anRows, anCols);
