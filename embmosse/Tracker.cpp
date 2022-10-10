@@ -36,7 +36,7 @@ Tracker::Tracker(Ut::Port aPort) : tracking{{}, 0.0f}, port{aPort}
 ///
 Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage)
 {
-	Tp::OffsetImage stub{tracking.roi, const_cast<std::uint8_t *>(aImage.data()), aImage.rows(), aImage.cols()};
+	Tp::OffsetImage stub{tracking.roi, const_cast<std::uint8_t *>(aImage.data())};
 #if MOSSE_MEM_CLONE_IMAGE_WORKING_AREA
 	auto roi = tracking.roi;
 
@@ -44,15 +44,15 @@ Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage)
 		return stub;
 	}
 
-	roi.origin(0) -= roi.size(0) / 4 - 1;
-	roi.origin(1) -= roi.size(1) / 4 - 1;
-	roi.size(0) += roi.size(0) / 2;
-	roi.size(1) += roi.size(1) / 2;
+	roi.origin(0) -= roi.size(0) / 2;
+	roi.origin(1) -= roi.size(1) / 2;
+	roi.size(0) += roi.size(0);
+	roi.size(1) += roi.size(1);
 	roi.fitShift({aImage.rows(), aImage.cols()});
+	ohdebug("Tracker::imageCropWorkingArea", tracking.roi, roi);
 	port.mem.initImageWorkingArea(aImage, roi);
 	mosse_assert(port.mem.imageWorkingArea() != nullptr);
-	Tp::OffsetImage offsetImage{roi, static_cast<std::uint8_t *>(port.mem.imageWorkingArea()), roi.size(0),
-		roi.size(1)};
+	Tp::OffsetImage offsetImage{roi, static_cast<std::uint8_t *>(port.mem.imageWorkingArea())};
 
 	return offsetImage;
 #else
