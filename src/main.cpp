@@ -56,7 +56,12 @@ void runPort()
 		}
 		else {
 			Mosse::Tp::Image mosseImage{gray.data, gray.size().height, gray.size().width};
+#if MOSSE_MEM_CLONE_IMAGE_WORKING_AREA
+			auto imageWorkingArea = sTracker->imageCropWorkingArea(mosseImage);
+			sTracker->update(imageWorkingArea, true);
+#else
 			sTracker->update(mosseImage, true);
+#endif
 			ohdebug(main, sTracker->lastPsr());
 			auto mosseRoi = sTracker->roi();
 			roi = {mosseRoi.origin(1), mosseRoi.origin(0), mosseRoi.size(1), mosseRoi.size(0)};  // Create cv-compatible row-major ROI
