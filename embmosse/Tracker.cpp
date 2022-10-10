@@ -49,7 +49,6 @@ Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage)
 	roi.size(0) += roi.size(0);
 	roi.size(1) += roi.size(1);
 	roi.fitShift({aImage.rows(), aImage.cols()});
-	ohdebug("Tracker::imageCropWorkingArea", tracking.roi, roi);
 	port.mem.initImageWorkingArea(aImage, roi);
 	mosse_assert(port.mem.imageWorkingArea() != nullptr);
 	Tp::OffsetImage offsetImage{roi, static_cast<std::uint8_t *>(port.mem.imageWorkingArea())};
@@ -84,7 +83,6 @@ void Tracker::init(const Mosse::Tp::Image &aImage, Mosse::Tp::Roi aRoi)
 
 void Tracker::update(const Tp::Image &aImage, bool aUpdatePsr)
 {
-	ohdebug("Tracker::update");
 	MallocCounter mc{};
 	(void)mc;
 	// Calculate convolution in the frequency domain
