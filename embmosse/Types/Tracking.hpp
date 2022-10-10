@@ -62,6 +62,8 @@ public:
 	Image(std::uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth);
 	virtual auto block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
 		-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const;
+	virtual Eigen::Index rows() const;
+	virtual Eigen::Index cols() const;
 
 	inline auto data() -> decltype(imageBase.data())
 	{
@@ -71,25 +73,21 @@ public:
 	{
 		return imageBase.data();
 	}
-	inline auto rows() const -> decltype(imageBase.rows())
-	{
-		return imageBase.rows();
-	}
-	inline auto cols() const -> decltype(imageBase.cols())
-	{
-		return imageBase.cols();
-	}
 };
 
 /// \brief Maps a chunk of an image
 ///
 class OffsetImage : public Image {
 private:
+private:
 	Roi roi;
+	PointRowCol virtSize;
 public:
-	OffsetImage(const Roi &aRoi, std::uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth);
-	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol)) override;
-	virtual auto operator()(Eigen::Index aRow, Eigen::Index aCol) const -> decltype(imageBase(aRow, aCol)) override;
+	OffsetImage(const Roi &aRoi, std::uint8_t *aData);
+	auto operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol)) override;
+	auto operator()(Eigen::Index aRow, Eigen::Index aCol) const -> decltype(imageBase(aRow, aCol)) override;
+	Eigen::Index rows() const override;
+	Eigen::Index cols() const override;
 	auto block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
 		-> decltype(imageBase.block(aRow, aCol, anRows, anCols)) const override;
 };

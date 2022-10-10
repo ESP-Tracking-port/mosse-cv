@@ -78,12 +78,22 @@ auto Image::block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eig
 	return imageBase.block(aRow, aCol, anRows, anCols);
 }
 
+Eigen::Index Image::rows() const
+{
+	return imageBase.rows();
+}
+
+Eigen::Index Image::cols() const
+{
+	return imageBase.cols();
+}
+
 Image::Image(uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) : imageBase{aData, aHeight, aWidth}
 {
 }
 
-OffsetImage::OffsetImage(const Roi &aRoi, uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) :
-	roi{aRoi}, Image{aData, aHeight, aWidth}
+OffsetImage::OffsetImage(const Roi &aRoi, uint8_t *aData) : roi{aRoi}, virtSize{roi.origin + roi.size + PointRowCol{1, 1}},
+	Image{aData, aRoi.size(0), aRoi.size(1)}
 {
 }
 
@@ -101,6 +111,16 @@ auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) const -> decl
 	mosse_assert(roi.isInside({aRow, aCol}));
 
 	return imageBase(aRow - roi.origin(0), aCol - roi.origin(1));
+}
+
+Eigen::Index OffsetImage::rows() const
+{
+	return virtSize(0);
+}
+
+Eigen::Index OffsetImage::cols() const
+{
+	return virtSize(1);
 }
 
 auto OffsetImage::block(Eigen::Index aRow, Eigen::Index aCol, Eigen::Index anRows, Eigen::Index anCols)
