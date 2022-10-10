@@ -69,7 +69,7 @@ void EspDspRawF32Ops::initImpl()
 	}
 }
 
-void EspDspRawF32Ops::imageCropInto(Tp::Image aImageReal, void *aBufferComplex)
+void EspDspRawF32Ops::imageCropInto(const Tp::Image &aImageReal, void *aBufferComplex)
 {
 	RawF32Ops::imageCropInto(aImageReal, aBufferComplex);
 

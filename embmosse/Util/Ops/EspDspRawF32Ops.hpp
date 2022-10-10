@@ -23,7 +23,7 @@ public:
 	void fft2(void *aBufferComplex) override;
 	void ifft2(void *aBufferComplex) override;
 	void initImpl() override;
-	void imageCropInto(Tp::Image aImageReal, void *aBufferComplex) override;
+	void imageCropInto(const Tp::Image &aImageReal, void *aBufferComplex) override;
 private:
 	EspDspFft2<RawF32Ops::reprFlags.buffer> espDspFft2;
 };
