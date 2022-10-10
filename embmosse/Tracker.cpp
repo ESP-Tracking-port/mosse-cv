@@ -34,6 +34,7 @@ Tracker::Tracker(Ut::Port aPort) : tracking{{}, 0.0f}, port{aPort}
 ///
 Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage, Tp::Roi &aRoi)
 {
+#if MOSSE_MEM_CLONE_IMAGE_WORKING_AREA
 	port.ops.roiResize(aRoi);
 	port.mem.initImageWorkingArea(aImage, aRoi);
 	mosse_assert(port.mem.imageWorkingArea() != nullptr);
@@ -41,6 +42,10 @@ Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage, Tp::Roi &
 		aRoi.size(1)};
 
 	return offsetImage;
+#else
+	mosse_assert(false);
+	return {aRoi.origin, nullptr, 0, 0};
+#endif
 }
 
 void Tracker::init(const Mosse::Tp::Image &aImage, Mosse::Tp::Roi aRoi)
