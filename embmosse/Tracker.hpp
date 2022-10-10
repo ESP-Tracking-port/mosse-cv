@@ -17,6 +17,7 @@ namespace Tp {
 class Image;
 class Roi;
 class PointRowCol;
+class OffsetImage;
 
 }  // namespace Tp
 
@@ -35,6 +36,7 @@ private:
 public:
 	Tracker(Ut::Port port);
 	virtual ~Tracker() = default;
+	Tp::OffsetImage imageCropWorkingArea(const Tp::Image &, Tp::Roi &);
 	void init(const Tp::Image &, Tp::Roi);
 	void update(const Tp::Image &, bool updatePsr);
 	const Tp::Roi &roi() const;

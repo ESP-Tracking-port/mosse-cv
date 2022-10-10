@@ -20,6 +20,29 @@ Tracker::Tracker(Ut::Port aPort) : tracking{{}, 0.0f}, port{aPort}
 {
 }
 
+/// \brief Creates a memory-safe working area by cropping a chunk of image into a separate memory location.
+///
+/// \details The duplication enables parallelization. If a frame is being formed by a separate thread (deployed on a
+/// physical core), the frame-forming thread will be able to continue reusing the frame buffer without waiting for
+/// the tracker to get finished with the frame. \sa `Mosse::Tracking::OffsetImage`
+///
+/// \arg aImage Mapped buffer
+/// \arg aRoi Region of Interest.
+///
+/// \post If the tracker uses windows from a set of predefined shapes (sizes), `aRoi` will be resized to the closest
+/// shape.
+///
+Tp::OffsetImage Tracker::imageCropWorkingArea(const Tp::Image &aImage, Tp::Roi &aRoi)
+{
+	port.ops.roiResize(aRoi);
+	port.mem.initImageWorkingArea(aImage, aRoi);
+	mosse_assert(port.mem.imageWorkingArea() != nullptr);
+	Tp::OffsetImage offsetImage{aRoi.origin, static_cast<std::uint8_t *>(port.mem.imageWorkingArea()), aRoi.size(0),
+		aRoi.size(1)};
+
+	return offsetImage;
+}
+
 void Tracker::init(const Mosse::Tp::Image &aImage, Mosse::Tp::Roi aRoi)
 {
 	MallocCounter mc{};
