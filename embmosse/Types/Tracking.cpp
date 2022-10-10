@@ -77,6 +77,16 @@ Image::Image(uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) : imageB
 {
 }
 
+OffsetImage::OffsetImage(const PointRowCol &aOffset, uint8_t *aData, Eigen::Index aHeight, Eigen::Index aWidth) :
+	offset{aOffset}, Image{aData, aHeight, aWidth}
+{
+}
+
+void OffsetImage::setOffset(const PointRowCol &aOffset)
+{
+	offset = aOffset;
+}
+
 auto OffsetImage::operator()(Eigen::Index aRow, Eigen::Index aCol) -> decltype(imageBase(aRow, aCol))
 {
 	mosse_assert(aRow >= offset(0));
