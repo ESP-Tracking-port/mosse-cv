@@ -68,6 +68,13 @@ inline auto makeEigenBlock(T &aMatrix, const Tp::Roi &aRoi) -> decltype(aMatrix.
 	return aMatrix.block(aRoi.origin(0), aRoi.origin(1), aRoi.size(0), aRoi.size(1));
 }
 
+template <class T>
+inline auto makeEigenBlock(const T &aMatrix, const Tp::Roi &aRoi)
+	-> decltype(makeEigenBlock(const_cast<T &>(aMatrix), aRoi))
+{
+	return makeEigenBlock(const_cast<T &>(aMatrix), aRoi);
+}
+
 }  // namespace Ut
 }  // namespace Mosse
 
