@@ -51,5 +51,6 @@ extract_valid_cxx_flags(MOSSE_COMPILER_FLAGS
 	"-Wno-stringop-truncation"
 	"-Wno-unneeded-internal-declaration"
 	"-Werror=narrowing"
+	"-Werror=reorder"
 )
 string(REPLACE " " ";" MOSSE_COMPILER_FLAGS ${MOSSE_COMPILER_FLAGS})
