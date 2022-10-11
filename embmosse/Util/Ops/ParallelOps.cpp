@@ -124,9 +124,11 @@ void ParallelOps::initImpl()
 				base += heightStep;
 			}
 
-			for (auto &op : ops) {
-				ohdebug(split, op.get().roiFragment());
-			}
+			ohdebugsect("split", {
+				for (auto &op : ops) {
+					ohdebug(split, op.get().roiFragment());
+				}
+			});
 		}
 	}
 }
