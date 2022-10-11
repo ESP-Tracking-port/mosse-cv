@@ -119,7 +119,7 @@ void ParallelOps::initImpl()
 			int base = 0;
 
 			for (int i = 0; i < ops.size(); ++i) {
-				int heightStep = roiFragmentheightSteps[i];
+				int heightStep = roiFragmentHeights[i];
 				ops[i].get().setRoiFragment({{base, 0}, {heightStep, roi().size(1)}});
 				base += heightStep;
 			}
