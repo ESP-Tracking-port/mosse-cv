@@ -96,11 +96,11 @@ public:
 		auto mapBlock = Ut::makeEigenBlock(map, roiFragment());
 
 		if (nullptr == sum) {
-			MaxVisitor<ReprBuffer> visitor;
+			MaxVisitor<ReprBuffer> visitor{0.0f, {0, 0}};
 			mapBlock.visit(visitor);
 			aPos = visitor.pos;
 		} else {
-			CompositeVisitor<ReprBuffer, MaxVisitor<ReprBuffer>, FloatSumVisitor<ReprBuffer>> visitor;
+			CompositeVisitor<ReprBuffer, MaxVisitor<ReprBuffer>, FloatSumVisitor<ReprBuffer>> visitor{{{0.0f, {0, 0}}, {0.0f}}};
 			mapBlock.visit(visitor);
 			*sum = visitor.template get<1>().sum;
 			aPos = visitor.template get<0>().pos;
@@ -147,7 +147,7 @@ public:
 		auto r = aRoi;
 		auto map = Ut::makeEigenMap<ReprBuffer>(aComplexBuffer, roi());
 		auto mapBlock = Ut::makeEigenBlock(map, r);
-		FloatSumVisitor<ReprBuffer> visitor;
+		FloatSumVisitor<ReprBuffer> visitor{0.0f};
 		mapBlock.visit(visitor);
 
 		return visitor.sum;
